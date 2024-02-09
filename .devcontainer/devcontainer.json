@@ -1,6 +1,6 @@
 // https://aka.ms/devcontainer.json
 {
-	"name": "Existing Docker Compose (Extend)",
+	"name": "Money DevContainer",
 	"dockerComposeFile": [
 		"../docker-compose.yml"
 	],
