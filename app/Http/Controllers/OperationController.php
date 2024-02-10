@@ -8,6 +8,8 @@ use App\Models\Operation;
 use App\Models\Bill;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Place;
 
 class OperationController extends Controller
 {
@@ -19,18 +21,52 @@ class OperationController extends Controller
         // add filters
         $operations = Operation::orderBy('date', 'desc');
 
-        if ($request->has('bill_id')) {
+        if ($request->get('bill_id')) {
             $operations->where('bill_id', $request->bill_id);
         }
 
-        if ($request->has('category_id')) {
+        if ($request->get('category_id')) {
             $operations->where('category_id', $request->category_id);
         }
 
+        if ($request->get('date_from')) {
+            $operations->where('date', '>=', $request->date_from);
+        }
+
+        if ($request->get('date_to')) {
+            $operations->where('date', '<=', $request->date_to);
+        }
+
+        if (in_array($request->type, ['0', '1'], true)) {
+            $operations->where('type', $request->type);
+        }
+
+        if ($request->get('user_id')) {
+            $operations->where('user_id', $request->user_id);
+        }
+
+        if ($request->get('place_id')) {
+            $operations->where('place_id', $request->place_id);
+        }
+
+        if ($request->get('notes')) {
+            $operations->where('notes', 'like', '%' . $request->notes . '%');
+        }
+
+        if ($request->get('amount_from')) {
+            $operations->where('amount', '>=', $request->amount_from);
+        }
+
+        if ($request->get('amount_to')) {
+            $operations->where('amount', '<=', $request->amount_to);
+        }
+
         return view('operations.index', [
-            'operations' => $operations->paginate(50),
+            'operations' => $operations->with(['bill', 'category', 'user', 'place', 'currency'])->paginate(50),
             'bills' => Bill::orderBy('name', 'asc')->get(),
             'categories' => Category::orderBy('name', 'asc')->get(),
+            'users' => User::orderBy('name', 'asc')->get(),
+            'places' => Place::orderBy('name', 'asc')->get(),
         ]);
     }
 

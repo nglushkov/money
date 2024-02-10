@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
+use DateTimeInterface;
 
 class Operation extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'date' => 'datetime',
+    ];
 
     public function bill(): BelongsTo
     {
@@ -44,5 +49,10 @@ class Operation extends Model
     public function getAmountAttribute($value): string
     {
         return $this->type === 0 ? '-' . $value : '+' . $value;
+    }
+
+    public function getDateAttribute($value): string
+    {
+        return Carbon::parse($value)->format('d.m.Y');
     }
 }
