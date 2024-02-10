@@ -28,7 +28,7 @@ class BillController extends Controller
      */
     public function create()
     {
-        //
+        return view('bills.create');
     }
 
     /**
@@ -36,7 +36,9 @@ class BillController extends Controller
      */
     public function store(StoreBillRequest $request)
     {
-        //
+        Bill::create($request->validated());
+
+        return redirect()->route('bills.index');
     }
 
     /**
@@ -44,7 +46,9 @@ class BillController extends Controller
      */
     public function show(Bill $bill)
     {
-        //
+        return view('bills.show', [
+            'bill' => $bill
+        ]);
     }
 
     /**
@@ -52,7 +56,9 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        //
+        return view('bills.edit', [
+            'bill' => $bill
+        ]);
     }
 
     /**
@@ -60,7 +66,9 @@ class BillController extends Controller
      */
     public function update(UpdateBillRequest $request, Bill $bill)
     {
-        //
+        $bill->update($request->validated());
+
+        return redirect()->route('bills.show', $bill);
     }
 
     /**
@@ -68,6 +76,16 @@ class BillController extends Controller
      */
     public function destroy(Bill $bill)
     {
-        //
+        if ($bill->operations()->count() > 0) {
+            return redirect()->route('bills.show', $bill)->withErrors(['error' => 'This bill is used in operations and cannot be deleted.']);
+        }
+
+        try {
+            $bill->delete();
+        } catch (\Exception $e) {
+            return redirect()->route('bills.show', $bill)->with('error', 'Error deleting bill.');
+        }
+
+        return redirect()->route('bills.index');
     }
 }

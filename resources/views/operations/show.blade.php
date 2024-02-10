@@ -19,14 +19,7 @@
         </ul>
     </div>
     <div class="card-footer">
-        <a href="{{ route('operations.edit', $operation) }}" class="card-link">Редактировать</a>
-        <a href="#" class="card-link link-danger"
-            onclick="event.preventDefault(); if (confirm('Are you sure you want to delete?')) { document.getElementById('delete-form').submit(); }">Удалить</a>
-        <form id="delete-form" action="{{ route('operations.destroy', $operation) }}" method="POST"
-            style="display: none;">
-            @csrf
-            @method('DELETE')
-        </form>
+        @include('blocks.delete-link', ['model' => $operation, 'routePart' => 'operations'])
     </div>
 </div>
 @endsection

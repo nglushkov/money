@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100)->unique();
-            $table->text('notes')->nullable();
+            $table->string('notes', 255)->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });

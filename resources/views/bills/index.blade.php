@@ -16,7 +16,7 @@
                 </thead>
                 <tbody class="table-group-divider">
                     @foreach ($bills as $bill)
-                        <tr onclick="window.location.href = '{{ route('bills.show', $operation->id) }}';" style="cursor: pointer;">
+                        <tr onclick="window.location.href = '{{ route('bills.show', $bill->id) }}';" style="cursor: pointer;">
                             <td>{{ $bill->name }}</td>
                             @foreach ($currencies as $currency)
                             @php

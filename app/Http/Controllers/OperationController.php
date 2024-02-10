@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Place;
 use App\Models\Currency;
+use Illuminate\Support\Facades\DB;
 
 class OperationController extends Controller
 {
@@ -76,7 +77,34 @@ class OperationController extends Controller
      */
     public function create()
     {
-        return view('operations.create');
+
+        return view('operations.create', [
+            'bills' => Bill::orderBy('name', 'asc')->get(),
+            'categories' => Category::orderBy('name', 'asc')->get(),
+            'users' => User::orderBy('name', 'asc')->get(),
+            'places' => Place::orderBy('name', 'asc')->get(),
+            'currencies' => Currency::orderBy('name', 'asc')->get(),
+
+            'topCategories' => Category::select('categories.*', DB::raw('COUNT(operations.category_id) as count'))
+                ->leftJoin('operations', 'categories.id', '=', 'operations.category_id')
+                ->groupBy('categories.id')
+                ->orderBy('count', 'desc')
+                ->take(10)
+                ->get(),
+
+            'topPlaces' => Place::select('places.*', DB::raw('COUNT(operations.place_id) as count'))
+                ->leftJoin('operations', 'places.id', '=', 'operations.place_id')
+                ->groupBy('places.id')
+                ->orderBy('count', 'desc')
+                ->take(15)
+                ->get(),
+            'topBills' => Bill::select('bills.*', DB::raw('COUNT(operations.bill_id) as count'))
+                ->leftJoin('operations', 'bills.id', '=', 'operations.bill_id')
+                ->groupBy('bills.id')
+                ->orderBy('count', 'desc')
+                ->take(5)
+                ->get(),
+        ]);
     }
 
     /**
@@ -84,7 +112,10 @@ class OperationController extends Controller
      */
     public function store(StoreOperationRequest $request)
     {
-        Operation::create($request->validated());
+        $operation = new Operation();
+        $operation->fill($request->validated());
+        $operation->user_id = auth()->id();
+        $operation->save();
 
         return redirect()->route('operations.index');
     }
@@ -96,7 +127,7 @@ class OperationController extends Controller
     {
         return view('operations.show', [
             'operation' => $operation
-        ]);       
+        ]);
     }
 
     /**

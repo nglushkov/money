@@ -4,6 +4,7 @@
         aria-controls="collapseFilter">
         Show filters
     </a>
+    <a href="{{ route('operations.index', ['user_id' => Auth::id()]) }}" class="btn btn-light">Show My Operations</a>
     <a href="{{ route('operations.index') }}" class="btn btn-light float-end">Clear</a>
     <div class="collapse" id="collapseFilter">
         <div class="row">
