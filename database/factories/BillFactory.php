@@ -19,6 +19,7 @@ class BillFactory extends Factory
         return [
             'name' => $this->faker->unique()->word(),
             'notes' => $this->faker->text(10),
+            'user_id' => rand(1, 10),
         ];
     }
 }

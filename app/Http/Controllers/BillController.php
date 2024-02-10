@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBillRequest;
 use App\Http\Requests\UpdateBillRequest;
 use App\Models\Bill;
+use App\Models\Currency;
 
 class BillController extends Controller
 {
@@ -13,7 +14,13 @@ class BillController extends Controller
      */
     public function index()
     {
-        //
+        $bills = Bill::orderBy('name');
+
+        return view('bills.index', [
+            'bills' => $bills->get(),
+            'currencies' => Currency::orderBy('name')->get(),
+            'bill'
+        ]);
     }
 
     /**

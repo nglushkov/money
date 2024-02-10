@@ -11,6 +11,8 @@ class Currency extends Model
 
     public function bills()
     {
-        return $this->belongsToMany(Bill::class);
+        return $this->belongsToMany(Bill::class, 'bill_currencies')
+                    ->withPivot('amount')
+                    ->withTimestamps();
     }
 }

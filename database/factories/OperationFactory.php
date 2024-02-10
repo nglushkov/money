@@ -17,7 +17,7 @@ class OperationFactory extends Factory
     public function definition(): array
     {
         return [
-            'amount' => $this->faker->randomFloat(2, 1, 1000),
+            'amount' => $this->faker->randomFloat(2, 1, 100000),
             'type' => $this->faker->randomElement([0, 1]), // 0 - expense, 1 - income
             'bill_id' => rand(1, 10),
             'category_id' => rand(1, 50),

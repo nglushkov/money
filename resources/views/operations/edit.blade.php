@@ -11,7 +11,7 @@
                 <div class="alert alert-danger">
                     <ul>
                         @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                            <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
@@ -21,7 +21,7 @@
                 @method('PUT')
                 <div class="form-group mb-2">
                     <label for="amount">Amount:</label>
-                    <input type="number" name="amount" id="amount" class="form-control" required
+                    <input type="text" name="amount" id="amount" class="form-control" required
                         value="{{ old('amount', $operation->amount) }}">
                 </div>
                 <div class="form-group mb-2">

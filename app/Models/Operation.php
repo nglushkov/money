@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\MoneyFormatter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,9 +58,14 @@ class Operation extends Model
         return $this->type === 0 ? 'Расход' : 'Приход';
     }
 
+    public function getAmountAsMoneyAttribute(): string
+    {
+        return MoneyFormatter::get($this->amount);
+    }
+
     public function getAmountTextAttribute($value): string
     {
-        return $this->type === 0 ? '-' . $this->amount : '+' . $this->amount;
+        return MoneyFormatter::getWithSymbolAndSign($this->amount, $this->currency->name, $this->type);
     }
 
     public function getDateFormattedAttribute($value): string
@@ -69,6 +75,6 @@ class Operation extends Model
 
     public function getAmountTextWithCurrencyAttribute($value): string
     {
-        return $this->amount_text . ' ' . $this->currency->name;
+        return MoneyFormatter::getWithSymbol($this->amount, $this->currency->name);
     }
 }

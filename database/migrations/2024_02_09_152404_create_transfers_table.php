@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('from_bill_id')->constrained('bills');
             $table->foreignId('to_bill_id')->constrained('bills');
-            $table->decimal('amount', 8, 2);
+            $table->decimal('amount', 8, 2)->unsigned();
             $table->integer('currency_id');
             $table->dateTime('date');
             $table->text('notes')->nullable();

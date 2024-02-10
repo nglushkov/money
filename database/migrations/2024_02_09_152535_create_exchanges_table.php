@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('exchanges', function (Blueprint $table) {
             $table->id();
+            $table->decimal('amount', 8, 2)->unsigned();
             $table->foreignId('from_currency_id')->references('id')->on('currencies');
             $table->foreignId('to_currency_id')->references('id')->on('currencies');
             $table->foreignId('bill_id')->references('id')->on('bills');
-            $table->decimal('rate', 8, 2);
+            $table->decimal('rate', 8, 2)->unsigned();
             $table->dateTime('date');
             $table->foreignId('user_id')->constrained('users');
             $table->text('notes')->nullable();
