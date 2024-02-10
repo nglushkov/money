@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('exchanges', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('from_currency_id')->references('id')->on('currencies');
+            $table->foreignId('to_currency_id')->references('id')->on('currencies');
+            $table->foreignId('bill_id')->references('id')->on('bills');
+            $table->decimal('rate', 8, 2);
+            $table->dateTime('date');
+            $table->foreignId('user_id')->constrained('users');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

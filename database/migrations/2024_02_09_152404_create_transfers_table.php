@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('from_bill_id')->constrained('bills');
+            $table->foreignId('to_bill_id')->constrained('bills');
+            $table->decimal('amount', 8, 2);
+            $table->integer('currency_id');
+            $table->dateTime('date');
+            $table->text('notes')->nullable();
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

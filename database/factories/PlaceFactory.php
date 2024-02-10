@@ -17,7 +17,8 @@ class PlaceFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->word,
+            'notes' => $this->faker->text(100),
         ];
     }
 }

@@ -12,6 +12,6 @@ class OperationSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Operation::factory(100)->create();
     }
 }

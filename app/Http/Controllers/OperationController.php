@@ -5,15 +5,33 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOperationRequest;
 use App\Http\Requests\UpdateOperationRequest;
 use App\Models\Operation;
+use App\Models\Bill;
+use App\Models\Category;
+use Illuminate\Http\Request;
 
 class OperationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        // add filters
+        $operations = Operation::orderBy('date', 'desc');
+
+        if ($request->has('bill_id')) {
+            $operations->where('bill_id', $request->bill_id);
+        }
+
+        if ($request->has('category_id')) {
+            $operations->where('category_id', $request->category_id);
+        }
+
+        return view('operations.index', [
+            'operations' => $operations->paginate(50),
+            'bills' => Bill::orderBy('name', 'asc')->get(),
+            'categories' => Category::orderBy('name', 'asc')->get(),
+        ]);
     }
 
     /**
@@ -21,7 +39,7 @@ class OperationController extends Controller
      */
     public function create()
     {
-        //
+        return view('operations.create');
     }
 
     /**
@@ -29,7 +47,9 @@ class OperationController extends Controller
      */
     public function store(StoreOperationRequest $request)
     {
-        //
+        Operation::create($request->validated());
+
+        return redirect()->route('operations.index');
     }
 
     /**
@@ -37,7 +57,9 @@ class OperationController extends Controller
      */
     public function show(Operation $operation)
     {
-        //
+        return view('operations.show', [
+            'operation' => $operation
+        ]);       
     }
 
     /**
@@ -45,7 +67,9 @@ class OperationController extends Controller
      */
     public function edit(Operation $operation)
     {
-        //
+        return view('operations.edit', [
+            'operation' => $operation
+        ]);
     }
 
     /**
@@ -53,7 +77,9 @@ class OperationController extends Controller
      */
     public function update(UpdateOperationRequest $request, Operation $operation)
     {
-        //
+        $operation->update($request->validated());
+
+        return redirect()->route('operations.show', $operation);
     }
 
     /**
@@ -61,6 +87,8 @@ class OperationController extends Controller
      */
     public function destroy(Operation $operation)
     {
-        //
+        $operation->delete();
+
+        return redirect()->route('operations.index');
     }
 }
