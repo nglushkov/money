@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('operations', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 8, 2);
+            $table->decimal('amount', 8, 2)->unsigned();
             $table->tinyInteger('type'); // 0 - expense, 1 - income
             $table->foreignId('bill_id')->constrained('bills');
             $table->foreignId('category_id')->constrained('categories');

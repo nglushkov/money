@@ -12,23 +12,30 @@
                         <a class="nav-link {{ Route::is('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('categories.index') }}">Categories</a>
+                        <a class="nav-link" href="#">Balance</a>
                     </li>
-                    <li>
-
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            Dropdown
+                            More
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('categories.index') }}">Categories</a></li>
                             <li><a class="dropdown-item" href="{{ route('places.index') }}">Places</a></li>
                             <li><a class="dropdown-item" href="{{ route('bills.index') }}">Bills</a></li>
-                            <li>
+                            <li><a class="dropdown-item" href="{{ route('currencies.index') }}">Currencies</a></li>
+                            <li><a class="dropdown-item" href="{{ route('exchanges.index') }}">Exchanges</a></li>
+                            <li><a class="dropdown-item" href="{{ route('transfers.index') }}">Transfers</a></li>
+                            <!-- <li>
                                 <hr class="dropdown-divider">
-                            </li>
+                            </li> -->
                         </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link disabled">|</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('logout') }}">Logout</a>
                     </li>
                 </ul>
             </div>

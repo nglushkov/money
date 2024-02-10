@@ -10,6 +10,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Place;
+use App\Models\Currency;
 
 class OperationController extends Controller
 {
@@ -104,7 +105,12 @@ class OperationController extends Controller
     public function edit(Operation $operation)
     {
         return view('operations.edit', [
-            'operation' => $operation
+            'operation' => $operation,
+            'bills' => Bill::orderBy('name', 'asc')->get(),
+            'categories' => Category::orderBy('name', 'asc')->get(),
+            'users' => User::orderBy('name', 'asc')->get(),
+            'places' => Place::orderBy('name', 'asc')->get(),
+            'currencies' => Currency::orderBy('name', 'asc')->get(),
         ]);
     }
 

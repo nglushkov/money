@@ -12,6 +12,17 @@ class Operation extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'amount',
+        'type',
+        'bill_id',
+        'category_id',
+        'currency_id',
+        'place_id',
+        'notes',
+        'date',
+    ];
+
     protected $casts = [
         'date' => 'datetime',
     ];
@@ -46,13 +57,18 @@ class Operation extends Model
         return $this->type === 0 ? 'Расход' : 'Приход';
     }
 
-    public function getAmountAttribute($value): string
+    public function getAmountTextAttribute($value): string
     {
-        return $this->type === 0 ? '-' . $value : '+' . $value;
+        return $this->type === 0 ? '-' . $this->amount : '+' . $this->amount;
     }
 
-    public function getDateAttribute($value): string
+    public function getDateFormattedAttribute($value): string
     {
-        return Carbon::parse($value)->format('d.m.Y');
+        return $this->date->format('d.m.Y');
+    }
+
+    public function getAmountTextWithCurrencyAttribute($value): string
+    {
+        return $this->amount_text . ' ' . $this->currency->name;
     }
 }

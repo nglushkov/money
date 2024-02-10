@@ -13,7 +13,7 @@
                     <select name="bill_id" id="bill_id" class="form-control">
                         <option value="">All</option>
                         @foreach ($bills as $bill)
-                        <option value="{{ $bill->id }}" @selected(request('bill_id')==$bill->id)>{{ $bill->name }}
+                        <option value="{{ $bill->id }}" @selected(request('bill_id') == $bill->id)>{{ $bill->name }}
                         </option>
                         @endforeach
                     </select>
@@ -25,8 +25,7 @@
                     <select name="category_id" id="category_id" class="form-control">
                         <option value="">All</option>
                         @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" @if(request('category_id')==$category->id) selected
-                            @endif>{{ $category->name }}</option>
+                        <option value="{{ $category->id }}" @selected(request('category_id') == $category->id))>{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
