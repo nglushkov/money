@@ -4,6 +4,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <a href="{{ route('bills.create') }}" class="btn btn-success">Create</a>
+
             <table class="table table-striped">
                 <caption>Bills count: {{ $bills->count() }}</caption>
                 <thead>

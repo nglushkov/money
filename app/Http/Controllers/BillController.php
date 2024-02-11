@@ -6,6 +6,8 @@ use App\Http\Requests\StoreBillRequest;
 use App\Http\Requests\UpdateBillRequest;
 use App\Models\Bill;
 use App\Models\Currency;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BillController extends Controller
 {
@@ -28,7 +30,9 @@ class BillController extends Controller
      */
     public function create()
     {
-        return view('bills.create');
+        return view('bills.create', [
+            'currencies' => Currency::orderBy('name')->get()
+        ]);
     }
 
     /**
@@ -36,7 +40,20 @@ class BillController extends Controller
      */
     public function store(StoreBillRequest $request)
     {
-        Bill::create($request->validated());
+        if (!$request->validated()) {
+            return redirect()->route('bills.create')->withErrors($request->errors());
+        }
+        
+        DB::transaction(function () use ($request) {
+            $bill = new Bill($request->validated());
+            $bill->user_id = auth()->id();
+            $bill->save();
+
+            foreach ($request->input('amount') as $currencyId => $amount) {
+                $bill->currencies()->attach($currencyId, ['amount' => $amount]);
+            }
+        });
+
 
         return redirect()->route('bills.index');
     }

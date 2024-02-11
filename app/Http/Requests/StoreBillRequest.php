@@ -11,7 +11,7 @@ class StoreBillRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'notes' => ['nullable', 'string', 'max:255'],
+            'amount' => ['required', 'array'],
+            'amount.*' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

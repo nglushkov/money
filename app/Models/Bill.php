@@ -11,6 +11,8 @@ class Bill extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'notes'];
+
     public function currencies()
     {
         return $this->belongsToMany(Currency::class, 'bill_currencies')
