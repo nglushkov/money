@@ -22,9 +22,9 @@ class StoreBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:bills,name'],
             'notes' => ['nullable', 'string', 'max:255'],
-            'amount' => ['required', 'array'],
+            'amount' => ['required', 'array', 'min:1'],
             'amount.*' => ['required', 'numeric', 'min:0'],
         ];
     }

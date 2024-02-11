@@ -35,9 +35,11 @@
                         <a href="#" class="nav-link disabled">|</a>
                     </li>
                     </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link disabled">{{ Auth::user()->name }}</a>
-                    </li>
+                    @if (Auth::check())
+                        <li class="nav-item">
+                            <a href="#" class="nav-link disabled">{{ Auth::user()->name }}</a>
+                        </li>
+                        @endif
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('logout') }}">Logout</a>
                     </li>

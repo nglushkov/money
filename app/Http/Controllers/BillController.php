@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBillRequest;
 use App\Http\Requests\UpdateBillRequest;
 use App\Models\Bill;
+use App\Models\BillCurrency;
 use App\Models\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -50,7 +51,15 @@ class BillController extends Controller
             $bill->save();
 
             foreach ($request->input('amount') as $currencyId => $amount) {
-                $bill->currencies()->attach($currencyId, ['amount' => $amount]);
+                if (is_null($amount) || $amount == 0) {
+                    continue;
+                }
+                $billCurrency = new BillCurrency([
+                    'bill_id' => $bill->id,
+                    'currency_id' => $currencyId,
+                    'amount' => $amount
+                ]);
+                $billCurrency->save();
             }
         });
 
@@ -74,7 +83,8 @@ class BillController extends Controller
     public function edit(Bill $bill)
     {
         return view('bills.edit', [
-            'bill' => $bill
+            'bill' => $bill,
+            'currencies' => Currency::orderBy('name')->get()
         ]);
     }
 
@@ -83,7 +93,24 @@ class BillController extends Controller
      */
     public function update(UpdateBillRequest $request, Bill $bill)
     {
-        $bill->update($request->validated());
+        DB::transaction(function () use ($request, $bill) {
+            $bill->update($request->validated());
+            $bill->currencies()->detach();
+
+
+            foreach ($request->input('amount') as $currencyId => $amount) {
+                if (is_null($amount) || $amount == 0) {
+                    continue;
+                }
+                $billCurrency = new BillCurrency([
+                    'bill_id' => $bill->id,
+                    'currency_id' => $currencyId,
+                    'amount' => $amount
+                ]);
+                $billCurrency->save();
+            }
+        });
+
 
         return redirect()->route('bills.show', $bill);
     }
