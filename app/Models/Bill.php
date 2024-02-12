@@ -30,4 +30,50 @@ class Bill extends Model
         return $this->hasMany(Operation::class);
     }
     
+    public function getAmount(int $currencyId): float
+    {
+        $operations = $this->operations->where('currency_id', $currencyId);
+        $initialAmount = $this->currenciesInitial->find($currencyId)->pivot->amount ?? 0;
+
+        foreach ($operations as $operation) {
+            if ($operation->type === 0) {
+                $initialAmount -= $operation->amount;
+            } else {
+                $initialAmount += $operation->amount;
+            }
+        }
+
+        $transfers = Transfer::where('from_bill_id', $this->id)
+            ->where('currency_id', $currencyId)
+            ->sum('amount');
+
+        $initialAmount -= $transfers;
+
+        $transfers = Transfer::where('to_bill_id', $this->id)
+            ->where('currency_id', $currencyId)
+            ->sum('amount');
+        $initialAmount += $transfers;
+
+        return $initialAmount;
+    }
+
+    public function getAmounts(): array
+    {
+        $amounts = [];
+        foreach (Currency::orderBy('name')->get() as $currency) {
+            $amounts[$currency->name] = $this->getAmount($currency->id);
+        }
+        return $amounts;
+    }
+
+    public function getAmountNotNull(): array
+    {
+        $amounts = $this->getAmounts();
+        foreach ($amounts as $currency => $amount) {
+            if ($amount === .0) {
+                unset($amounts[$currency]);
+            }
+        }
+        return $amounts;
+    }
 }

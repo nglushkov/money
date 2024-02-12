@@ -6,13 +6,13 @@
         <div class="col-md-12">
             <a href="{{ route('bills.create') }}" class="btn btn-success">Create</a>
 
-            <table class="table table-striped">
-                <caption>Bills count: {{ $bills->count() }}</caption>
+            <table class="table table-striped table-hover">
+                <caption>Всего счетов: {{ $bills->count() }}</caption>
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Счёт</th>
                         @foreach ($currencies as $currency)
-                            <th>{{ $currency->name }}</th>
+                            <th class="table-info">{{ $currency->name }}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -20,10 +20,7 @@
                     @foreach ($bills as $bill)
                         <tr onclick="window.location.href = '{{ route('bills.show', $bill->id) }}';" style="cursor: pointer;">
                             <td>{{ $bill->name }}</td>
-                            @foreach ($currencies as $currency)
-                            @php
-                                $amount = $currency->billsInitial->find($bill->id)->pivot->amount ?? 0;
-                            @endphp
+                            @foreach ($bill->getAmounts() as $amount)
                                 <td>
                                     {{ \App\Helpers\MoneyFormatter::getWithoutDecimals($amount)}}
                                 </td>

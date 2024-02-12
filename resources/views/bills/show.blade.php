@@ -13,15 +13,40 @@
             <li class="list-group-item"><strong>User:</strong> {{ $bill->user->name }}</li>
             <li class="list-group-item">Currencies:
                 <ul>
-                    @foreach ($bill->currenciesInitial as $currency)
-                        <li><strong>{{ $currency->name }}</strong>: <span @class(['text-success' => $currency->pivot->amount > 0])>{{ App\Helpers\MoneyFormatter::get($currency->pivot->amount, $currency->name) }}</span></li>
+                    @foreach ($bill->getAmountNotNull() as $currencyName => $amount)
+                        <li><strong>{{ $currencyName }}</strong>: <span @class(['text-success' => $amount > 0])>{{ App\Helpers\MoneyFormatter::get($amount) }}</span></li>
                     @endforeach
                 </ul>
             </li>
         </ul>
-    </div>
-    <div class="card-footer">
-        @include('blocks.delete-link', ['model' => $bill, 'routePart' => 'bills'])
+        <div class="card-footer">
+            @include('blocks.delete-link', ['model' => $bill, 'routePart' => 'bills'])
+        </div>
+        <hr>
+        <h5>Последние операции <small><a href="{{ route('operations.index') }}">все</a></small></h5>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Place</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($lastOperations as $operation)
+                    <tr onclick="window.location.href = '{{ route('operations.show', $operation->id) }}';" style="cursor: pointer;">
+                        <td>{{ $operation->date_formatted }}</td>
+                        <td>{{ $operation->amount_text }}</td>
+                        <td>{{ $operation->category->name }}</td>
+                        <td>{{ $operation->place->name }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        
+        </div>
     </div>
 </div>
 @endsection

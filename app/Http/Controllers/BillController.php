@@ -72,8 +72,11 @@ class BillController extends Controller
      */
     public function show(Bill $bill)
     {
+        $lastOperations = $bill->operations()->orderBy('date', 'desc')->take(10)->get();
+
         return view('bills.show', [
-            'bill' => $bill
+            'bill' => $bill,
+            'lastOperations' => $lastOperations
         ]);
     }
 

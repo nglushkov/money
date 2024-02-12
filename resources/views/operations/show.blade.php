@@ -5,11 +5,11 @@
     <div class="card-body">
         <h5 class="card-title">Operation Details</h5>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item"><strong>Amount:</strong> <span @class([ 'text-danger'=> $operation->type === 0,
-                    'text-success' => $operation->type === 1,
+            <li class="list-group-item"><strong>Amount:</strong> <span @class([ 'text-danger'=> $operation->is_expense,
+                    'text-success' => $operation->is_income,
                     ])>{{ $operation->amount_text }}</span></li>
             <li class="list-group-item"><strong>Type:</strong> {{ $operation->type_name }}</li>
-            <li class="list-group-item"><strong>Bill:</strong> {{ $operation->bill->name }}</li>
+            <li class="list-group-item"><strong>Bill:</strong> <a href="{{ route('bills.show', $operation->bill->id) }}">{{ $operation->bill->name }}</a></li>
             <li class="list-group-item"><strong>Category:</strong> {{ $operation->category->name }}</li>
             <li class="list-group-item"><strong>Currency:</strong> {{ $operation->currency->name }}</li>
             <li class="list-group-item"><strong>Place:</strong> {{ $operation->place->name }}</li>

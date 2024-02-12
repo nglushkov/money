@@ -115,6 +115,7 @@ class OperationController extends Controller
         $operation = new Operation();
         $operation->fill($request->validated());
         $operation->user_id = auth()->id();
+        $operation->date = $request->date . ' ' . date('H:i:s');
         $operation->save();
 
         return redirect()->route('operations.index');

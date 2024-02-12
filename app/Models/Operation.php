@@ -28,6 +28,16 @@ class Operation extends Model
         'date' => 'datetime',
     ];
 
+    public function getIsExpenseAttribute(): bool
+    {
+        return $this->type === 0;
+    }
+
+    public function getIsIncomeAttribute(): bool
+    {
+        return $this->type === 1;
+    }
+
     public function bill(): BelongsTo
     {
         return $this->belongsTo(Bill::class);
@@ -55,7 +65,7 @@ class Operation extends Model
 
     public function getTypeNameAttribute(): string
     {
-        return $this->type === 0 ? 'Расход' : 'Приход';
+        return $this->is_expense ? 'Расход' : 'Приход';
     }
 
     public function getAmountAsMoneyAttribute(): string

@@ -72,7 +72,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="date">Date:</label>
-                                <input type="date" name="date" id="date" class="form-control" required value="{{ old('date') }}">
+                                <input type="date" name="date" id="date" class="form-control" required value="{{ old('date', date('Y-m-d')) }}">
                             </div>
                             <hr>
                             <button type="submit" class="btn btn-primary">Save</button>
