@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             PlaceSeeder::class,
             OperationSeeder::class,
             TransferSeeder::class,
-            BillCurrencySeeder::class,
+            BillCurrencyInitialSeeder::class,
         ]);
 
         // \App\Models\User::factory()->create([

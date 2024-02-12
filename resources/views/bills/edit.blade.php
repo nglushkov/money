@@ -27,11 +27,13 @@
                         <label for="notes">Notes</label>
                         <input type="text" name="notes" id="notes" class="form-control" value="{{ $bill->notes }}">
                     </div>
+                    <hr>
+                    <h5>Начальный остаток:</h5>
                     @foreach($currencies as $currency)
                         <div class="form-group mb-2">
                             <label for="amount_{{ $currency->id }}">{{ $currency->name }}</label>
                             <input type="text" name="amount[{{ $currency->id }}]" id="amount_{{ $currency->id }}"
-                                class="form-control" value="{{ old('amount.' . $currency->id, $bill->currencies->find($currency->id)->pivot->amount ?? 0) }}"
+                                class="form-control" value="{{ old('amount.' . $currency->id, $bill->currenciesInitial->find($currency->id)->pivot->amount ?? 0) }}"
                                 required>
                         </div>
                     @endforeach

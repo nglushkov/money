@@ -5,14 +5,14 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class BillCurrencySeeder extends Seeder
+class BillCurrencyInitialSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('bill_currencies')->insert([
+        DB::table('bill_currency_initial')->insert([
             [
                 'bill_id' => rand(1, 2),
                 'currency_id' => rand(1, 2),
@@ -31,11 +31,6 @@ class BillCurrencySeeder extends Seeder
             [
                 'bill_id' => rand(7, 8),
                 'currency_id' => rand(7, 8),
-                'amount' => rand(1, 100000),
-            ],
-            [
-                'bill_id' => rand(9, 10),
-                'currency_id' => rand(9, 10),
                 'amount' => rand(1, 100000),
             ],
             [

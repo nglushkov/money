@@ -13,7 +13,7 @@
             <li class="list-group-item"><strong>User:</strong> {{ $bill->user->name }}</li>
             <li class="list-group-item">Currencies:
                 <ul>
-                    @foreach ($bill->currencies as $currency)
+                    @foreach ($bill->currenciesInitial as $currency)
                         <li><strong>{{ $currency->name }}</strong>: <span @class(['text-success' => $currency->pivot->amount > 0])>{{ App\Helpers\MoneyFormatter::get($currency->pivot->amount, $currency->name) }}</span></li>
                     @endforeach
                 </ul>

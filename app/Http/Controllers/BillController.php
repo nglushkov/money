@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBillRequest;
 use App\Http\Requests\UpdateBillRequest;
 use App\Models\Bill;
-use App\Models\BillCurrency;
+use App\Models\BillCurrencyInitial;
 use App\Models\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -54,7 +54,7 @@ class BillController extends Controller
                 if (is_null($amount) || $amount == 0) {
                     continue;
                 }
-                $billCurrency = new BillCurrency([
+                $billCurrency = new BillCurrencyInitial([
                     'bill_id' => $bill->id,
                     'currency_id' => $currencyId,
                     'amount' => $amount
@@ -95,14 +95,14 @@ class BillController extends Controller
     {
         DB::transaction(function () use ($request, $bill) {
             $bill->update($request->validated());
-            $bill->currencies()->detach();
+            $bill->currenciesInitial()->detach();
 
 
             foreach ($request->input('amount') as $currencyId => $amount) {
                 if (is_null($amount) || $amount == 0) {
                     continue;
                 }
-                $billCurrency = new BillCurrency([
+                $billCurrency = new BillCurrencyInitial([
                     'bill_id' => $bill->id,
                     'currency_id' => $currencyId,
                     'amount' => $amount

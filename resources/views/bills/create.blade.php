@@ -26,6 +26,8 @@
                         <label for="notes">Notes</label>
                         <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
                     </div>
+                    <hr>
+                    <h5>Начальный остаток:</h5>
                     @foreach($currencies as $currency)
                     <div class="form-group mb-2">
                         <label for="amount_{{ $currency->id }}">{{ $currency->name }}</label>

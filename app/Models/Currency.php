@@ -9,9 +9,9 @@ class Currency extends Model
 {
     use HasFactory;
 
-    public function bills()
+    public function billsInitial()
     {
-        return $this->belongsToMany(Bill::class, 'bill_currencies')
+        return $this->belongsToMany(Bill::class, 'bill_currency_initial')
                     ->withPivot('amount')
                     ->withTimestamps();
     }

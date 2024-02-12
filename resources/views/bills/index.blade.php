@@ -22,7 +22,7 @@
                             <td>{{ $bill->name }}</td>
                             @foreach ($currencies as $currency)
                             @php
-                                $amount = $currency->bills->find($bill->id)->pivot->amount ?? 0;
+                                $amount = $currency->billsInitial->find($bill->id)->pivot->amount ?? 0;
                             @endphp
                                 <td>
                                     {{ \App\Helpers\MoneyFormatter::getWithoutDecimals($amount)}}
@@ -36,7 +36,7 @@
                         <th>Total</th>
                         @foreach ($currencies as $currency)
                             <th>
-                                {{ \App\Helpers\MoneyFormatter::getWithoutDecimals($currency->bills->sum('pivot.amount')) }}
+                                {{ \App\Helpers\MoneyFormatter::getWithoutDecimals($currency->billsInitial->sum('pivot.amount')) }}
                             </th>
                         @endforeach
                     </tr>

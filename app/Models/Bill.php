@@ -13,9 +13,9 @@ class Bill extends Model
 
     protected $fillable = ['name', 'notes'];
 
-    public function currencies()
+    public function currenciesInitial()
     {
-        return $this->belongsToMany(Currency::class, 'bill_currencies')
+        return $this->belongsToMany(Currency::class, 'bill_currency_initial')
                     ->withPivot('amount')
                     ->withTimestamps();
     }
