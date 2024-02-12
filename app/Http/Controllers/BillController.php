@@ -15,9 +15,12 @@ class BillController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $bills = Bill::orderBy('name');
+        if ($request->get('user_id')) {
+            $bills->where('user_id', $request->user_id);
+        }
 
         return view('bills.index', [
             'bills' => $bills->get(),
