@@ -124,7 +124,7 @@ class BillController extends Controller
     public function destroy(Bill $bill)
     {
         if ($bill->operations()->count() > 0) {
-            return redirect()->route('bills.show', $bill)->withErrors(['error' => 'This bill is used in operations and cannot be deleted.']);
+            return redirect()->route('place.show', $bill)->withErrors(['error' => 'This bill is used in operations and cannot be deleted.']);
         }
 
         try {

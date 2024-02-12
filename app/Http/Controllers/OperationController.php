@@ -20,7 +20,6 @@ class OperationController extends Controller
      */
     public function index(Request $request)
     {
-        // add filters
         $operations = Operation::orderBy('date', 'desc');
 
         if ($request->get('bill_id')) {
@@ -83,7 +82,7 @@ class OperationController extends Controller
             'categories' => Category::orderBy('name', 'asc')->get(),
             'users' => User::orderBy('name', 'asc')->get(),
             'places' => Place::orderBy('name', 'asc')->get(),
-            'currencies' => Currency::orderBy('name', 'asc')->get(),
+            'currencies' => Currency::orderBy('is_default', 'desc')->orderBy('name', 'asc')->get(),
 
             'topCategories' => Category::select('categories.*', DB::raw('COUNT(operations.category_id) as count'))
                 ->leftJoin('operations', 'categories.id', '=', 'operations.category_id')

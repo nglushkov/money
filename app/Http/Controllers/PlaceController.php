@@ -13,7 +13,9 @@ class PlaceController extends Controller
      */
     public function index()
     {
-        //
+        $places = Place::orderBy('name')->paginate(50);
+
+        return view('places.index', compact('places'));
     }
 
     /**
@@ -21,7 +23,7 @@ class PlaceController extends Controller
      */
     public function create()
     {
-        //
+        return view('places.create');
     }
 
     /**
@@ -29,7 +31,9 @@ class PlaceController extends Controller
      */
     public function store(StorePlaceRequest $request)
     {
-        //
+        Place::create($request->validated());
+
+        return redirect()->route('places.index');
     }
 
     /**
@@ -37,7 +41,7 @@ class PlaceController extends Controller
      */
     public function show(Place $place)
     {
-        //
+        return view('places.show', compact('place'));
     }
 
     /**
@@ -45,7 +49,7 @@ class PlaceController extends Controller
      */
     public function edit(Place $place)
     {
-        //
+        return view('places.edit', compact('place'));
     }
 
     /**
@@ -53,7 +57,9 @@ class PlaceController extends Controller
      */
     public function update(UpdatePlaceRequest $request, Place $place)
     {
-        //
+        $place->update($request->validated());
+
+        return redirect()->route('places.index');
     }
 
     /**
@@ -61,6 +67,11 @@ class PlaceController extends Controller
      */
     public function destroy(Place $place)
     {
-        //
+        if ($place->operations()->count() > 0) {
+            return redirect()->route('places.show', $place)->withErrors(['error' => 'This place is used in operations and cannot be deleted.']);
+        }
+        $place->delete();
+
+        return redirect()->route('places.index');
     }
 }

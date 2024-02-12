@@ -13,7 +13,9 @@ class CurrencyController extends Controller
      */
     public function index()
     {
-        //
+        return view('currencies.index', [
+            'currencies' => Currency::orderBy('name')->get()
+        ]);
     }
 
     /**
@@ -21,7 +23,7 @@ class CurrencyController extends Controller
      */
     public function create()
     {
-        //
+        return view('currencies.create');
     }
 
     /**
@@ -29,7 +31,9 @@ class CurrencyController extends Controller
      */
     public function store(StoreCurrencyRequest $request)
     {
-        //
+        Currency::create($request->validated());
+
+        return redirect()->route('currencies.index');
     }
 
     /**
@@ -37,7 +41,7 @@ class CurrencyController extends Controller
      */
     public function show(Currency $currency)
     {
-        //
+        return view('currencies.show', compact('currency'));
     }
 
     /**
@@ -45,7 +49,7 @@ class CurrencyController extends Controller
      */
     public function edit(Currency $currency)
     {
-        //
+        return view('currencies.edit', compact('currency'));
     }
 
     /**
@@ -53,7 +57,9 @@ class CurrencyController extends Controller
      */
     public function update(UpdateCurrencyRequest $request, Currency $currency)
     {
-        //
+        $currency->update($request->validated());
+
+        return redirect()->route('currencies.show', $currency);
     }
 
     /**
@@ -61,6 +67,11 @@ class CurrencyController extends Controller
      */
     public function destroy(Currency $currency)
     {
-        //
+        if ($currency->operations()->count() > 0) {
+            return redirect()->route('currencies.show',$currency)->withErrors(['error' => 'This currency is used in operations and cannot be deleted.']);
+        }
+        $currency->delete();
+
+        return redirect()->route('currencies.index');
     }
 }

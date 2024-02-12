@@ -9,10 +9,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link {{ Route::is('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
+                        <a class="nav-link" href="{{ route('home') }}">Операции</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('bills.index') }}">Bills</a>
+                        <a class="nav-link" href="{{ route('bills.index') }}">Счета</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('categories.index') }}">Категории</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('places.index') }}">Места</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('currencies.index') }}">Валюта</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -20,10 +29,6 @@
                             More
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ route('categories.index') }}">Categories</a></li>
-                            <li><a class="dropdown-item" href="{{ route('places.index') }}">Places</a></li>
-                            <li><a class="dropdown-item" href="{{ route('bills.index') }}">Bills</a></li>
-                            <li><a class="dropdown-item" href="{{ route('currencies.index') }}">Currencies</a></li>
                             <li><a class="dropdown-item" href="{{ route('exchanges.index') }}">Exchanges</a></li>
                             <li><a class="dropdown-item" href="{{ route('transfers.index') }}">Transfers</a></li>
                             <!-- <li>

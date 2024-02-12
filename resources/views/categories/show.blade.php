@@ -1,0 +1,19 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="card">
+    <div class="card-body">
+    @error('error')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
+        <h5 class="card-title">Category Details</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Name:</strong> {{ $category->name }}</li>
+            <li class="list-group-item"><strong>Notes:</strong> {{ $category->notes }}</li>
+        </ul>
+        <div class="card-footer">
+            @include('blocks.delete-link', ['model' => $category, 'routePart' => 'categories'])
+        </div>
+    </div>
+</div>
+@endsection
