@@ -12,7 +12,9 @@
 
     <div class="container">
         <div class="row">
-            @include('header')
+            @if (Auth::check())
+                @include('header')
+            @endif
             <div class="col-12">
                 @yield('content')
             </div>
