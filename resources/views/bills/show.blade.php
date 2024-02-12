@@ -22,6 +22,7 @@
         <div class="card-footer">
             @include('blocks.delete-link', ['model' => $bill, 'routePart' => 'bills'])
         </div>
+        @if ($lastOperations->count() > 0)
         <hr>
         <h5>Последние операции <small><a href="{{ route('operations.index') }}">все</a></small></h5>
         <div class="table-responsive">
@@ -45,8 +46,8 @@
                     @endforeach
                 </tbody>
             </table>
-        
         </div>
+        @endif
     </div>
 </div>
 @endsection
