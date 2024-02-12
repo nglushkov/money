@@ -6,13 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\MoneyFormatter;
 
-class Transfer extends Model
+class Transfer extends Move
 {
     use HasFactory;
-    
-    protected $casts = [
-        'date' => 'datetime',
-    ];
 
     protected $fillable = [
         'amount',
@@ -21,6 +17,11 @@ class Transfer extends Model
         'user_id',
         'notes',
         'date',
+        'currency_id',
+    ];
+
+    protected $casts = [
+        'date' => 'datetime',
     ];
     
     public function from()

@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Place;
 use App\Models\Currency;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class OperationController extends Controller
 {
@@ -76,7 +77,8 @@ class OperationController extends Controller
      */
     public function create()
     {
-
+        session()->put('url.previous', url()->previous());
+        
         return view('operations.create', [
             'bills' => Bill::orderBy('name', 'asc')->get(),
             'categories' => Category::orderBy('name', 'asc')->get(),
@@ -117,7 +119,7 @@ class OperationController extends Controller
         $operation->date = $request->date . ' ' . date('H:i:s');
         $operation->save();
 
-        return redirect()->route('home');
+        return redirect()->to(session()->get('url.previous', route('operations.index')));
     }
 
     /**
@@ -125,6 +127,8 @@ class OperationController extends Controller
      */
     public function show(Operation $operation)
     {
+        session()->put('url.previous', url()->previous());
+
         return view('operations.show', [
             'operation' => $operation
         ]);
@@ -162,6 +166,6 @@ class OperationController extends Controller
     {
         $operation->delete();
 
-        return redirect()->route('operations.index');
+        return redirect()->to(session()->get('url.previous', route('operations.index')));
     }
 }

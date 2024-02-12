@@ -9,16 +9,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('operations.index') }}">Операции</a>
+                        <a class="nav-link" href="{{ route('operations.index') }}">Operations</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('bills.index') }}">Счета</a>
+                        <a class="nav-link" href="{{ route('transfers.index') }}">Transfers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('categories.index') }}">Категории</a>
+                        <a class="nav-link" href="{{ route('bills.index') }}">Bills</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('places.index') }}">Места</a>
+                        <a class="nav-link" href="{{ route('categories.index') }}">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('places.index') }}">Places</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -26,9 +29,8 @@
                             More
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ route('currencies.index') }}">Валюта</a></li>
                             <li><a class="dropdown-item" href="{{ route('exchanges.index') }}">Exchanges</a></li>
-                            <li><a class="dropdown-item" href="{{ route('transfers.index') }}">Transfers</a></li>
+                            <li><a class="dropdown-item" href="{{ route('currencies.index') }}">Currencies</a></li>
                             <!-- <li>
                                 <hr class="dropdown-divider">
                             </li> -->
@@ -39,10 +41,10 @@
                     </li>
                     </li>
                     @if (Auth::check())
-                        <li class="nav-item">
-                            <a href="#" class="nav-link disabled">{{ Auth::user()->name }}</a>
-                        </li>
-                        @endif
+                    <li class="nav-item">
+                        <a href="#" class="nav-link disabled">{{ Auth::user()->name }}</a>
+                    </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('logout') }}">Logout</a>
                     </li>

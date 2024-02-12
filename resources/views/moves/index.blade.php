@@ -7,7 +7,7 @@
             <a href="{{ route('operations.create') }}" class="btn btn-outline-primary">New Operation</a>
             <a href="{{ route('transfers.create') }}" class="btn btn-outline-primary">New Transfer</a>
             <a href="{{ route('exchanges.create') }}" class="btn btn-outline-primary">New Exchange</a>
-            <div class="card mt-3">
+            <div class="card mt-3 mb-3">
                 <ul class="list-group list-group-flush">
                     @foreach($moves as $move)
                         @if ($move instanceof App\Models\Operation)
@@ -32,6 +32,7 @@
                                     <td>
                                         <span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
                                     </td>
+                                    <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
                                 </tr>
                             </table>
                         @elseif ($move instanceof App\Models\Transfer)
@@ -53,7 +54,7 @@
                                         <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
                                     <td></td>
-                                    <td></td>
+                                    <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
                                 </tr>
                             </table
                         </li>    

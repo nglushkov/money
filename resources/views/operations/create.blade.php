@@ -80,6 +80,7 @@
                     </div>
                     <div class="col-md-4">
                         <h5>Top 10 usable categories</h5>
+                        <a href="{{ route('categories.create') }}" class="btn btn-outline-primary btn-sm">Create new category</a>
                         <ul class="list-group">
                             @foreach($topCategories as $category)
                             <li class="list-group">
@@ -90,6 +91,7 @@
                         <hr>
 
                         <h5>Top 15 usable places</h5>
+                        <a href="{{ route('places.create') }}" class="btn btn-outline-primary btn-sm">Create new place</a>
                         <ul class="list-group">
                             @foreach($topPlaces as $place)
                             <li class="list-group">

@@ -8,7 +8,7 @@
             <a href="{{ route('bills.index', ['user_id' => Auth::id()]) }}" class="btn btn-light">My</a>
 
             <table class="table table-striped table-hover">
-                <caption>Всего счетов: {{ $bills->count() }}</caption>
+                <caption>Bills count: {{ $bills->count() }}</caption>
                 <thead>
                     <tr>
                         <th>Счёт</th>

@@ -32,14 +32,19 @@ class Bill extends Model
     
     public function getAmount(int $currencyId): float
     {
+        $amount = $this->getAmountFromCache($currencyId);
+        if ($amount) {
+            return $amount;
+        }
+
         $operations = $this->operations->where('currency_id', $currencyId);
-        $initialAmount = $this->currenciesInitial->find($currencyId)->pivot->amount ?? 0;
+        $amount = $this->currenciesInitial->find($currencyId)->pivot->amount ?? 0;
 
         foreach ($operations as $operation) {
             if ($operation->type === 0) {
-                $initialAmount -= $operation->amount;
+                $amount -= $operation->amount;
             } else {
-                $initialAmount += $operation->amount;
+                $amount += $operation->amount;
             }
         }
 
@@ -47,20 +52,43 @@ class Bill extends Model
             ->where('currency_id', $currencyId)
             ->sum('amount');
 
-        $initialAmount -= $transfers;
+        $amount -= $transfers;
 
         $transfers = Transfer::where('to_bill_id', $this->id)
             ->where('currency_id', $currencyId)
             ->sum('amount');
-        $initialAmount += $transfers;
+        $amount += $transfers;
 
-        return $initialAmount;
+        $this->setAmountInCache($currencyId, $amount);
+
+        return $amount;
+
+    }
+
+    private function setAmountInCache(int $currencyId, float $amount): void
+    {
+        $key = 'bill_amount_' . $this->id . '_currency_' . $currencyId;
+        cache()->put($key, $amount, now()->addYears(10));
+    }
+
+    private function getAmountFromCache(int $currencyId): ?float
+    {
+        $key = 'bill_amount_' . $this->id . '_currency_' . $currencyId;
+        return cache()->get($key);
+    }
+
+    public function clearAmountCache(): void
+    {
+        foreach (Currency::all() as $currency) {
+            $key = 'bill_amount_' . $this->id . '_currency_' . $currency->id;
+            cache()->forget($key);
+        }
     }
 
     public function getAmounts(): array
     {
         $amounts = [];
-        foreach (Currency::orderBy('name')->get() as $currency) {
+        foreach (Currency::all() as $currency) {
             $amounts[$currency->name] = $this->getAmount($currency->id);
         }
         return $amounts;

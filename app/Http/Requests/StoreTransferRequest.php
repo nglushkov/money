@@ -11,7 +11,7 @@ class StoreTransferRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class StoreTransferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'from_bill_id' => ['required', 'exists:bills,id', 'different:to_bill_id'],
+            'to_bill_id' => ['required', 'exists:bills,id', 'different:from_bill_id'],
+            'amount' => ['required', 'numeric', 'min:0'],
+            'currency_id' => ['required', 'exists:currencies,id'],
+            'date' => ['required', 'date', 'before_or_equal:today'],
+            'notes' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use DateTimeInterface;
 
-class Operation extends Model
+class Operation extends Move
 {
     use HasFactory;
 
