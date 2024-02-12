@@ -20,15 +20,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('places.index') }}">Места</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('currencies.index') }}">Валюта</a>
-                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             More
                         </a>
                         <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('currencies.index') }}">Валюта</a></li>
                             <li><a class="dropdown-item" href="{{ route('exchanges.index') }}">Exchanges</a></li>
                             <li><a class="dropdown-item" href="{{ route('transfers.index') }}">Transfers</a></li>
                             <!-- <li>

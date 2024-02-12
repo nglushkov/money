@@ -35,6 +35,7 @@
                 <tfoot>
                     <tr>
                         <th>Total</th>
+                        <th></th>
                         @foreach ($currencies as $currency)
                             <th>
                                 {{ \App\Helpers\MoneyFormatter::getWithoutDecimals($currency->billsInitial->sum('pivot.amount')) }}
