@@ -5,7 +5,6 @@
     <div class="row">
         <div class="col-md-12">
             <a href="{{ route('bills.create') }}" class="btn btn-success">Create</a>
-            <!-- show my bills -->
             <a href="{{ route('bills.index', ['user_id' => Auth::id()]) }}" class="btn btn-light">My</a>
 
             <table class="table table-striped table-hover">

@@ -117,7 +117,7 @@ class OperationController extends Controller
         $operation->date = $request->date . ' ' . date('H:i:s');
         $operation->save();
 
-        return redirect()->route('operations.index');
+        return redirect()->route('home');
     }
 
     /**

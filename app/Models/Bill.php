@@ -76,4 +76,9 @@ class Bill extends Model
         }
         return $amounts;
     }
+
+    public function transfersFrom(): HasMany
+    {
+        return $this->hasMany(Transfer::class, 'from_bill_id');
+    }
 }

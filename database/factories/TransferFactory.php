@@ -17,7 +17,12 @@ class TransferFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'from_bill_id' => $this->faker->numberBetween(1, 10),
+            'to_bill_id' => $this->faker->numberBetween(1, 10),
+            'amount' => $this->faker->randomFloat(2, 1, 1000),
+            'currency_id' => $this->faker->numberBetween(1, 10),
+            'date' => $this->faker->dateTimeThisYear(),
+            'user_id' => $this->faker->numberBetween(1, 10),
         ];
     }
 }

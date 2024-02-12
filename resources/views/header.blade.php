@@ -9,7 +9,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home') }}">Операции</a>
+                        <a class="nav-link" href="{{ route('operations.index') }}">Операции</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('bills.index') }}">Счета</a>

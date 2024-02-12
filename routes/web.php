@@ -9,6 +9,7 @@ use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\TransferController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MoveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +23,6 @@ use App\Http\Controllers\LoginController;
 */
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [OperationController::class, 'index'])->name('home');
-
     Route::resource('operations', OperationController::class);
     Route::resource('places', PlaceController::class);
     Route::resource('bills', BillController::class);
@@ -31,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('exchanges', ExchangeController::class);
     Route::resource('transfers', TransferController::class);
+
+    Route::get('/', [MoveController::class, 'index'])->name('home');
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });

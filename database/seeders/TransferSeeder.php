@@ -12,6 +12,6 @@ class TransferSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Transfer::factory(50)->create();
     }
 }
