@@ -76,7 +76,9 @@ class TransferController extends Controller
      */
     public function update(UpdateTransferRequest $request, Transfer $transfer)
     {
-        $transfer->update($request->validated());
+        $transfer->fill($request->validated());
+        $transfer->date = $request->date . ' ' . date('H:i:s');
+        $transfer->save();
 
         return redirect()->route('transfers.show', $transfer);
     }

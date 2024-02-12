@@ -24,7 +24,7 @@
         </div>
         @if ($lastOperations->count() > 0)
         <hr>
-        <h5>Последние операции <small><a href="{{ route('operations.index') }}">все</a></small></h5>
+        <h5>Last Operations <small><a href="{{ route('operations.index') }}">all</a></small></h5>
         <div class="table-responsive">
             <table class="table">
                 <thead>

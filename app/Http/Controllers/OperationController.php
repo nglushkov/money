@@ -154,7 +154,9 @@ class OperationController extends Controller
      */
     public function update(UpdateOperationRequest $request, Operation $operation)
     {
-        $operation->update($request->validated());
+        $operation->fill($request->validated());
+        $operation->date = $request->date . ' ' . date('H:i:s');
+        $operation->save();
 
         return redirect()->route('operations.show', $operation);
     }

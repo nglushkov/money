@@ -3,9 +3,9 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <a href="{{ route('transfers.create') }}" class="btn btn-success">Create</a>
-                <table class="table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Date</th>

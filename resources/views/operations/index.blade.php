@@ -23,10 +23,10 @@
                             <td>{{ $operation->date_formatted }}</td>
                             <td @class([
                                 'text-success' => $operation->type === 1,
-                            ])>{{ $operation->amount_text_with_currency }}</td>
-                            <td>{{ Str::limit($operation->category->name, 10, '...') }}</td>
-                            <td>{{ Str::limit($operation->place->name, 10, '...') }}</td>
-                            <td><a class="text-body" href="{{ route('bills.show', $operation->bill) }}">{{ Str::limit($operation->bill->name, 20, '...') }}</td>
+                            ])>{{ $operation->amount_text }}</td>
+                            <td><a class="text-body" href="{{ route('categories.show', $operation->category) }}">{{ Str::limit($operation->category->name, 15, '...') }}</a></td>
+                            <td><a class="text-body" href="{{ route('places.show', $operation->place) }}">{{ Str::limit($operation->place->name, 15, '...') }}</a></td>
+                            <td><a class="text-body" href="{{ route('bills.show', $operation->bill) }}">{{ Str::limit($operation->bill->name, 15, '...') }}</td>
                             <!-- <td>{{ Str::limit($operation->notes, 20, '...') }}</td> -->
                         </tr>
                     </a>
