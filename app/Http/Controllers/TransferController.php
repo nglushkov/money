@@ -25,8 +25,6 @@ class TransferController extends Controller
      */
     public function create()
     {
-        session()->put('url.previous', url()->previous());
-
         return view('transfers.create', [
             'bills' => Bill::orderBy('name')->get(),
             'currencies' => Currency::orderBy('is_default', 'desc')->orderBy('name', 'asc')->get(),
@@ -41,10 +39,9 @@ class TransferController extends Controller
         $transfer = new Transfer();
         $transfer->fill($request->validated());
         $transfer->user_id = auth()->id();
-        $transfer->date = $request->date . ' ' . date('H:i:s');
         $transfer->save();
 
-        return redirect()->to(session()->get('url.previous', route('operations.index')));
+        return redirect()->route('home');
     }
 
     /**
@@ -52,8 +49,6 @@ class TransferController extends Controller
      */
     public function show(Transfer $transfer)
     {
-        session()->put('url.previous', url()->previous());
-
         return view('transfers.show', [
             'transfer' => $transfer
         ]);
@@ -77,7 +72,7 @@ class TransferController extends Controller
     public function update(UpdateTransferRequest $request, Transfer $transfer)
     {
         $transfer->fill($request->validated());
-        $transfer->date = $request->date . ' ' . date('H:i:s');
+        $transfer->date = $request->date;
         $transfer->save();
 
         return redirect()->route('transfers.show', $transfer);
@@ -90,6 +85,6 @@ class TransferController extends Controller
     {
         $transfer->delete();
 
-        return redirect()->to(session()->get('url.previous', route('transfers.index')));
+        return redirect()->route('home');
     }
 }

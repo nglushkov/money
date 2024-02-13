@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Currency Details')
+
 @section('content')
 <div class="card">
     <div class="card-body">

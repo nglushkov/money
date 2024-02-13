@@ -21,7 +21,7 @@ class OperationController extends Controller
      */
     public function index(Request $request)
     {
-        $operations = Operation::orderBy('date', 'desc');
+        $operations = Operation::orderBy('date', 'desc')->latest();
 
         if ($request->get('bill_id')) {
             $operations->where('bill_id', $request->bill_id);
@@ -77,8 +77,6 @@ class OperationController extends Controller
      */
     public function create()
     {
-        session()->put('url.previous', url()->previous());
-        
         return view('operations.create', [
             'bills' => Bill::orderBy('name', 'asc')->get(),
             'categories' => Category::orderBy('name', 'asc')->get(),
@@ -116,10 +114,9 @@ class OperationController extends Controller
         $operation = new Operation();
         $operation->fill($request->validated());
         $operation->user_id = auth()->id();
-        $operation->date = $request->date . ' ' . date('H:i:s');
         $operation->save();
 
-        return redirect()->to(session()->get('url.previous', route('operations.index')));
+        return redirect()->route('home');
     }
 
     /**
@@ -127,8 +124,6 @@ class OperationController extends Controller
      */
     public function show(Operation $operation)
     {
-        session()->put('url.previous', url()->previous());
-
         return view('operations.show', [
             'operation' => $operation
         ]);
@@ -155,7 +150,7 @@ class OperationController extends Controller
     public function update(UpdateOperationRequest $request, Operation $operation)
     {
         $operation->fill($request->validated());
-        $operation->date = $request->date . ' ' . date('H:i:s');
+        $operation->date = $request->date;
         $operation->save();
 
         return redirect()->route('operations.show', $operation);
@@ -168,6 +163,6 @@ class OperationController extends Controller
     {
         $operation->delete();
 
-        return redirect()->to(session()->get('url.previous', route('operations.index')));
+        return redirect()->route('home');
     }
 }

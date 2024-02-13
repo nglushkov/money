@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             OperationSeeder::class,
             TransferSeeder::class,
             BillCurrencyInitialSeeder::class,
+            ExchangeSeeder::class,
         ]);
 
         // \App\Models\User::factory()->create([

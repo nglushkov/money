@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreExchangeRequest;
 use App\Http\Requests\UpdateExchangeRequest;
 use App\Models\Exchange;
+use App\Models\Currency;
+use App\Models\Bill;
 
 class ExchangeController extends Controller
 {
@@ -13,7 +15,9 @@ class ExchangeController extends Controller
      */
     public function index()
     {
-        //
+        return view('exchanges.index', [
+            'exchanges' => Exchange::with('from', 'to', 'bill')->orderBy('date', 'desc')->latest()->paginate(20)
+        ]);
     }
 
     /**
@@ -21,7 +25,10 @@ class ExchangeController extends Controller
      */
     public function create()
     {
-        //
+        return view('exchanges.create', [
+            'currencies' => Currency::all(),
+            'bills' => Bill::all()
+        ]);
     }
 
     /**
@@ -29,7 +36,11 @@ class ExchangeController extends Controller
      */
     public function store(StoreExchangeRequest $request)
     {
-        //
+        $exchange = new Exchange($request->validated());
+        $exchange->user_id = auth()->id();
+        $exchange->save();
+        
+        return redirect()->route('exchanges.index');
     }
 
     /**
@@ -37,7 +48,9 @@ class ExchangeController extends Controller
      */
     public function show(Exchange $exchange)
     {
-        //
+        return view('exchanges.show', [
+            'exchange' => $exchange
+        ]);
     }
 
     /**
@@ -45,7 +58,11 @@ class ExchangeController extends Controller
      */
     public function edit(Exchange $exchange)
     {
-        //
+        return view('exchanges.edit', [
+            'exchange' => $exchange,
+            'currencies' => Currency::all(),
+            'bills' => Bill::all()
+        ]);
     }
 
     /**
@@ -53,7 +70,8 @@ class ExchangeController extends Controller
      */
     public function update(UpdateExchangeRequest $request, Exchange $exchange)
     {
-        //
+        $exchange->update($request->validated());
+        return redirect()->route('exchanges.index');
     }
 
     /**
@@ -61,6 +79,7 @@ class ExchangeController extends Controller
      */
     public function destroy(Exchange $exchange)
     {
-        //
+        $exchange->delete();
+        return redirect()->route('exchanges.index');
     }
 }

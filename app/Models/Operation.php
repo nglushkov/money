@@ -24,10 +24,6 @@ class Operation extends Move
         'date',
     ];
 
-    protected $casts = [
-        'date' => 'datetime',
-    ];
-
     public function getIsExpenseAttribute(): bool
     {
         return $this->type === 0;
@@ -68,23 +64,18 @@ class Operation extends Move
         return $this->is_expense ? 'Расход' : 'Приход';
     }
 
-    public function getAmountAsMoneyAttribute(): string
-    {
-        return MoneyFormatter::get($this->amount);
-    }
-
     public function getAmountTextAttribute($value): string
     {
         return MoneyFormatter::getWithSymbolAndSign($this->amount, $this->currency->name, $this->type);
     }
 
-    public function getDateFormattedAttribute($value): string
-    {
-        return $this->date->format('d.m.Y');
-    }
-
     public function getAmountTextWithCurrencyAttribute($value): string
     {
         return MoneyFormatter::getWithSymbol($this->amount, $this->currency->name);
+    }
+
+    public function getAmountFormattedAttribute(): string
+    {
+        return MoneyFormatter::get($this->amount);
     }
 }

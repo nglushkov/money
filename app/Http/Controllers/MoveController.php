@@ -14,9 +14,9 @@ class MoveController extends Controller
 {
     public function index()
     {
-        $operations = Operation::orderBy('date', 'desc')->get();
-        $transfers = Transfer::orderBy('date', 'desc')->get();
-        $exchanges = Exchange::orderBy('date', 'desc')->get();
+        $operations = Operation::orderBy('date', 'desc')->latest()->get();
+        $transfers = Transfer::orderBy('date', 'desc')->latest()->get();
+        $exchanges = Exchange::orderBy('date', 'desc')->latest()->get();
 
         $moves = $operations->concat($transfers)->concat($exchanges)->sortByDesc('date');
 

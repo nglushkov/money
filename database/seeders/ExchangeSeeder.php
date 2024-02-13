@@ -12,6 +12,6 @@ class ExchangeSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Exchange::factory(50)->create();
     }
 }

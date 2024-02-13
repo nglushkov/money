@@ -31,6 +31,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('exchanges.index') }}">Exchanges</a></li>
                             <li><a class="dropdown-item" href="{{ route('currencies.index') }}">Currencies</a></li>
+                            <li><a class="dropdown-item" href="{{ route('exchanges.index') }}">Exchange Rates</a></li>
                             <!-- <li>
                                 <hr class="dropdown-divider">
                             </li> -->

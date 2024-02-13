@@ -1,14 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Create Transfer')
-
 @section('content')
 <div class="row justify-content-md-center">
     <div class="col-md-6">
-        <h5 class="card-title mb-2">Create Transfer</h5>
+        <h5 class="card-title mb-2">Create Exchange</h5>
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('transfers.store') }}" method="POST">
+                <form action="{{ route('exchanges.store') }}" method="POST">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -20,32 +18,34 @@
                     @endif
                     @csrf
                     <div class="form-group mb-2">
-                        <label for="from_bill_id">From Bill</label>
-                        <select name="from_bill_id" id="from_bill_id" class="form-control" required>
-                            <option value="">Select Bill</option>
-                            @foreach ($bills as $bill)
-                                <option value="{{ $bill->id }}" @selected(old('from_bill_id') == $bill->id)>{{ $bill->name }}</option>
-                            @endforeach
-                        </select>
+                        <label for="amount_from">Amount From</label>
+                        <input type="number" name="amount_from" id="amount_from" class="form-control" required value="{{ old('amount_from') }}">
                     </div>
                     <div class="form-group mb-2">
-                        <label for="to_bill_id">To Bill</label>
-                        <select name="to_bill_id" id="to_bill_id" class="form-control" required>
-                            <option value="">Select Bill</option>
-                            @foreach ($bills as $bill)
-                                <option value="{{ $bill->id }}" @selected(old('to_bill_id') == $bill->id)>{{ $bill->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="amount">Amount</label>
-                        <input type="text" name="amount" id="amount" class="form-control" required value="{{ old('amount') }}">
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="currency_id">Currency</label>
-                        <select name="currency_id" id="currency_id" class="form-control" required>
+                        <label for="from_currency_id">From Currency</label>
+                        <select name="from_currency_id" id="from_currency_id" class="form-control" required>
                             @foreach ($currencies as $currency)
-                                <option value="{{ $currency->id }}" @selected(old('currency_id') == $currency->id)>{{ $currency->name }}</option>
+                                <option value="{{ $currency->id }}" @selected(old('from_currency_id') == $currency->id)>{{ $currency->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="amount_to">Amount From</label>
+                        <input type="number" name="amount_to" id="amount_to" class="form-control" required value="{{ old('amount_to') }}">
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="to_currency_id">To Currency</label>
+                        <select name="to_currency_id" id="to_currency_id" class="form-control" required>
+                            @foreach ($currencies as $currency)
+                                <option value="{{ $currency->id }}" @selected(old('to_currency_id') == $currency->id)>{{ $currency->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="bill_id">Bill</label>
+                        <select name="bill_id" id="bill_id" class="form-control" required>
+                            @foreach ($bills as $bill)
+                                <option value="{{ $bill->id }}" @selected(old('bill_id') == $bill->id)>{{ $bill->name }}</option>
                             @endforeach
                         </select>
                     </div>

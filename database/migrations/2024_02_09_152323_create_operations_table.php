@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('place_id')->constrained('places');
             $table->foreignId('user_id')->constrained('users');
             $table->text('notes')->nullable();
-            $table->dateTime('date');
+            $table->date('date');
             $table->timestamps();
         });
     }

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Moves')
+
 @section('content')
 <div class="container">
     <div class="row">
@@ -54,6 +56,31 @@
                                         <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
                                     <td></td>
+                                    <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
+                                </tr>
+                            </table
+                        </li>    
+                        @elseif ($move instanceof App\Models\Exchange)
+                        <li class="list-group-item" onclick="window.location.href = '{{ route('exchanges.show', $move) }}';" style="cursor: pointer;">
+                            <table style="width:100%">
+                                <tr>
+                                    <td style="width: 8rem;">
+                                        <span>🔁 {{ $move->amount_from_formatted }} → {{ $move->amount_to_formatted }}</span>
+                                    </td>
+                                    <td style="width: 8rem">
+                                        <span>{{ $move->rate_text }}</span>
+                                    </td>
+                                    <td style="width: 8rem">
+                                        <span class="text-body-secondary fw-light"><small>{{ Auth::user()->name }}</small></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
+                                    </td>
+                                    <td>
+                                        <span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
+                                    </td>
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
                                 </tr>
                             </table

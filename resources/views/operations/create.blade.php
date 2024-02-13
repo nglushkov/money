@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Create Operation')
+
 @section('content')
 <div class="row">
     <div class="col">
@@ -34,7 +36,8 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="bill">Bill:</label>
-                                <select name="bill_id" id="bill" class="form-control">
+                                <select name="bill_id" id="bill" class="form-control" required>
+                                    <option value="">Select Bill</option>
                                     @foreach($bills as $bill)
                                     <option value="{{ $bill->id }}" @selected(old('bill_id') == $bill->id)>{{
                                         $bill->name }}</option>
@@ -43,7 +46,8 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="category">Category:</label>
-                                <select name="category_id" id="category" class="form-control">
+                                <select name="category_id" id="category" class="form-control" required>
+                                    <option value="">Select Category</option>
                                     @foreach($categories as $category)
                                     <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>{{ $category->name }}</option>
                                     @endforeach
@@ -59,7 +63,8 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="place">Place:</label>
-                                <select name="place_id" id="place" class="form-control">
+                                <select name="place_id" id="place" class="form-control" required>
+                                    <option value="">Select Place</option>
                                     @foreach($places as $place)
                                     <option value="{{ $place->id }}" @selected(old('place_id') == $place->id)>{{
                                         $place->name }}</option>

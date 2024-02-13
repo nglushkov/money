@@ -59,6 +59,16 @@ class Bill extends Model
             ->sum('amount');
         $amount += $transfers;
 
+        $exchangeFrom = Exchange::where('bill_id', $this->id)
+            ->where('from_currency_id', $currencyId)
+            ->sum('amount_from');
+        $amount -= $exchangeFrom;
+
+        $exchangeTo = Exchange::where('bill_id', $this->id)
+            ->where('to_currency_id', $currencyId)
+            ->sum('amount_to');
+        $amount += $exchangeTo;
+
         $this->setAmountInCache($currencyId, $amount);
 
         return $amount;

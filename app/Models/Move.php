@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\MoneyFormatter;
 
 class Move extends Model
 {
@@ -11,6 +12,20 @@ class Move extends Model
         'updated' => \App\Events\MoveProcessed::class,
         'deleted' => \App\Events\MoveProcessed::class,
     ];
+
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+
+    public function getAmountAsMoneyAttribute(): string
+    {
+        return MoneyFormatter::get($this->amount);
+    }
+
+    public function getDateFormattedAttribute($value): string
+    {
+        return $this->date->format('d.m.Y');
+    }
 
     public function getRelatedBills(): array
     {
@@ -21,7 +36,7 @@ class Move extends Model
             return [$this->from, $this->to];
         }
         else if ($this instanceof Exchange) {
-            return [$this->from, $this->to];
+            return [$this->bill];
         }
         return [];
     }

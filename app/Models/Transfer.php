@@ -19,10 +19,6 @@ class Transfer extends Move
         'date',
         'currency_id',
     ];
-
-    protected $casts = [
-        'date' => 'datetime',
-    ];
     
     public function from()
     {
@@ -44,23 +40,18 @@ class Transfer extends Move
         return $this->belongsTo(Currency::class);
     }
 
-    public function getAmountAsMoneyAttribute(): string
-    {
-        return MoneyFormatter::get($this->amount);
-    }
-
     public function getAmountTextAttribute($value): string
     {
         return MoneyFormatter::getWithSymbolAndSign($this->amount, $this->currency->name, $this->type);
     }
 
-    public function getDateFormattedAttribute($value): string
-    {
-        return $this->date->format('d.m.Y');
-    }
-
     public function getAmountTextWithCurrencyAttribute($value): string
     {
         return MoneyFormatter::getWithSymbol($this->amount, $this->currency->name);
+    }
+
+    public function getAmountFormattedAttribute(): string
+    {
+        return MoneyFormatter::get($this->amount);
     }
 }

@@ -24,8 +24,8 @@ class OperationFactory extends Factory
             'currency_id' => rand(1, 10),
             'place_id' => rand(1, 100),
             'user_id' => rand(1, 10),
-            'notes' => $this->faker->text(100),
-            'date' => $this->faker->dateTime(),
+            'notes' => rand(1, 5) === 1 ? $this->faker->text(rand(10, 150)) : '',
+            'date' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
         ];
     }
 }

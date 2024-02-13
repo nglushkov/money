@@ -4,9 +4,9 @@ namespace App\Helpers;
 
 class MoneyFormatter
 {
-    public static function get(float $amount): string
+    public static function get(float $amount, int $decimals = 2): string
     {
-        return number_format($amount, 2, '.', ' ');
+        return number_format($amount, $decimals, '.', ' ');
     }
 
     public static function getWithSymbol(float $amount, string $currencySymbol): string

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('to_bill_id')->constrained('bills');
             $table->decimal('amount', 8, 2)->unsigned();
             $table->integer('currency_id');
-            $table->dateTime('date');
+            $table->date('date');
             $table->text('notes')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
