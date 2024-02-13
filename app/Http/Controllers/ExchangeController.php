@@ -71,7 +71,7 @@ class ExchangeController extends Controller
     public function update(UpdateExchangeRequest $request, Exchange $exchange)
     {
         $exchange->update($request->validated());
-        return redirect()->route('exchanges.index');
+        return redirect()->route('exchanges.show', $exchange);
     }
 
     /**
@@ -80,6 +80,6 @@ class ExchangeController extends Controller
     public function destroy(Exchange $exchange)
     {
         $exchange->delete();
-        return redirect()->route('exchanges.index');
+        return redirect()->route('home');
     }
 }
