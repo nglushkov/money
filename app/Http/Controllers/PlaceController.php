@@ -33,7 +33,7 @@ class PlaceController extends Controller
     {
         Place::create($request->validated());
 
-        return redirect()->route('places.index');
+        return redirect()->route('places.create');
     }
 
     /**
