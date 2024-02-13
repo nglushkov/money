@@ -18,10 +18,6 @@
                     @endif
                     @csrf
                     <div class="form-group mb-2">
-                        <label for="amount_from">Amount From</label>
-                        <input type="number" name="amount_from" id="amount_from" class="form-control" required value="{{ old('amount_from') }}">
-                    </div>
-                    <div class="form-group mb-2">
                         <label for="from_currency_id">From Currency</label>
                         <select name="from_currency_id" id="from_currency_id" class="form-control" required>
                             @foreach ($currencies as $currency)
@@ -30,8 +26,8 @@
                         </select>
                     </div>
                     <div class="form-group mb-2">
-                        <label for="amount_to">Amount From</label>
-                        <input type="number" name="amount_to" id="amount_to" class="form-control" required value="{{ old('amount_to') }}">
+                        <label for="amount_from">Amount From</label>
+                        <input type="number" name="amount_from" id="amount_from" class="form-control" required value="{{ old('amount_from') }}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="to_currency_id">To Currency</label>
@@ -40,6 +36,10 @@
                                 <option value="{{ $currency->id }}" @selected(old('to_currency_id') == $currency->id)>{{ $currency->name }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="amount_to">Amount To</label>
+                        <input type="number" name="amount_to" id="amount_to" class="form-control" required value="{{ old('amount_to') }}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="bill_id">Bill</label>
