@@ -26,7 +26,7 @@ class ExchangeController extends Controller
     public function create()
     {
         return view('exchanges.create', [
-            'currencies' => Currency::all(),
+            'currencies' => Currency::orderBy('name')->get(),
             'bills' => Bill::all()
         ]);
     }
@@ -40,7 +40,7 @@ class ExchangeController extends Controller
         $exchange->user_id = auth()->id();
         $exchange->save();
         
-        return redirect()->route('exchanges.index');
+        return redirect()->route('home');
     }
 
     /**
