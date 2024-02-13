@@ -12,6 +12,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Amount</th>
+                        <th>Amount in {{ $defaultCurrency->name }}</th>
                         <th>Category</th>
                         <th>Place</th>
                         <th>Bill</th>
@@ -26,6 +27,7 @@
                             <td @class([
                                 'text-success' => $operation->type === 1,
                             ])>{{ $operation->amount_text }}</td>
+                            <td>{{ $operation->amount_in_default_currency_formatted }}</td>
                             <td><a class="text-body" href="{{ route('categories.show', $operation->category) }}">{{ Str::limit($operation->category->name, 15, '...') }}</a></td>
                             <td><a class="text-body" href="{{ route('places.show', $operation->place) }}">{{ Str::limit($operation->place->name, 15, '...') }}</a></td>
                             <td><a class="text-body" href="{{ route('bills.show', $operation->bill) }}">{{ Str::limit($operation->bill->name, 15, '...') }}</td>

@@ -78,4 +78,17 @@ class Operation extends Move
     {
         return MoneyFormatter::get($this->amount);
     }
+
+    public function getAmountInDefaultCurrencyAttribute(): float
+    {
+        return $this->currency->convertToDefault($this->amount, $this->date);
+    }
+
+    public function getAmountInDefaultCurrencyFormattedAttribute(): string
+    {
+        if ($this->amount_in_default_currency == 0) {
+            return '';
+        }
+        return MoneyFormatter::getWithSymbol($this->amount_in_default_currency, $this->currency->defaultCurrency->name);
+    }
 }

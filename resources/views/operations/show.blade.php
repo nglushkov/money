@@ -10,6 +10,7 @@
             <li class="list-group-item"><strong>Amount:</strong> <span @class([ 'text-danger'=> $operation->is_expense,
                     'text-success' => $operation->is_income,
                     ])>{{ $operation->amount_text }}</span></li>
+            <li class="list-group-item"><strong>Amount in {{ $defaultCurrency->name }}:</strong> {{ $operation->amount_in_default_currency_formatted }} <small><a href="{{ route('currencies.show', $defaultCurrency->id) }}">rates</a></small></li>
             <li class="list-group-item"><strong>Type:</strong> {{ $operation->type_name }}</li>
             <li class="list-group-item"><strong>Bill:</strong> <a href="{{ route('bills.show', $operation->bill->id) }}">{{ $operation->bill->name }}</a></li>
             <li class="list-group-item"><strong>Category:</strong> <a href="{{ route('categories.show', $operation->category->id) }}">{{ $operation->category->name }}</a></li>

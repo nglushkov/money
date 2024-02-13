@@ -57,7 +57,7 @@
                                 <label for="currency">Currency:</label>
                                 <select name="currency_id" id="currency" class="form-control">
                                     @foreach($currencies as $currency)
-                                        <option value="{{ $currency->id }}" @selected(old('currency_id') == $currency->id or $currency->is_default == 1)>{{ $currency->name }}</option>
+                                        <option value="{{ $currency->id }}" @selected(old('currency_id') == $currency->id)>{{ $currency->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

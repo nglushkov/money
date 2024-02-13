@@ -12,6 +12,19 @@ class CurrencySeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Currency::factory(10)->create();
+        // \App\Models\Currency::factory(10)->create();
+        $names = [
+            'USD',
+            'KZT',
+            'RUB',
+            'EUR',
+            'ARS',
+        ];
+        foreach ($names as $name) {
+            \App\Models\Currency::factory()->create([
+                'name' => $name,
+                'is_default' => $name === 'USD',
+            ]);
+        }
     }
 }

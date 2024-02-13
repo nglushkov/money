@@ -41,7 +41,13 @@ class CurrencyController extends Controller
      */
     public function show(Currency $currency)
     {
-        return view('currencies.show', compact('currency'));
+        $currencies = [];
+        if ($currency->is_default) {
+            $currencies = Currency::where('is_default', false)->orderBy('name')->get();
+        }
+        $currencyRates = $currency->ratesTo()->orderBy('date', 'desc')->orderBy('id', 'desc')->paginate(50);
+
+        return view('currencies.show', compact('currency', 'currencies', 'currencyRates'));
     }
 
     /**
@@ -54,10 +60,13 @@ class CurrencyController extends Controller
 
     /**
      * Update the specified resource in storage.
-     */
+     */ 
     public function update(UpdateCurrencyRequest $request, Currency $currency)
     {
-        $currency->update($request->validated());
+        $currency->name = $request->name;
+        $currencyDefault = Currency::where('is_default', true)->first();
+        $currency->is_default = !$currencyDefault && $request->has('is_default');
+        $currency->save();
 
         return redirect()->route('currencies.show', $currency);
     }

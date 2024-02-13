@@ -10,6 +10,7 @@ use App\Http\Controllers\TransferController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MoveController;
+use App\Http\Controllers\RateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('exchanges', ExchangeController::class);
     Route::resource('transfers', TransferController::class);
+    Route::resource('rates', RateController::class);
 
     Route::get('/', [MoveController::class, 'index'])->name('home');
 

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCurrencyRequest extends FormRequest
+class StoreRateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,10 @@ class UpdateCurrencyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:5|unique:currencies,name,' . $this->route('currency')->id,
+            'from_currency_id' => 'required|exists:currencies,id',
+            'to_currency_id' => 'required|exists:currencies,id',
+            'date' => 'required|date|before_or_equal:today',
+            'rate' => 'required|numeric',
         ];
     }
 }

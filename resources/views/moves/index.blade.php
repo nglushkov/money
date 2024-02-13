@@ -11,6 +11,7 @@
             <a href="{{ route('exchanges.create') }}" class="btn btn-outline-primary">New Exchange</a>
             <div class="card mt-3 mb-3">
                 <ul class="list-group list-group-flush">
+                    
                     @foreach($moves as $move)
                         @if ($move instanceof App\Models\Operation)
                         <li class="list-group-item" onclick="window.location.href = '{{ route('operations.show', $move) }}';" style="cursor: pointer;">
@@ -18,6 +19,7 @@
                                 <tr>
                                     <td style="width: 8rem">
                                         <span @class(['text-success' => $move->is_income])>💰 {{ $move->amount_text }}</span>
+                                        <small class="text-body-secondary">{{ $move->amount_in_default_currency_formatted }}</small>
                                     </td>
                                     <td style="width: 8rem">
                                         <span><a href="{{ route('categories.show', $move->category) }}" class="text-body">{{ $move->category->name }}</a></span>&nbsp;
@@ -37,6 +39,8 @@
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
                                 </tr>
                             </table>
+                        </li>
+
                         @elseif ($move instanceof App\Models\Transfer)
                         <li class="list-group-item" onclick="window.location.href = '{{ route('transfers.show', $move) }}';" style="cursor: pointer;">
                             <table style="width:100%">
@@ -59,7 +63,8 @@
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
                                 </tr>
                             </table
-                        </li>    
+                        </li>
+
                         @elseif ($move instanceof App\Models\Exchange)
                         <li class="list-group-item" onclick="window.location.href = '{{ route('exchanges.show', $move) }}';" style="cursor: pointer;">
                             <table style="width:100%">
@@ -84,7 +89,7 @@
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
                                 </tr>
                             </table
-                        </li>    
+                        </li>
                         @endif
                     @endforeach
                 </ul>

@@ -12,6 +12,11 @@ class BillSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Bill::factory(10)->create();
+        // \App\Models\Bill::factory(10)->create();
+        \App\Models\Bill::create([
+            'name' => 'Cash',
+            'notes' => 'Cash in wallet',
+            'user_id' => 1,
+        ]);
     }
 }

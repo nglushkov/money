@@ -18,12 +18,12 @@ class DatabaseSeeder extends Seeder
             BillSeeder::class,
             CategorySeeder::class,
             CurrencySeeder::class,
-            ExchangeSeeder::class,
+            // ExchangeSeeder::class,
             PlaceSeeder::class,
-            OperationSeeder::class,
-            TransferSeeder::class,
-            BillCurrencyInitialSeeder::class,
-            ExchangeSeeder::class,
+            // OperationSeeder::class,
+            // TransferSeeder::class,
+            // BillCurrencyInitialSeeder::class,
+            // ExchangeSeeder::class,
         ]);
 
         // \App\Models\User::factory()->create([
