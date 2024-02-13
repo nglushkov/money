@@ -1,6 +1,6 @@
-–—@extends('layouts.app')
+@extends('layouts.app')
 
-@section('title', 'Edit Bill')
+@section('title', 'Create Bill')
 
 @section('content')
 <div class="row justify-content-md-center">
