@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Bills')
+@
 
 @section('content')
 <div class="container">
@@ -39,7 +39,7 @@
                         <th></th>
                         @foreach ($currencies as $currency)
                             <th>
-                                {{ \App\Helpers\MoneyFormatter::getWithoutDecimals($currency->billsInitial->sum('pivot.amount')) }}
+                                {{ \App\Helpers\MoneyFormatter::getWithoutDecimals($currency->getSum($bills)) }}
                             </th>
                         @endforeach
                     </tr>

@@ -98,7 +98,7 @@ class Bill extends Model
     public function getAmounts(): array
     {
         $amounts = [];
-        foreach (Currency::all() as $currency) {
+        foreach (Currency::orderBy('name')->get() as $currency) {
             $amounts[$currency->name] = $this->getAmount($currency->id);
         }
         return $amounts;

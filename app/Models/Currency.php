@@ -22,4 +22,13 @@ class Currency extends Model
     {
         return $this->hasMany(Operation::class);
     }
+
+    public function getSum($bills)
+    {
+        $sum = 0;
+        foreach ($bills as $bill) {
+            $sum += $bill->getAmount($this->id);
+        }
+        return $sum;
+    }
 }
