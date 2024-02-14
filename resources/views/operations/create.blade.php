@@ -40,7 +40,7 @@
                                     <option value="">Select Bill</option>
                                     @foreach($bills as $bill)
                                     <option value="{{ $bill->id }}" @selected(old('bill_id') == $bill->id)>{{
-                                        $bill->name }}</option>
+                                        $bill->name_with_user }}</option>
                                     @endforeach
                                 </select>
                             </div>

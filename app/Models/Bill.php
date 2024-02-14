@@ -119,4 +119,9 @@ class Bill extends Model
     {
         return $this->hasMany(Transfer::class, 'from_bill_id');
     }
+
+    public function getNameWithUserAttribute(): string
+    {
+        return $this->name . ' (' . $this->user->name . ')';
+    }
 }

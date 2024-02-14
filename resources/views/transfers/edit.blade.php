@@ -25,7 +25,7 @@
                         <select name="from_bill_id" id="from_bill_id" class="form-control" required>
                             @foreach ($bills as $bill)
                                 <option value="{{ $bill->id }}" @selected(old('from_bill_id') == $bill->id or $transfer->from_bill_id == $bill->id)>
-                                    {{ $bill->name }}
+                                    {{ $bill->name_with_user }}
                                 </option>
                             @endforeach
                         </select>
@@ -35,7 +35,7 @@
                         <select name="to_bill_id" id="to_bill_id" class="form-control" required>
                             @foreach ($bills as $bill)
                                 <option value="{{ $bill->id }}" @selected(old('to_bill_id') == $bill->id or $transfer->to_bill_id == $bill->id)>
-                                    {{ $bill->name }}
+                                    {{ $bill->name_with_user }}
                                 </option>
                             @endforeach
                         </select>

@@ -24,7 +24,7 @@
                         <select name="from_bill_id" id="from_bill_id" class="form-control" required>
                             <option value="">Select Bill</option>
                             @foreach ($bills as $bill)
-                                <option value="{{ $bill->id }}" @selected(old('from_bill_id') == $bill->id)>{{ $bill->name }}</option>
+                                <option value="{{ $bill->id }}" @selected(old('from_bill_id') == $bill->id)>{{ $bill->name_with_user }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -33,7 +33,7 @@
                         <select name="to_bill_id" id="to_bill_id" class="form-control" required>
                             <option value="">Select Bill</option>
                             @foreach ($bills as $bill)
-                                <option value="{{ $bill->id }}" @selected(old('to_bill_id') == $bill->id)>{{ $bill->name }}</option>
+                                <option value="{{ $bill->id }}" @selected(old('to_bill_id') == $bill->id)>{{ $bill->name_with_user }}</option>
                             @endforeach
                         </select>
                     </div>
