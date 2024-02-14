@@ -91,4 +91,9 @@ class Operation extends Move
         }
         return MoneyFormatter::getWithSymbol($this->amount_in_default_currency, $this->currency->defaultCurrency->name);
     }
+
+    public function scopeLatestDate($query)
+    {
+        return $query->orderBy('date', 'desc');
+    }
 }

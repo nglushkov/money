@@ -25,7 +25,7 @@
                                         <small class="text-body-secondary">{{ $move->amount_in_default_currency_formatted }}</small>
                                     </td>
                                     <td style="width: 8rem">
-                                        <span><a href="{{ route('categories.show', $move->category) }}" class="text-body">{{ $move->category->name }}</a></span>&nbsp;
+                                        <span><a href="{{ route('categories.show', $move->category) }}" class="text-body">{{ $move->category->name }}</a></span>&nbsp;<small class="text-secondary">in</small>
                                         <span class=""><a href="{{ route('places.show', $move->place) }}" class="text-body">{{ $move->place->name }}</a></span></span>
                                     </td>
                                     <td style="width: 8rem">
@@ -37,7 +37,7 @@
                                         <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
                                     <td>
-                                        <span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
+                                    <small class="text-secondary">by</small>&nbsp;<span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
                                     </td>
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
                                 </tr>

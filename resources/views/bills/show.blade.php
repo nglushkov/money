@@ -24,32 +24,9 @@
         <div class="card-footer">
             @include('blocks.delete-link', ['model' => $bill, 'routePart' => 'bills'])
         </div>
-        @if ($lastOperations->count() > 0)
+
         <hr>
-        <h5>Last Operations <small><a href="{{ route('operations.index') }}">all</a></small></h5>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Place</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($lastOperations as $operation)
-                    <tr onclick="window.location.href = '{{ route('operations.show', $operation->id) }}';" style="cursor: pointer;">
-                        <td>{{ $operation->date_formatted }}</td>
-                        <td>{{ $operation->amount_text }}</td>
-                        <td>{{ $operation->category->name }}</td>
-                        <td>{{ $operation->place->name }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        @endif
+        @include('blocks.latest-operations', ['operations' => $lastOperations])
     </div>
 </div>
 @endsection

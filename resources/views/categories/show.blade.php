@@ -16,6 +16,9 @@
         <div class="card-footer">
             @include('blocks.delete-link', ['model' => $category, 'routePart' => 'categories'])
         </div>
+
+        <hr>
+        @include('blocks.latest-operations', ['operations' => $lastOperations])
     </div>
 </div>
 @endsection
