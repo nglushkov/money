@@ -36,6 +36,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [MoveController::class, 'index'])->name('home');
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('/get-cat-url', function () {
+        $image = Cache::remember('catImage2', 60 * 60 * 24, function () {
+            $response = Http::get('https://cataas.com/cat');
+            $imageName = 'catImage.jpg';
+            Storage::put($imageName, $response->body());
+            return $imageName;
+        });
+    
+        return response()->file(Storage::path($image));
+    });
 });
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');

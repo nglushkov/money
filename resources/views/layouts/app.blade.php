@@ -9,6 +9,10 @@
 </head>
 
 <body>
+    <div style="position: absolute; bottom: 0; left: 0;">
+        <a href="/get-cat-url"><img src="{{ url('/get-cat-url') }}" alt="Cat Image" style="width: 200px;"></a>
+    </div>
+    
 
     <div class="container">
         <div class="row">
@@ -22,6 +26,11 @@
     </div>
 
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: cornsilk;
+        }
+    </style>
 </body>
 
 </html>

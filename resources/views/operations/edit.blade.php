@@ -77,16 +77,7 @@
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-primary">Save</button>
-            </form>
-        </div>
-
-        <div class="card-footer">
-            <a href="#" class="card-link link-danger"
-                onclick="event.preventDefault(); if (confirm('Are you sure you want to delete?')) { document.getElementById('delete-form').submit(); }">Delete</a>
-            <form id="delete-form" action="{{ route('operations.destroy', $operation) }}" method="POST"
-                style="display: none;">
-                @csrf
-                @method('DELETE')
+                <a href="{{ route('home') }}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </div>

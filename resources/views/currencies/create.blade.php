@@ -5,8 +5,8 @@
 @section('content')
 <div class="row justify-content-md-center">
     <div class="col-md-6">
-        <h5 class="card-title mb-2">New Currency</h5>
-        <div class="card">
+        <div class="card p-3">
+            <h5 class="card-title mb-2">Create Currency</h5>
             <div class="card-body">
                 <form action="{{ route('currencies.store') }}" method="POST">
                     @if ($errors->any())
@@ -26,6 +26,7 @@
                     </div>
                     <hr>
                     <button type="submit" class="btn btn-primary">Create</button>
+                    <a href="{{ route('currencies.index') }}" class="btn btn-secondary">Cancel</a>
                 </form>
             </div>
         </div>

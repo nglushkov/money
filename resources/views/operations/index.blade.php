@@ -6,7 +6,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            @include('operations.filters')
+            <div class="bg-light p-3">
+                @include('operations.filters')
+            </div>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -16,7 +18,6 @@
                         <th>Category</th>
                         <th>Place</th>
                         <th>Bill</th>
-                        <!-- <th>Notes</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -31,7 +32,6 @@
                             <td><a class="text-body" href="{{ route('categories.show', $operation->category) }}">{{ Str::limit($operation->category->name, 15, '...') }}</a></td>
                             <td><a class="text-body" href="{{ route('places.show', $operation->place) }}">{{ Str::limit($operation->place->name, 15, '...') }}</a></td>
                             <td><a class="text-body" href="{{ route('bills.show', $operation->bill) }}">{{ Str::limit($operation->bill->name, 15, '...') }}</td>
-                            <!-- <td>{{ Str::limit($operation->notes, 20, '...') }}</td> -->
                         </tr>
                     </a>
                     @endforeach

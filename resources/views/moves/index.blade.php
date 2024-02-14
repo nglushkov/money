@@ -6,10 +6,13 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <a href="{{ route('operations.create') }}" class="btn btn-outline-primary">New Operation</a>
-            <a href="{{ route('transfers.create') }}" class="btn btn-outline-primary">New Transfer</a>
-            <a href="{{ route('exchanges.create') }}" class="btn btn-outline-primary">New Exchange</a>
-            <div class="card mt-3 mb-3">
+            <div class="bg-light p-3">
+                <a href="{{ route('operations.create') }}" class="btn btn-success">New Operation</a>
+                <a href="{{ route('transfers.create') }}" class="btn btn-success">New Transfer</a>
+                <a href="{{ route('exchanges.create') }}" class="btn btn-success">New Exchange</a>&nbsp;
+                <a href="{{ route('currencies.show', \App\Models\Currency::default()->first()) }}" class="btn btn-light">{{ \App\Models\Currency::default()->first()->name }} rates</a>
+            </div>
+            <div class="card mb-3">
                 <ul class="list-group list-group-flush">
                     
                     @foreach($moves as $move)

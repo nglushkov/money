@@ -6,8 +6,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <a href="{{ route('bills.create') }}" class="btn btn-success">Create</a>
-            <a href="{{ route('bills.index', ['user_id' => Auth::id()]) }}" class="btn btn-light">Show My Bills</a>
+            <div class="bg-light p-3">
+                <a href="{{ route('bills.create') }}" class="btn btn-success">Create</a>
+                <a href="{{ route('bills.index', ['user_id' => Auth::id()]) }}" class="btn btn-light">Show My Bills</a>
+            </div>
 
             <table class="table table-striped table-hover">
                 <caption>Bills count: {{ $bills->count() }}</caption>

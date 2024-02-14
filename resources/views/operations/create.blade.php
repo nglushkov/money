@@ -5,8 +5,8 @@
 @section('content')
 <div class="row">
     <div class="col">
-        <h5 class="card-title mb-2">Create Operation</h5>
-        <div class="card">
+        <div class="card p-3">
+            <h5 class="card-title mb-2">Create Operation</h5>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-8">
@@ -81,6 +81,7 @@
                             </div>
                             <hr>
                             <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="{{ route('home') }}" class="btn btn-secondary">Cancel</a>
                         </form>
                     </div>
                     <div class="col-md-4">

@@ -4,7 +4,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <a href="{{ route('exchanges.create') }}" class="btn btn-success">Create</a>
+                <div class="bg-light p-3">
+                    <a href="{{ route('exchanges.create') }}" class="btn btn-success">Create</a>
+                </div>
                 <table class="table table-striped">
                     <thead>
                         <tr>
