@@ -10,11 +10,10 @@
 
 <body>
     @if (env('APP_ENV') === 'production')    
-    <div style="position: absolute; bottom: 0; left: 0;">
+    <div style="position: absolute; bottom: 0; left: 0; z-index: -1;">
         <a href="/get-cat-url"><img src="{{ url('/get-cat-url') }}" alt="Cat Image" style="width: 200px;"></a>
     </div>
     @endif
-    
 
     <div class="container">
         <div class="row">
