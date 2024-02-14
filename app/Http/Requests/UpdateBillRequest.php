@@ -22,7 +22,7 @@ class UpdateBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:bills,name,' . $this->route('bill')->id],
+            'name' => ['required', 'string', 'max:255', 'unique:bills,name,' . $this->route('bill')->id . ',id,user_id,' . auth()->id()],
             'notes' => ['nullable', 'string', 'max:255'],
             'amount' => ['required', 'array'],
             'amount.*' => ['required', 'numeric'],

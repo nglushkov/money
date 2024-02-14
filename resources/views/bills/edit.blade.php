@@ -22,12 +22,12 @@
                     @method('PUT')
                     <div class="form-group mb-2">
                         <label for="name">Name</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{ $bill->name }}"
+                        <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $bill->name) }}"
                             required>
                     </div>
                     <div class="form-group mb-2">
                         <label for="notes">Notes</label>
-                        <input type="text" name="notes" id="notes" class="form-control" value="{{ $bill->notes }}">
+                        <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes', $bill->notes) }}">
                     </div>
                     <hr>
                     <h5>Начальный остаток:</h5>
