@@ -27,7 +27,7 @@ class TransferController extends Controller
     {
         return view('transfers.create', [
             'bills' => Bill::orderBy('name')->get(),
-            'currencies' => Currency::orderBy('is_default', 'desc')->orderBy('name', 'asc')->get(),
+            'currencies' => Currency::orderBy('name', 'asc')->get(),
         ]);
     }
 
@@ -62,7 +62,7 @@ class TransferController extends Controller
         return view('transfers.edit', [
             'transfer' => $transfer,
             'bills' => Bill::orderBy('name')->get(),
-            'currencies' => Currency::orderBy('name')->orderBy('is_default')->get(),
+            'currencies' => Currency::orderBy('name')->get(),
         ]);
     }
 
