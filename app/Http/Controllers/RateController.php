@@ -32,8 +32,8 @@ class RateController extends Controller
     {
         $rate = new Rate($request->validated());
         
-        $rateClone = Rate::where('to_currency_id', $rate->to_currency_id)
-            ->where('from_currency_id', $rate->from_currency_id)
+        $rateClone = Rate::where('from_currency_id', $rate->from_currency_id)
+            ->where('to_currency_id', $rate->to_currency_id)
             ->where('date', $rate->date)
             ->first();
 

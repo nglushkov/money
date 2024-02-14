@@ -39,8 +39,8 @@ class ExchangeController extends Controller
     {
         $exchange = new Exchange($request->validated());
         if ($request->has('create_currency_rate')) {
-            $rate = Rate::where('from_currency_id', $exchange->to_currency_id)
-                ->where('to_currency_id', $exchange->from_currency_id)
+            $rate = Rate::where('from_currency_id', $exchange->from_currency_id)
+                ->where('to_currency_id', $exchange->to_currency_id)
                 ->where('date', $exchange->date)
                 ->count();
                 

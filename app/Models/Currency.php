@@ -62,7 +62,7 @@ class Currency extends Model
             return $amount;
         }
 
-        $rate = $this->ratesFrom()->where('to_currency_id', $this->defaultCurrency->id)
+        $rate = $this->ratesTo()->where('from_currency_id', $this->defaultCurrency->id)
             ->where('date', '<=', $date)
             ->orderBy('date', 'desc')
             ->first();

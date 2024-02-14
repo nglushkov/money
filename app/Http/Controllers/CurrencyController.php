@@ -45,7 +45,10 @@ class CurrencyController extends Controller
         if ($currency->is_default) {
             $currencies = Currency::where('is_default', false)->orderBy('name')->get();
         }
-        $currencyRates = $currency->ratesTo()->orderBy('date', 'desc')->orderBy('id', 'desc')->paginate(50);
+        $currencyRates = $currency->ratesFrom()
+            ->orderBy('date', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(50);
 
         return view('currencies.show', compact('currency', 'currencies', 'currencyRates'));
     }
