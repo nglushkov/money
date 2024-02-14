@@ -111,7 +111,7 @@
                         <ul class="list-group">
                             @foreach($topBills as $bill)
                             <li class="list-group">
-                                <a href="{{ route('operations.index', ['bill_id' => $bill->id]) }}" onclick="event.preventDefault(); document.getElementById('bill').value = {{ $bill->id }}; document.getElementById('form').submit();">{{ $bill->name }}</a>
+                                <a href="{{ route('operations.index', ['bill_id' => $bill->id]) }}" onclick="event.preventDefault(); document.getElementById('bill').value = {{ $bill->id }}; document.getElementById('form').submit();">{{ $bill->name_with_user }}</a>
                             </li>
                             @endforeach
                         </ul>
