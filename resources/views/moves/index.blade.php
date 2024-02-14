@@ -26,7 +26,7 @@
                                         <span class=""><a href="{{ route('places.show', $move->place) }}" class="text-body">{{ $move->place->name }}</a></span></span>
                                     </td>
                                     <td style="width: 8rem">
-                                        <span class="text-body-secondary fw-light"><small>{{ Auth::user()->name }}</small></span>
+                                        <span class="text-body-secondary fw-light"><small>{{ $move->user->name }}</small></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -52,7 +52,7 @@
                                         <span>{{ $move->from->name }} → {{ $move->to->name }}</span>
                                     </td>
                                     <td style="width: 8rem">
-                                        <span class="text-body-secondary fw-light"><small>{{ Auth::user()->name }}</small></span>
+                                        <span class="text-body-secondary fw-light"><small>{{ $move->user->name }}</small></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -76,7 +76,7 @@
                                         <span>{{ $move->rate_text }}</span>
                                     </td>
                                     <td style="width: 8rem">
-                                        <span class="text-body-secondary fw-light"><small>{{ Auth::user()->name }}</small></span>
+                                        <span class="text-body-secondary fw-light"><small>{{ $move->user->name }}</small></span>
                                     </td>
                                 </tr>
                                 <tr>
