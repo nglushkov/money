@@ -5,8 +5,8 @@
 @section('content')
 <div class="row justify-content-md-center">
     <div class="col-md-6">
-        <h5 class="card-title mb-2">Create Transfer</h5>
-        <div class="card">
+        <div class="card p-3">
+            <h5 class="card-title mb-2">Create Transfer</h5>
             <div class="card-body">
                 <form action="{{ route('transfers.store') }}" method="POST">
                     @if ($errors->any())
@@ -59,6 +59,7 @@
                     </div>
                     <hr>
                     <button type="submit" class="btn btn-primary">Create</button>
+                    <a href="{{ route('transfers.index') }}" class="btn btn-secondary">Cancel</a>
                 </form>
             </div>
         </div>

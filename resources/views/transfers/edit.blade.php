@@ -5,8 +5,8 @@
 @section('content')
 <div class="row justify-content-md-center">
     <div class="col-md-6">
-        <h5 class="card-title mb-2">Edit Transfer</h5>
-        <div class="card">
+        <div class="card p-3">
+            <h5 class="card-title mb-2">Edit Transfer</h5>
             <div class="card-body">
                 <form action="{{ route('transfers.update', $transfer->id) }}" method="POST">
                     @if ($errors->any())
@@ -66,6 +66,7 @@
                     </div>
                     <hr>
                     <button type="submit" class="btn btn-primary">Update</button>
+                    <a href="{{ route('transfers.index') }}" class="btn btn-secondary">Cancel</a>
                 </form>
             </div>
         </div>
