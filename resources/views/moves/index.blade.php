@@ -37,9 +37,8 @@
                                     <td>
                                         <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
-                                    <td>
-                                    </td>
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
+                                    <td></td>
                                 </tr>
                             </table>
                         </li>
@@ -65,7 +64,7 @@
                                         <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
                                     <td></td>
-                                    <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
+                                    <td></td>
                                 </tr>
                             </table
                         </li>

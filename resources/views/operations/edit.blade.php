@@ -69,7 +69,7 @@
                 </div>
                 <div class="form-group mb-2">
                     <label for="notes">Notes:</label>
-                    <textarea rows=5 name="notes" id="notes" class="form-control">{{ old('notes', $operation->notes) }}</textarea>
+                    <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes', $operation->notes) }}">
                 </div>
                 <div class="form-group">
                     <label for="date">Date:</label>
