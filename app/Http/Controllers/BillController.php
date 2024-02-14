@@ -114,6 +114,7 @@ class BillController extends Controller
                     'amount' => $amount
                 ]);
                 $billCurrency->save();
+                $bill->clearAmountCache();
             }
         });
 
