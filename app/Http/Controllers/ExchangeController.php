@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateExchangeRequest;
 use App\Models\Exchange;
 use App\Models\Currency;
 use App\Models\Bill;
+use App\Models\Rate;
 
 class ExchangeController extends Controller
 {
@@ -37,6 +38,25 @@ class ExchangeController extends Controller
     public function store(StoreExchangeRequest $request)
     {
         $exchange = new Exchange($request->validated());
+        if ($request->has('create_currency_rate')) {
+            $rate = Rate::where('from_currency_id', $exchange->to_currency_id)
+                ->where('to_currency_id', $exchange->from_currency_id)
+                ->where('date', $exchange->date)
+                ->count();
+                
+            if ($rate > 0) {
+                return redirect()->route('exchanges.create')
+                    ->withErrors(['Rate already exists'])
+                    ->withInput($request->all());
+            }
+            
+            $rate = Rate::create([
+                'from_currency_id' => $exchange->to_currency_id, // 955000
+                'to_currency_id' => $exchange->from_currency_id, // 800
+                'date' => $exchange->date,
+                'rate' => $exchange->amount_to / $exchange->amount_from
+            ]);
+        }
         $exchange->user_id = auth()->id();
         $exchange->save();
         
@@ -49,7 +69,8 @@ class ExchangeController extends Controller
     public function show(Exchange $exchange)
     {
         return view('exchanges.show', [
-            'exchange' => $exchange
+            'exchange' => $exchange,
+            'defaultCurrency' => Currency::default()->first(),
         ]);
     }
 

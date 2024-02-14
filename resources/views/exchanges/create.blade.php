@@ -57,6 +57,12 @@
                         <label for="notes">Notes</label>
                         <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
                     </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="create_currency_rate" @checked(old('create_currency_rate')) id="create_currency_rate">
+                        <label class="form-check-label" for="create_currency_rate">
+                            Create Currency Rate
+                        </label>
+                    </div>
                     <hr>
                     <button type="submit" class="btn btn-primary">Create</button>
                 </form>
