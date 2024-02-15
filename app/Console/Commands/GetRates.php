@@ -42,42 +42,48 @@ class GetRates extends Command
             $data = $response->json();
 
             $dataDate = date('Y-m-d', strtotime($data['Timestamp']));
-            $rate = ExternalRate::where('from_currency_id', $fromCurrencyId)
+            $fromValue = $data['Valute'][self::FROM_CURRENCY_ID]['Value'];
+
+            $externalRate = ExternalRate::where('from_currency_id', $fromCurrencyId)
                 ->where('to_currency_id', $toCurrencyId)
                 ->where('date', $dataDate)
                 ->count();
 
-            if ($rate > 0) {
-                logger()->info('Rates already updated');
-                return;
+            if ($externalRate === 0) {
+                $rate = new ExternalRate();
+                $rate->from_currency_id = $fromCurrencyId;
+                $rate->to_currency_id = $toCurrencyId;
+                $rate->date = $dataDate;
+                $rate->rate = $fromValue;
+                $rate->save();
+
+                logger()->info('External rates updated');
+            } else {
+                logger()->info('External rates already updated');
             }
-
-            $fromValue = $data['Valute'][self::FROM_CURRENCY_ID]['Value'];
-
-            $rate = new ExternalRate();
-            $rate->from_currency_id = $fromCurrencyId;
-            $rate->to_currency_id = $toCurrencyId;
-            $rate->date = $dataDate;
-            $rate->rate = $fromValue;
-            $rate->save();
 
             $rate = Rate::where('from_currency_id', $fromCurrencyId)
                 ->where('to_currency_id', $toCurrencyId)
                 ->where('date', $dataDate)
                 ->count();
 
-            $rate = new Rate();
-            $rate->from_currency_id = $fromCurrencyId;
-            $rate->to_currency_id = $toCurrencyId;
-            $rate->date = $dataDate;
-            $rate->rate = $fromValue;
-            $rate->save();
+            if ($rate === 0) {
+                $rate = new Rate();
+                $rate->from_currency_id = $fromCurrencyId;
+                $rate->to_currency_id = $toCurrencyId;
+                $rate->date = $dataDate;
+                $rate->rate = $fromValue;
+                $rate->save();
+
+                logger()->info('Rates updated');
+            } else {
+                logger()->info('Rates already updated');
+            }
             
         } catch (\Exception $e) {
             logger()->error('Error while getting rates', ['error' => $e->getMessage()]);
         }
 
-        logger()->info('Rates updated');
-        
+        logger()->info('All rates updated');
     }
 }
