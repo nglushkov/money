@@ -12,8 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('rates:get-usd-ars')->dailyAt('06:00');
-        $schedule->command('rates:get-usd-ars')->everyFiveSeconds();
+        $schedule->command('rates:get-usd-ars')->dailyAt('06:00');
     }
 
     /**
