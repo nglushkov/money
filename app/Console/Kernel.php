@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('rates:get-usd-ars')->evertyThreeHours();
+        $schedule->command('rates:get-usd-ars')->everyThreeHours();
         $schedule->command('rates:get')->everyThreeHours();
     }
 
