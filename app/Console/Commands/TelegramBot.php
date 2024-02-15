@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Telegram\Bot\Api;
 
 class TelegramBot extends Command
 {
