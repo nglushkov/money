@@ -64,12 +64,12 @@ class Operation extends Move
         return $this->is_expense ? 'Расход' : 'Приход';
     }
 
-    public function getAmountTextAttribute($value): string
+    public function getAmountTextAttribute(): string
     {
         return MoneyFormatter::getWithSymbolAndSign($this->amount, $this->currency->name, $this->type);
     }
 
-    public function getAmountTextWithCurrencyAttribute($value): string
+    public function getAmountTextWithCurrencyAttribute(): string
     {
         return MoneyFormatter::getWithSymbol($this->amount, $this->currency->name);
     }

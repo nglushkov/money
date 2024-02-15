@@ -18,13 +18,13 @@
                         <a class="nav-link active" href="{{ route('bills.index') }}">💳 Bills</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('transfers.index') }}">📤 Transfers</a>
+                        <a class="nav-link active" href="{{ route('transfers.index') }}">🔄 Transfers</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ route('categories.index') }}">📒 Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('places.index') }}">🛒 Places</a>
+                        <a class="nav-link active" href="{{ route('places.index') }}">🏢 Places</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
@@ -33,7 +33,8 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('exchanges.index') }}">🔁 Exchanges</a></li>
-                            <li><a class="dropdown-item" href="{{ route('currencies.index') }}">＄ Currencies</a></li>
+                            <li><a class="dropdown-item" href="{{ route('currencies.index') }}">💱 Currencies</a></li>
+                            <li><a class="dropdown-item" href="{{ route('external-rates.index') }}">💹 Rates</a></li>
                             <!-- <li>
                                 <hr class="dropdown-divider">
                             </li> -->

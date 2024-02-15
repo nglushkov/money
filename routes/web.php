@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MoveController;
 use App\Http\Controllers\RateController;
+use App\Http\Controllers\ExternalRateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('exchanges', ExchangeController::class);
     Route::resource('transfers', TransferController::class);
     Route::resource('rates', RateController::class);
+    Route::resource('external-rates', ExternalRateController::class);
 
     Route::get('/', [MoveController::class, 'index'])->name('home');
 
