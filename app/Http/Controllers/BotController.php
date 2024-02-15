@@ -11,7 +11,7 @@ class BotController extends Controller
     public function handleWebhook(Request $request)
     {
         $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
-        $telegram->setWebhook(['url' => 'https://money.nglushkov.com/]' . env('TELEGRAM_BOT_TOKEN') . '/webhook']);
+        $telegram->setWebhook(['url' => 'https://money.nglushkov.com/' . env('TELEGRAM_BOT_TOKEN') . '/webhook']);
 
         $updates = Telegram::getWebhookUpdate();
 
