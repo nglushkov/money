@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use App\Models\ExternalRate;
 use App\Models\Currency;
+use App\Models\Rate;
 
 class GetRates extends Command
 {
@@ -32,7 +33,7 @@ class GetRates extends Command
     public function handle()
     {
         try {
-            logger()->info('Getting USD/ARS rates');
+            logger()->info('Getting rates');
 
             $fromCurrencyId = Currency::where('name', self::FROM_CURRENCY_ID)->first()->id;
             $toCurrencyId = Currency::where('name', self::TO_CURRENCY_ID)->first()->id;
@@ -51,11 +52,25 @@ class GetRates extends Command
                 return;
             }
 
+            $fromValue = $data['Valute'][self::FROM_CURRENCY_ID]['Value'];
+
             $rate = new ExternalRate();
             $rate->from_currency_id = $fromCurrencyId;
             $rate->to_currency_id = $toCurrencyId;
             $rate->date = $dataDate;
-            $rate->rate = $data['Valute'][self::FROM_CURRENCY_ID]['Value'];
+            $rate->rate = $fromValue;
+            $rate->save();
+
+            $rate = Rate::where('from_currency_id', $fromCurrencyId)
+                ->where('to_currency_id', $toCurrencyId)
+                ->where('date', $dataDate)
+                ->count();
+
+            $rate = new Rate();
+            $rate->from_currency_id = $fromCurrencyId;
+            $rate->to_currency_id = $toCurrencyId;
+            $rate->date = $dataDate;
+            $rate->rate = $fromValue;
             $rate->save();
             
         } catch (\Exception $e) {

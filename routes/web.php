@@ -32,8 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('exchanges', ExchangeController::class);
     Route::resource('transfers', TransferController::class);
-    Route::resource('rates', RateController::class);
-    Route::resource('external-rates', ExternalRateController::class);
+    Route::resource('rates', RateController::class)->except(['show']);
+    Route::get('/rates/external/', [ExternalRateController::class, 'index'])->name('external-rates.index');
 
     Route::get('/', [MoveController::class, 'index'])->name('home');
 
