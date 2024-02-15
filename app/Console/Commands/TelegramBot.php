@@ -26,7 +26,7 @@ class TelegramBot extends Command
      */
     public function handle()
     {
-        $response = Telegram::getMe();
+        $response = $telegram->setWebhook(['url' => 'https://money.nglushkov.com/6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04/webhook']);
         dd($response);
     }
 }
