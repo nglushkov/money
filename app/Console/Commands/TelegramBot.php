@@ -26,7 +26,14 @@ class TelegramBot extends Command
      */
     public function handle()
     {
-        $response = $telegram->setWebhook(['url' => 'https://money.nglushkov.com/6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04/webhook']);
-        dd($response);
+        $telegram = new Api('6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04');
+        $telegram->setWebhook(['url' => 'https://money.nglushkov.com/6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04/webhook']);
+
+        $update = $telegram->commandsHandler(true);
+
+        $chatId = $update->getMessage()->getChat()->getId();
+        $text = $update->getMessage()->getText();
+
+        logger($chatId, $text);
     }
 }
