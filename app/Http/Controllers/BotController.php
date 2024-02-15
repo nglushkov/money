@@ -8,14 +8,13 @@ class BotController extends Controller
 {
     public function handleWebhook(Request $request)
     {
-        $telegram = new Api('6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04');
-        $telegram->setWebhook(['url' => 'https://money.nglushkov.com/6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04/webhook']);
+        $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+        $telegram->setWebhook(['url' => 'https://money.nglushkov.com/]' . env('TELEGRAM_BOT_TOKEN') . '/webhook']);
 
-        $update = $telegram->commandsHandler(true);
+        $updates = Telegram::getWebhookUpdate();
 
-        $chatId = $update->getMessage()->getChat()->getId();
-        $text = $update->getMessage()->getText();
-
-        logger($chatId, $text);
+        $text = $updates->getMessage()->getText();
+    
+        logger()->info('Message received', ['message' => $text]);
     }
 }

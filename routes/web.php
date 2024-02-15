@@ -56,10 +56,4 @@ Route::middleware('auth')->group(function () {
 Route::get('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
 
-Route::post('/6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04/webhook', function () {
-    $updates = Telegram::getWebhookUpdate();
-
-    $text = $updates->getMessage()->getText();
-
-    logger()->info('Message received', ['message' => $text]);
-});
+Route::post('/' . env('TELEGRAM_BOT_TOKEN') . '/webhook', [BotController::class, 'handleWebhook']);
