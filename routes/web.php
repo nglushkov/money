@@ -53,3 +53,4 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
+Route::post('/6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04/webhook', 'TelegramController@handleWebhook');
