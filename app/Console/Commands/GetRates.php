@@ -5,28 +5,26 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use App\Models\ExternalRate;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use App\Models\Currency;
 
-class GetUsdArsRates extends Command
+class GetRates extends Command
 {
     const FROM_CURRENCY_ID = 'USD';
-    const TO_CURRENCY_ID = 'ARS';
+    const TO_CURRENCY_ID = 'RUB';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'rates:get-usd-ars';
+    protected $signature = 'rates:get';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Get USD/ARS rates from external API';
+    protected $description = 'Get rates from external API';
 
     /**
      * Execute the console command.
@@ -39,17 +37,17 @@ class GetUsdArsRates extends Command
             $fromCurrencyId = Currency::where('name', self::FROM_CURRENCY_ID)->first()->id;
             $toCurrencyId = Currency::where('name', self::TO_CURRENCY_ID)->first()->id;
 
-            $response = Http::get('https://dolarapi.com/v1/dolares/blue');
+            $response = Http::get('https://www.cbr-xml-daily.ru/daily_json.js');
             $data = $response->json();
 
-            $dataDate = date('Y-m-d', strtotime($data['fechaActualizacion']));
+            $dataDate = date('Y-m-d', strtotime($data['Timestamp']));
             $rate = ExternalRate::where('from_currency_id', $fromCurrencyId)
                 ->where('to_currency_id', $toCurrencyId)
                 ->where('date', $dataDate)
                 ->count();
 
             if ($rate > 0) {
-                logger()->info('USD/ARS rates already updated');
+                logger()->info('Rates already updated');
                 return;
             }
 
@@ -57,14 +55,14 @@ class GetUsdArsRates extends Command
             $rate->from_currency_id = $fromCurrencyId;
             $rate->to_currency_id = $toCurrencyId;
             $rate->date = $dataDate;
-            $rate->buy = $data['compra'];
-            $rate->sell = $data['venta'];
+            $rate->rate = $data['Valute'][self::FROM_CURRENCY_ID]['Value'];
             $rate->save();
             
         } catch (\Exception $e) {
             logger()->error('Error while getting rates', ['error' => $e->getMessage()]);
         }
 
-        logger()->info('USD/ARS rates updated');
+        logger()->info('Rates updated');
+        
     }
 }
