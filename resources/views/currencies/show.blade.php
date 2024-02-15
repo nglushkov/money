@@ -82,7 +82,7 @@
                         @foreach ($currencyRates as $rate)
                         <tr>
                             <td>{{ $rate->date_formatted }}</td>
-                            <td>1 {{ $currency->name . ' = ' . $rate->rate . ' ' . $rate->currencyFrom->name }}</td>
+                            <td>1 {{ $currency->name . ' = ' . $rate->rate . ' ' . $rate->currencyTo->name }}</td>
                             <td>
                                 <form action="{{ route('rates.destroy', $rate) }}" method="POST">
                                     @method('DELETE')
