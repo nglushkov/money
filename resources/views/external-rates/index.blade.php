@@ -14,6 +14,7 @@
                             <th>To Currency</th>
                             <th>Buy</th>
                             <th>Sell</th>
+                            <th>Rate</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,6 +25,7 @@
                                 <td>{{ $externalRate->toCurrency->name }}</td>
                                 <td>{{ $externalRate->buy }}</td>
                                 <td>{{ $externalRate->sell }}</td>
+                                <td>{{ $externalRate->rate }}</td>
                             </tr>
                         @endforeach
                     </tbody>

@@ -29,12 +29,17 @@ class ExternalRate extends Model
 
     public function getBuyAttribute($value): string
     {
-        return MoneyFormatter::get($value);
+        return $value ? MoneyFormatter::get($value) : '';
     }
 
     public function getSellAttribute($value): string
     {
-        return MoneyFormatter::get($value);
+        return $value ? MoneyFormatter::get($value) : '';
+    }
+
+    public function getRateAttribute($value): string
+    {
+        return $value ? MoneyFormatter::get($value) : '';
     }
 
     public function fromCurrency()
