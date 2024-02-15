@@ -15,8 +15,8 @@ class BotController extends Controller
 
         $updates = Telegram::getWebhookUpdate();
 
-        $text = $updates->getMessage()->getText();
+        $message = $updates->getMessage();
     
-        logger()->info('Message received', ['message' => $text]);
+        logger()->info('Message received', ['message' => $message]);
     }
 }
