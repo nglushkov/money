@@ -41,6 +41,7 @@ class GetUsdArsRates extends Command
 
             $response = Http::get('https://dolarapi.com/v1/dolares/blue');
             $data = $response->json();
+            logger()->info('USD/ARS rates received', ['data' => $data]);
 
             $dataDate = date('Y-m-d', strtotime($data['fechaActualizacion']));
             $rate = ExternalRate::where('from_currency_id', $fromCurrencyId)
