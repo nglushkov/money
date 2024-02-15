@@ -12,7 +12,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MoveController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\ExternalRateController;
-use App\Http\BotController;
+use App\Http\Controllers\BotController;
 
 
 /*
