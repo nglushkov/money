@@ -59,5 +59,7 @@ Route::post('/authenticate', [LoginController::class, 'authenticate'])->name('au
 Route::post('/6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04/webhook', function () {
     $updates = Telegram::getWebhookUpdate();
 
-    return 'ok';
+    $text = $updates->getMessage()->getText();
+
+    logger()->info('Message received', ['message' => $text]);
 });
