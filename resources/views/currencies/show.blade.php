@@ -42,11 +42,11 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="from_currency_id">Currency:</label>
-                        <select name="from_currency_id" id="from_currency_id" class="form-control" required>
+                        <label for="to_currency_id">Currency:</label>
+                        <select name="to_currency_id" id="to_currency_id" class="form-control" required>
                             <option value="">Select Currency</option>
                             @foreach ($currencies as $currencyOption)
-                                <option value="{{ $currencyOption->id }}" @selected(old('from_currency_id') == $currencyOption->id)>{{ $currencyOption->name }}</option>
+                                <option value="{{ $currencyOption->id }}" @selected(old('to_currency_id') == $currencyOption->id)>{{ $currencyOption->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -57,7 +57,7 @@
                             value="{{ old('date', date('Y-m-d')) }}">
                     </div>
 
-                    <input type="hidden" name="to_currency_id" value="{{ $currency->id }}">
+                    <input type="hidden" name="from_currency_id" value="{{ $currency->id }}">
 
                     <button type="submit" class="btn btn-primary">Add Rate</button>
                 </form>
