@@ -96,7 +96,7 @@ class BotController extends Controller
             $operation->bill_id = $bill->id;
             $operation->currency_id = $currency->id;
             $operation->date = date('Y-m-d');
-            $operation->type = 1;
+            $operation->type = 0;
 
             $operation->user_id = array_search($userId, self::USER_IDS);
             if ($operation->user_id === false) {
