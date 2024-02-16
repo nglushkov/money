@@ -1,5 +1,5 @@
 ### Prerequisites
-* One Bill must be is_default=True
+* One Bill must be default=True
 * One Currency must be active=True
 
 ### Telegram Bot

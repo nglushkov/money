@@ -41,7 +41,7 @@ class Bill extends Model
             return $amount;
         }
 
-        $operations = $this->operations->where('currency_id', $currencyId);
+        $operations = $this->operations()->isNotDraft()->where('currency_id', $currencyId);
         $amount = $this->currenciesInitial->find($currencyId)->pivot->amount ?? 0;
 
         foreach ($operations as $operation) {
