@@ -7,7 +7,7 @@
     <div class="col-md-6">
         <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Edit Operation</h5>
+            <h5 class="card-title">Edit Operation @if($operation->is_draft)<span class="badge bg-warning">Draft</span>@endif</h5>
             <form action="{{ route('operations.update', $operation) }}" method="POST">
                 @if ($errors->any())
                 <div class="alert alert-danger">
@@ -44,9 +44,10 @@
                 </div>
                 <div class="form-group mb-2">
                     <label for="category">Category:</label>
-                    <select name="category_id" id="category" class="form-control">
+                    <select name="category_id" id="category" class="form-control" required>
+                        <option value="">Select Category</option>
                         @foreach($categories as $category)
-                        <option value="{{ $category->id }}" @selected(old('category_id', $operation->category_id) == $category->id)>{{ $category->name }}</option>
+                            <option value="{{ $category->id }}" @selected(old('category_id', $operation->category_id) == $category->id)>{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -60,7 +61,8 @@
                 </div>
                 <div class="form-group mb-2">
                     <label for="place">Place:</label>
-                    <select name="place_id" id="place" class="form-control">
+                    <select name="place_id" id="place" class="form-control" required>
+                        <option value="">Select Place</option>
                         @foreach($places as $place)
                         <option value="{{ $place->id }}" @selected(old('place_id', $operation->place_id) == $place->id)>{{
                             $place->name }}</option>

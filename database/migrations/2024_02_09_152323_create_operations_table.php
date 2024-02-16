@@ -16,9 +16,9 @@ return new class extends Migration
             $table->decimal('amount', 8, 2)->unsigned();
             $table->tinyInteger('type'); // 0 - expense, 1 - income
             $table->foreignId('bill_id')->constrained('bills');
-            $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('category_id')->nullable()->constrained('categories');
             $table->foreignId('currency_id')->constrained('currencies');
-            $table->foreignId('place_id')->constrained('places');
+            $table->foreignId('place_id')->nullable()->constrained('places');
             $table->foreignId('user_id')->constrained('users');
             $table->text('notes')->nullable();
             $table->date('date');

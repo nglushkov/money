@@ -24,6 +24,11 @@ class Operation extends Move
         'date',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+        'is_draft' => 'boolean',
+    ];
+
     public function getIsExpenseAttribute(): bool
     {
         return $this->type === 0;
@@ -95,5 +100,10 @@ class Operation extends Move
     public function scopeLatestDate($query)
     {
         return $query->orderBy('date', 'desc');
+    }
+
+    public function scopeIsNotDraft($query)
+    {
+        return $query->where('is_draft', false);
     }
 }

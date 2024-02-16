@@ -47,7 +47,7 @@ class BillController extends Controller
         if (!$request->validated()) {
             return redirect()->route('bills.create')->withErrors($request->errors());
         }
-        
+
         DB::transaction(function () use ($request) {
             $bill = new Bill($request->validated());
             $bill->user_id = auth()->id();
@@ -75,7 +75,7 @@ class BillController extends Controller
      */
     public function show(Bill $bill)
     {
-        $lastOperations = $bill->operations()->latestDate()->paginate(20);
+        $lastOperations = $bill->operations()->isNotDraft()->latestDate()->paginate(20);
 
         return view('bills.show', [
             'bill' => $bill,

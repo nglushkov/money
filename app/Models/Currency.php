@@ -69,4 +69,9 @@ class Currency extends Model
 
         return $rate ? bcdiv($amount, $rate->rate, 2) : 0;
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
 }

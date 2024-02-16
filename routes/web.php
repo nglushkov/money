@@ -1,18 +1,21 @@
 <?php
 
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\BotController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExchangeController;
-use App\Http\Controllers\OperationController;
-use App\Http\Controllers\PlaceController;
-use App\Http\Controllers\TransferController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExternalRateController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MoveController;
+use App\Http\Controllers\OperationController;
+use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\RateController;
-use App\Http\Controllers\ExternalRateController;
-use App\Http\Controllers\BotController;
+use App\Http\Controllers\TransferController;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 
 /*
@@ -48,7 +51,7 @@ Route::middleware('auth')->group(function () {
             Storage::put($imageName, $response->body());
             return $imageName;
         });
-    
+
         return response()->file(Storage::path($image));
     });
 });

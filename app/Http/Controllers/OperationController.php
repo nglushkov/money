@@ -64,7 +64,7 @@ class OperationController extends Controller
         }
 
         return view('operations.index', [
-            'operations' => $operations->with(['bill', 'category', 'user', 'place', 'currency'])->paginate(50),
+            'operations' => $operations->isNotDraft()->with(['bill', 'category', 'user', 'place', 'currency'])->paginate(50),
             'bills' => Bill::orderBy('name', 'asc')->get(),
             'categories' => Category::orderBy('name', 'asc')->get(),
             'users' => User::orderBy('name', 'asc')->get(),
@@ -153,6 +153,7 @@ class OperationController extends Controller
     {
         $operation->fill($request->validated());
         $operation->date = $request->date;
+        $operation->is_draft = false;
         $operation->save();
 
         return redirect()->route('operations.show', $operation);

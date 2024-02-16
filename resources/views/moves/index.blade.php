@@ -14,10 +14,10 @@
             </div>
             <div class="card mb-3">
                 <ul class="list-group list-group-flush">
-                    
+
                     @foreach($moves as $move)
                         @if ($move instanceof App\Models\Operation)
-                        <li class="list-group-item" onclick="window.location.href = '{{ route('operations.show', $move) }}';" style="cursor: pointer;">
+                        <li class="list-group-item" onclick="window.location.href = '{{ route($move->is_draft ? 'operations.edit' : 'operations.show', $move) }}';" style="cursor: pointer;">
                             <table style="width:100%">
                                 <tr>
                                     <td style="width: 30%">
@@ -25,8 +25,12 @@
                                         <small class="text-body-secondary">{{ $move->amount_in_default_currency_formatted }}</small>
                                     </td>
                                     <td style="width: 50%">
-                                        <span><a href="{{ route('categories.show', $move->category) }}" class="text-body">{{ $move->category->name }}</a></span>&nbsp;<small class="text-secondary">in</small>
-                                        <span class=""><a href="{{ route('places.show', $move->place) }}" class="text-body">{{ $move->place->name }}</a></span></span>
+                                        @if($move->category)
+                                            <span><a href="{{ route('categories.show', $move->category) }}" class="text-body">{{ $move->category->name }}</a></span>&nbsp;<small class="text-secondary">in</small>
+                                        @endif
+                                        @if($move->place)
+                                            <span class=""><a href="{{ route('places.show', $move->place) }}" class="text-body">{{ $move->place->name }}</a></span></span>
+                                        @endif
                                         <small class="text-secondary">by</small>&nbsp;<span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
                                     </td>
                                     <td style="width: 20%">
@@ -38,7 +42,17 @@
                                         <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
-                                    <td></td>
+                                    <td>
+                                        @if($move->is_draft)
+                                            {{-- add form to delete move and form to edit move--}}
+                                            <form action="{{ route('operations.destroy', $move) }}" method="post">
+                                                <span class="badge bg-warning">Draft</span>
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-light btn-sm">Delete</button>
+                                            </form>
+                                        @endif
+                                    </td>
                                 </tr>
                             </table>
                         </li>

@@ -13,6 +13,10 @@ class Bill extends Model
 
     protected $fillable = ['name', 'notes'];
 
+    protected $casts = [
+        'default' => 'boolean',
+    ];
+
     public function currenciesInitial()
     {
         return $this->belongsToMany(Currency::class, 'bill_currency_initial')
@@ -29,7 +33,7 @@ class Bill extends Model
     {
         return $this->hasMany(Operation::class);
     }
-    
+
     public function getAmount(int $currencyId): float
     {
         $amount = $this->getAmountFromCache($currencyId);
@@ -123,5 +127,10 @@ class Bill extends Model
     public function getNameWithUserAttribute(): string
     {
         return $this->name . ' (' . $this->user->name . ')';
+    }
+
+    public function scopeDefault($query)
+    {
+        return $query->where('default', true);
     }
 }
