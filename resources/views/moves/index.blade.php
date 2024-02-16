@@ -43,7 +43,7 @@
                                     <td>
                                         <div><small class="text-body-secondary fw-light">{{ $move->date_humans }}</small></div>
                                     </td>
-                                    <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
+                                    <td><small class="text-body-secondary">{{ Str::limit($move->notes, 40) }}</small></td>
                                     <td>
                                         @if($move->is_draft)
                                             <form action="{{ route('operations.destroy', $move) }}" method="post">
