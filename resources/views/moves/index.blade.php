@@ -39,7 +39,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
+                                        <div><small class="text-body-secondary fw-light">{{ $move->date_humans }}</small></div>
                                     </td>
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
                                     <td>
@@ -75,7 +75,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
+                                        <div><small class="text-body-secondary fw-light">{{ $move->date_humans }}</small></div>
                                     </td>
                                     <td></td>
                                     <td></td>
@@ -99,7 +99,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
+                                        <div><small class="text-body-secondary fw-light">{{ $move->date_humans }}</small></div>
                                     </td>
                                     <td>
                                         <span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>

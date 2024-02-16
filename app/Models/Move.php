@@ -27,6 +27,11 @@ class Move extends Model
         return $this->date->format('d.m.Y');
     }
 
+    public function getDateHumansAttribute(): string
+    {
+        return $this->date->diffForHumans();
+    }
+
     public function getRelatedBills(): array
     {
         if ($this instanceof Operation) {
