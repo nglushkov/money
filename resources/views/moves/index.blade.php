@@ -44,7 +44,6 @@
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
                                     <td>
                                         @if($move->is_draft)
-                                            {{-- add form to delete move and form to edit move--}}
                                             <form action="{{ route('operations.destroy', $move) }}" method="post">
                                                 <span class="badge bg-warning">Draft</span>
                                                 @csrf
