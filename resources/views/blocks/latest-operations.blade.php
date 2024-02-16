@@ -13,7 +13,10 @@
         @foreach ($lastOperations as $operation)
         <tr onclick="window.location.href = '{{ route('operations.show', $operation->id) }}';" style="cursor: pointer;">
             <td>{{ $operation->date_formatted }}</td>
-            <td>{{ $operation->amount_text }}</td>
+            <td>
+                {{ $operation->amount_text }}
+                <small class="text-body-secondary">{{ $operation->amount_in_default_currency_formatted }}</small>
+            </td>
             <td><a href="{{ route('categories.show', $operation->category) }}">{{ $operation->category->name }}</a></td>
             <td><a href="{{ route('places.show', $operation->place) }}">{{ $operation->place->name }}</a></td>
             <td><a href="{{ route('bills.show', $operation->bill) }}">{{ $operation->bill->name }}</a></td>
