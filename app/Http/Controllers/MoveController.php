@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use Illuminate\Http\Request;
 use App\Models\Operation;
 use App\Models\Transfer;
@@ -22,8 +23,13 @@ class MoveController extends Controller
 
         $paginator = $this->paginate($moves, 15);
         $moves = $paginator->items();
+        $defaultCurrency = Currency::default()->first();
 
-        return view('moves.index', compact('moves'), compact('paginator'));
+        return view('moves.index', [
+            'moves' => $moves,
+            'paginator' => $paginator,
+            'defaultCurrency' => $defaultCurrency,
+        ]);
     }
 
     public function paginate($items, $perPage = 15, $page = null, $options = [])

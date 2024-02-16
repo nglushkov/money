@@ -22,7 +22,9 @@
                                 <tr>
                                     <td style="width: 30%">
                                         <span @class(['text-success' => $move->is_income])>💰 {{ $move->amount_text }}</span>
-                                        <small class="text-body-secondary">{{ $move->amount_in_default_currency_formatted }}</small>
+                                        @if ($move->currency->id !== $defaultCurrency->id)
+                                            <small class="text-body-secondary">{{ $move->amount_in_default_currency_formatted }}</small>
+                                        @endif
                                     </td>
                                     <td style="width: 50%">
                                         @if($move->category)
