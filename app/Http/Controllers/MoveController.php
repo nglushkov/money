@@ -21,7 +21,7 @@ class MoveController extends Controller
 
         $moves = $operations->concat($transfers)->concat($exchanges)->sortByDesc('date');
 
-        $paginator = $this->paginate($moves, 15);
+        $paginator = $this->paginate($moves, 50);
         $moves = $paginator->items();
         $defaultCurrency = Currency::default()->first();
 
