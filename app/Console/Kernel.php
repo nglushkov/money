@@ -12,8 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('rates:get-usd-ars')->between('12:00', '18:00')->everyHour();
-        $schedule->command('rates:get')->between('06:00', '12:00')->everyHour();
+        $schedule->command('rates:get-usd-ars')->between('12:00', '18:00')->hourly();
+        $schedule->command('rates:get')->between('06:00', '12:00')->hourly();
     }
 
     /**
