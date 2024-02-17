@@ -10,7 +10,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="text-end">
+                        <div class="text-end pe-4">
                             <h5>Top 10 usable categories</h5>
                             <a href="{{ route('categories.create') }}" class="btn btn-outline-primary btn-sm">Create new category</a>
                             <ul class="list-group">
@@ -108,16 +108,17 @@
                         </form>
                     </div>
                     <div class="col-md-4">
-
-                        <h5>Top 15 usable places</h5>
-                        <a href="{{ route('places.create') }}" class="btn btn-outline-primary btn-sm">Create new place</a>
-                        <ul class="list-group">
-                            @foreach($topPlaces as $place)
-                                <li class="list-group">
-                                    <a href="{{ route('operations.index', ['place_id' => $place->id]) }}" onclick="event.preventDefault(); document.getElementById('place').value = {{ $place->id }}; document.getElementById('form').submit();">{{ $place->name }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
+                        <div class="ps-3">
+                            <h5>Top 15 usable places</h5>
+                            <a href="{{ route('places.create') }}" class="btn btn-outline-primary btn-sm">Create new place</a>
+                            <ul class="list-group">
+                                @foreach($topPlaces as $place)
+                                    <li class="list-group">
+                                        <a href="{{ route('operations.index', ['place_id' => $place->id]) }}" onclick="event.preventDefault(); document.getElementById('place').value = {{ $place->id }}; document.getElementById('form').submit();">{{ $place->name }}</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
