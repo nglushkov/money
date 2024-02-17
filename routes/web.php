@@ -10,6 +10,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MoveController;
 use App\Http\Controllers\OperationController;
 use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\PlannedExpenseController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\TransferController;
 use Illuminate\Support\Facades\Cache;
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('exchanges', ExchangeController::class);
     Route::resource('transfers', TransferController::class);
+    Route::resource('planned-expenses', PlannedExpenseController::class);
     Route::resource('rates', RateController::class)->except(['show']);
     Route::get('/rates/external/', [ExternalRateController::class, 'index'])->name('external-rates.index');
 

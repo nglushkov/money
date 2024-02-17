@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Currency;
+use App\Models\PlannedExpense;
 use Illuminate\Http\Request;
 use App\Models\Operation;
 use App\Models\Transfer;
@@ -24,6 +25,18 @@ class MoveController extends Controller
         $paginator = $this->paginate($moves, 50);
         $moves = $paginator->items();
         $defaultCurrency = Currency::default()->first();
+
+        // @todo: refactor this
+//        $plannedExpenses = PlannedExpense::where(function ($query) {
+//            $query->where('frequency', 'monthly')
+//                    ->where('day', '>=', today()->day)
+//                    ->where('day', '<=', today()->addDays(2)->day);
+//            })->orWhere(function ($query) {
+//                $query->where('frequency', 'annually')
+//                    ->where('day', '>=', today()->day)
+//                    ->where('day', '<=', today()->addDays(2)->day)
+//                    ->where('month', '=', today()->month);
+//            })->get();
 
         return view('moves.index', [
             'moves' => $moves,
