@@ -10,24 +10,26 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <h5>Top 10 usable categories</h5>
-                        <a href="{{ route('categories.create') }}" class="btn btn-outline-primary btn-sm">Create new category</a>
-                        <ul class="list-group">
-                            @foreach($topCategories as $category)
-                            <li class="list-group">
-                                <a href="{{ route('operations.index', ['category_id' => $category->id]) }}" onclick="event.preventDefault(); document.getElementById('category').value = {{ $category->id }}; document.getElementById('form').submit();">{{ $category->name }}</a>
-                            </li>
-                            @endforeach
-                        </ul>
-                        <div class="mb-3"></div>
-                        <h5>Top 5 usable bills</h5>
-                        <ul class="list-group">
-                            @foreach($topBills as $bill)
+                        <div class="text-end">
+                            <h5>Top 10 usable categories</h5>
+                            <a href="{{ route('categories.create') }}" class="btn btn-outline-primary btn-sm">Create new category</a>
+                            <ul class="list-group">
+                                @foreach($topCategories as $category)
                                 <li class="list-group">
-                                    <a href="{{ route('operations.index', ['bill_id' => $bill->id]) }}" onclick="event.preventDefault(); document.getElementById('bill').value = {{ $bill->id }}; document.getElementById('form').submit();">{{ $bill->name_with_user }}</a>
+                                    <a href="{{ route('operations.index', ['category_id' => $category->id]) }}" onclick="event.preventDefault(); document.getElementById('category').value = {{ $category->id }}; document.getElementById('form').submit();">{{ $category->name }}</a>
                                 </li>
-                            @endforeach
-                        </ul>
+                                @endforeach
+                            </ul>
+                            <div class="mb-3"></div>
+                            <h5>Top 5 usable bills</h5>
+                            <ul class="list-group">
+                                @foreach($topBills as $bill)
+                                    <li class="list-group">
+                                        <a href="{{ route('operations.index', ['bill_id' => $bill->id]) }}" onclick="event.preventDefault(); document.getElementById('bill').value = {{ $bill->id }}; document.getElementById('form').submit();">{{ $bill->name_with_user }}</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="col-md-4">
