@@ -48,7 +48,7 @@
                             <div class="form-group mb-2">
                                 <label for="amount">Amount:</label>
                                 <input type="text" name="amount" id="amount" class="form-control" required autofocus
-                                       value="{{ old('amount') }}">
+                                       value="{{ old('amount', $plannedExpense->amount ?? '') }}">
                             </div>
                             <div class="form-group mb-2">
                                 <label for="type">Type:</label>
@@ -72,7 +72,7 @@
                                 <select name="category_id" id="category" class="form-control" required>
                                     <option value="">Select Category</option>
                                     @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>{{ $category->name }}</option>
+                                        <option value="{{ $category->id }}" @selected(old('category_id', $plannedExpense->category_id ?? '') == $category->id)>{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -80,7 +80,7 @@
                                 <label for="currency">Currency:</label>
                                 <select name="currency_id" id="currency" class="form-control">
                                     @foreach($currencies as $currency)
-                                        <option value="{{ $currency->id }}" @selected(old('currency_id') == $currency->id)>{{ $currency->name }}</option>
+                                        <option value="{{ $currency->id }}" @selected(old('currency_id', $plannedExpense->currency_id ?? '') == $currency->id)>{{ $currency->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -89,7 +89,7 @@
                                 <select name="place_id" id="place" class="form-control" required>
                                     <option value="">Select Place</option>
                                     @foreach($places as $place)
-                                        <option value="{{ $place->id }}" @selected(old('place_id') == $place->id)>{{
+                                        <option value="{{ $place->id }}" @selected(old('place_id', $plannedExpense->place_id ?? '') == $place->id)>{{
                                         $place->name }}</option>
                                     @endforeach
                                 </select>

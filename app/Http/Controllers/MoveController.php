@@ -26,22 +26,15 @@ class MoveController extends Controller
         $moves = $paginator->items();
         $defaultCurrency = Currency::default()->first();
 
-        // @todo: refactor this
-//        $plannedExpenses = PlannedExpense::where(function ($query) {
-//            $query->where('frequency', 'monthly')
-//                    ->where('day', '>=', today()->day)
-//                    ->where('day', '<=', today()->addDays(2)->day);
-//            })->orWhere(function ($query) {
-//                $query->where('frequency', 'annually')
-//                    ->where('day', '>=', today()->day)
-//                    ->where('day', '<=', today()->addDays(2)->day)
-//                    ->where('month', '=', today()->month);
-//            })->get();
+        $plannedExpenses = PlannedExpense::getNearest()->filter(function ($plannedExpense) {
+            return !$plannedExpense->isDismissed();
+        });
 
         return view('moves.index', [
             'moves' => $moves,
             'paginator' => $paginator,
             'defaultCurrency' => $defaultCurrency,
+            'plannedExpenses' => $plannedExpenses,
         ]);
     }
 

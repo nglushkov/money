@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateOperationRequest;
 use App\Models\Operation;
 use App\Models\Bill;
 use App\Models\Category;
+use App\Models\PlannedExpense;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Place;
@@ -76,8 +77,12 @@ class OperationController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->get('planned_expense_id')) {
+            $plannedExpense = PlannedExpense::findOrFail($request->planned_expense_id);
+        }
+
         return view('operations.create', [
             'bills' => Bill::orderBy('name', 'asc')->get(),
             'categories' => Category::orderBy('name', 'asc')->get(),
@@ -104,6 +109,7 @@ class OperationController extends Controller
                 ->orderBy('count', 'desc')
                 ->take(5)
                 ->get(),
+            'plannedExpense' => $plannedExpense ?? null,
         ]);
     }
 

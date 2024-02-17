@@ -6,6 +6,8 @@ use App\Helpers\MoneyFormatter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class PlannedExpense extends Model
 {
@@ -79,6 +81,35 @@ class PlannedExpense extends Model
     public function getAmountFormattedAttribute(): string
     {
         return MoneyFormatter::getWithSymbol($this->amount, $this->currency->name);
+    }
+
+    /**
+     * Получить ближайшие планируемые расходы
+     * @todo: move to Service
+     * @return Collection
+     */
+    public static function getNearest(): Collection
+    {
+        $plannedExpenses = PlannedExpense::all();
+        $plannedExpensesToBePaid = collect();
+
+        foreach ($plannedExpenses as $plannedExpense) {
+            if ($plannedExpense->isNearest()) {
+                $plannedExpensesToBePaid->push($plannedExpense);
+            }
+        }
+
+        return $plannedExpensesToBePaid->sortBy('next_payment_date');
+    }
+
+    public function isNearest(): bool
+    {
+        return $this->next_payment_date->diffInDays(today()) <= $this->reminder_days;
+    }
+
+    public function isDismissed(): bool
+    {
+        return Cache::get('dismissed_planned_expense_' . $this->id) === true;
     }
 
     public function currency()

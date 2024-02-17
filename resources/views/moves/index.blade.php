@@ -12,6 +12,25 @@
                 <a href="{{ route('exchanges.create') }}" class="btn btn-success">New Exchange</a>&nbsp;
                 <a href="{{ route('currencies.show', \App\Models\Currency::default()->first()) }}" class="btn btn-light">{{ \App\Models\Currency::default()->first()->name }} rates</a>
             </div>
+            @if($plannedExpenses->count() > 0)
+                @foreach($plannedExpenses as $plannedExpense)
+                    <div class="alert alert-info alert-dismissible mt-3" role="alert">
+                            <p class="m-0">У вас есть <a href="{{ route('planned-expenses.index', ['id' => $plannedExpense]) }}" class="alert-link">
+                                    запланированные расходы</a> на {{ $plannedExpense->next_payment_date_formatted }} ({{ $plannedExpense->next_payment_date_humans }})
+                                    на {{ $plannedExpense->amount_formatted }} в категории {{ $plannedExpense->category->name }} ({{ $plannedExpense->place->name }})
+                            </p>
+
+                            <button type="button" class="btn-close" id="planned-expense-dismiss"
+                            onclick="document.getElementById('planned-expense-dismiss-{{ $plannedExpense->id }}').submit();"></button>
+
+                            <form action="{{ route('planned-expenses.dismiss', $plannedExpense) }}" method="post" id="planned-expense-dismiss-{{ $plannedExpense->id }}">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="dismiss" value="{{ $plannedExpense->id }}">
+                            </form>
+                    </div>
+                @endforeach
+            @endif
             <div class="card mb-3">
                 <ul class="list-group list-group-flush">
 

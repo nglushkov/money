@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class PlannedExpenseController extends Controller
 {
@@ -37,6 +38,18 @@ class PlannedExpenseController extends Controller
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+    }
+
+    /**
+     * Скрыть сообщение о запланированном расходе.
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function dismiss($id)
+    {
+        $plannedExpense = PlannedExpense::find($id);
+        Cache::set('dismissed_planned_expense_' . $plannedExpense->id, true, 60 * 60 * 24);
+        return back();
     }
 
     /**
