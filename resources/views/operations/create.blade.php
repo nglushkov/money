@@ -96,7 +96,7 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="notes">Notes:</label>
-                                <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
+                                <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes', $plannedExpense->notes ?? '') }}">
                             </div>
                             <div class="form-group">
                                 <label for="date">Date:</label>

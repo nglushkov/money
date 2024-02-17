@@ -23,7 +23,11 @@
                         @foreach($plannedExpenses as $plannedExpense)
                             <tr @class(['table-primary' => $plannedExpense->next_payment_date->isToday()]) onclick="window.location.href = '{{ route('operations.create', ['planned_expense_id' => $plannedExpense]) }}';" style="cursor: pointer;">
                                 <td>{{ $plannedExpense->next_payment_date_formatted }} ({{ $plannedExpense->next_payment_date_humans }})</td>
-                                <td>{{ $plannedExpense->amount_formatted }}</td>
+                                <td>{{ $plannedExpense->amount_formatted }}
+                                    @if(!$plannedExpense->currency->is_default)
+                                        <small class="text-body-secondary">{{ $plannedExpense->amount_in_default_currency_formatted }}</small>
+                                    @endif
+                                </td>
                                 <td>
                                     {{ $plannedExpense->frequency_text }}
                                 </td>

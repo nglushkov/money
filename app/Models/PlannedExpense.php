@@ -112,6 +112,19 @@ class PlannedExpense extends Model
         return Cache::get('dismissed_planned_expense_' . $this->id) === true;
     }
 
+    public function getAmountInDefaultCurrencyAttribute(): float
+    {
+        return $this->currency->convertToDefault($this->amount, Carbon::today());
+    }
+
+    public function getAmountInDefaultCurrencyFormattedAttribute(): string
+    {
+        if ($this->amount_in_default_currency == 0) {
+            return '';
+        }
+        return MoneyFormatter::getWithSymbol($this->amount_in_default_currency, $this->currency->defaultCurrency->name);
+    }
+
     public function currency()
     {
         return $this->belongsTo(Currency::class);
