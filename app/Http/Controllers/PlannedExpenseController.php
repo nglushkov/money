@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PlannedExpense;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -48,7 +49,8 @@ class PlannedExpenseController extends Controller
     public function dismiss($id)
     {
         $plannedExpense = PlannedExpense::find($id);
-        Cache::set('dismissed_planned_expense_' . $plannedExpense->id, true, 60 * 60 * 24);
+        // 10 дней
+        Cache::set('dismissed_planned_expense_' . $plannedExpense->id, true, 60 * 60 * 24 * 10);
         return back();
     }
 
