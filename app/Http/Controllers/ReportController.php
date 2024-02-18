@@ -36,7 +36,7 @@ class ReportController extends Controller
         })->sum();
         $total = MoneyFormatter::getWithCurrencyName($total, $defaultCurrencyName);
 
-        // Получение суммы операций по категориям в виде массива [категория => [валюта => сумма]]
+        // Получение суммы операций по категориям и валютам
         $categories = $operations->groupBy(['category.name', 'currency.name']);
         $categories = $categories->map(function ($currencies) {
             return $currencies->map(function ($operations, $currencyName) {
@@ -51,6 +51,16 @@ class ReportController extends Controller
             })->sortKeys();
         });
         $result = $categories->sortKeys();
+
+        // Получение суммы операций по категориям в валюте по умолчанию
+        $totalByCategories = $operations->groupBy('category.name')->map(function ($operations, $categoryName) {
+            return $operations->map(function ($operation) {
+                return $operation->amount_in_default_currency;
+            })->sum();
+        });
+        $totalByCategories->transform(function ($total) use ($defaultCurrencyName) {
+            return MoneyFormatter::getWithCurrencyName($total, $defaultCurrencyName);
+        });
 
         // Получение списка месяцев и годов для фильтрации
         $months = [];
@@ -74,6 +84,7 @@ class ReportController extends Controller
             'years' => $years,
             'total' => $total,
             'defaultCurrencyName' => $defaultCurrencyName,
+            'totalByCategories' => $totalByCategories,
         ]);
     }
 }

@@ -45,7 +45,7 @@
                             <tbody>
                             @foreach($result as $categoryName => $currency)
                                 <tr>
-                                    <td><strong>{{ $categoryName }}</strong></td>
+                                    <td><strong>{{ $categoryName }}</strong> <small class="text-body-secondary">{{ $totalByCategories->get($categoryName) }}</small></td>
                                 </tr>
                                 @foreach($currency as $currencyName => $amounts)
                                     <tr>
