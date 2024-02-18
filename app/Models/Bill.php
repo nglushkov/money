@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\IsNotCorrectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -41,7 +42,10 @@ class Bill extends Model
             return $amount;
         }
 
-        $operations = $this->operations()->isNotDraft()->where('currency_id', $currencyId)->get();
+        $operations = $this->operations()
+            ->isNotDraft()
+            ->where('currency_id', $currencyId)->get();
+
         $amount = $this->currenciesInitial->find($currencyId)->pivot->amount ?? 0;
 
         foreach ($operations as $operation) {
@@ -132,5 +136,37 @@ class Bill extends Model
     public function scopeDefault($query)
     {
         return $query->where('default', true);
+    }
+
+    /**
+     * @param Bill $bill
+     * @param string $currencyName
+     * @param float $amount
+     * @return void
+     * @todo: Move to service
+     */
+    public function correctAmount(Bill $bill, string $currencyName, float $amount)
+    {
+        $currency = Currency::where(['name' => $currencyName])->first();
+        $billAmount = $bill->getAmount($currency->id);
+
+        $fields = [
+            'bill_id' => $bill->id,
+            'currency_id' => $currency->id,
+            'amount' => $amount > $billAmount ? $amount - $billAmount : $billAmount - $amount,
+            'type' => $amount > $billAmount ? Operation::TYPE_INCOME : Operation::TYPE_EXPENSE,
+            'date' => now(),
+            'notes' => 'Correction',
+            'user_id' => auth()->id(),
+            'is_correction' => true,
+        ];
+
+        if ($billAmount === $amount) {
+            return;
+        } else {
+            $operation = new Operation($fields);
+            $operation->user_id = auth()->id();
+            $operation->save();
+        }
     }
 }

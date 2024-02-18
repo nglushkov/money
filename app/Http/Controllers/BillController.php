@@ -40,6 +40,28 @@ class BillController extends Controller
     }
 
     /**
+     * Скорректировать счет
+     * @todo: Refactor
+     *
+     * @param Request $request
+     * @param Bill $bill
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function correct(Request $request, Bill $bill)
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0|max:99999999',
+            'currency_name' => 'required|exists:currencies,name'
+        ]);
+        if (!$validated) {
+            return redirect()->route('bills.show', $bill)->withErrors($request->errors());
+        }
+
+        $bill->correctAmount($bill, $request->input('currency_name'), $request->input('amount'));
+        return redirect()->back();
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreBillRequest $request)

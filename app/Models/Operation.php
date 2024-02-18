@@ -3,15 +3,25 @@
 namespace App\Models;
 
 use App\Helpers\MoneyFormatter;
+use App\Models\Scopes\IsNotCorrectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
-use DateTimeInterface;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
+#[ScopedBy([IsNotCorrectionScope::class])]
 class Operation extends Move
 {
     use HasFactory;
+
+    // @todo: refactor to enum
+    CONST int TYPE_EXPENSE = 0;
+    CONST int TYPE_INCOME = 1;
+    CONST int TYPE_CORRECTION = 2;
+    const array TYPES = [
+        self::TYPE_EXPENSE,
+        self::TYPE_INCOME,
+        self::TYPE_CORRECTION,
+    ];
 
     protected $fillable = [
         'amount',
@@ -22,12 +32,20 @@ class Operation extends Move
         'place_id',
         'notes',
         'date',
+        'is_correction',
+        'is_draft',
     ];
 
     protected $casts = [
         'date' => 'date',
         'is_draft' => 'boolean',
+        'is_correction' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new IsNotCorrectionScope);
+    }
 
     public function getIsExpenseAttribute(): bool
     {
@@ -105,5 +123,15 @@ class Operation extends Move
     public function scopeIsNotDraft($query)
     {
         return $query->where('is_draft', false);
+    }
+
+    public function scopeIsCorrection($query)
+    {
+        return $query->where('is_correction', true);
+    }
+
+    public function scopeIsNotCorrection($query)
+    {
+        return $query->where('is_correction', false);
     }
 }

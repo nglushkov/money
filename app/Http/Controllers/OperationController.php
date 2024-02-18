@@ -8,6 +8,7 @@ use App\Models\Operation;
 use App\Models\Bill;
 use App\Models\Category;
 use App\Models\PlannedExpense;
+use App\Models\Scopes\IsNotCorrectionScope;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Place;
@@ -22,7 +23,7 @@ class OperationController extends Controller
      */
     public function index(Request $request)
     {
-        $operations = Operation::orderBy('date', 'desc')->latest();
+        $operations = Operation::orderBy('date', 'desc')->withoutGlobalScope(IsNotCorrectionScope::class)->latest();
 
         if ($request->get('bill_id')) {
             $operations->where('bill_id', $request->bill_id);
@@ -168,10 +169,10 @@ class OperationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Operation $operation)
+    public function destroy($id)
     {
-        $operation->delete();
+        Operation::withoutGlobalScope(IsNotCorrectionScope::class)->findOrFail($id)->delete();
 
-        return redirect()->route('home');
+        return redirect()->back();
     }
 }

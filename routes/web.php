@@ -31,9 +31,13 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::middleware('auth')->group(function () {
-    Route::resource('operations', OperationController::class);
+    Route::resource('operations', OperationController::class)->except(['delete']);
+    Route::delete('operations/{id}', [OperationController::class, 'destroy'])->name('operations.destroy')->whereNumber('id');
+
     Route::resource('places', PlaceController::class);
     Route::resource('bills', BillController::class);
+    Route::put('bills/{bill}/correct', [BillController::class, 'correct'])->name('bills.correct')->whereNumber('id');
+
     Route::resource('currencies', CurrencyController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('exchanges', ExchangeController::class);

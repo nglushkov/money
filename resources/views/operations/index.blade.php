@@ -29,8 +29,23 @@
                                 'text-success' => $operation->type === 1,
                             ])>{{ $operation->amount_text }}</td>
                             <td>{{ $operation->amount_in_default_currency_formatted }}</td>
-                            <td><a class="text-body" href="{{ route('categories.show', $operation->category) }}">{{ Str::limit($operation->category->name, 15, '...') }}</a></td>
-                            <td><a class="text-body" href="{{ route('places.show', $operation->place) }}">{{ Str::limit($operation->place->name, 15, '...') }}</a></td>
+                            <td>
+                                @if(!$operation->is_correction)
+                                <a class="text-body" href="{{ route('categories.show', $operation->category) }}">{{ Str::limit($operation->category->name, 15, '...') }}</a>
+                                @else
+                                    <form action="{{ route('operations.destroy', $operation) }}" method="post">
+                                        <span class="badge bg-warning">Correction</span>
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-light btn-sm">Delete</button>
+                                    </form>
+                                @endif
+                            </td>
+                            <td>
+                                @if(!$operation->is_correction)
+                                <a class="text-body" href="{{ route('places.show', $operation->place) }}">{{ Str::limit($operation->place->name, 15, '...') }}</a>
+                                @endif
+                            </td>
                             <td><a class="text-body" href="{{ route('bills.show', $operation->bill) }}">{{ Str::limit($operation->bill->name, 15, '...') }}</td>
                         </tr>
                     </a>
