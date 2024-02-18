@@ -14,10 +14,10 @@ class Operation extends Move
     use HasFactory;
 
     // @todo: refactor to enum
-    CONST int TYPE_EXPENSE = 0;
-    CONST int TYPE_INCOME = 1;
-    CONST int TYPE_CORRECTION = 2;
-    const array TYPES = [
+    CONST TYPE_EXPENSE = 0;
+    CONST TYPE_INCOME = 1;
+    CONST TYPE_CORRECTION = 2;
+    const TYPES = [
         self::TYPE_EXPENSE,
         self::TYPE_INCOME,
         self::TYPE_CORRECTION,
