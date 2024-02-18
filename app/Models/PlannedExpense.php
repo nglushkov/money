@@ -23,6 +23,7 @@ class PlannedExpense extends Model
         'place_id',
         'user_id',
         'notes',
+        'reminder_days',
     ];
 
     public function scopeIsMonthly($query)
