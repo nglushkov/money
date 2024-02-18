@@ -70,11 +70,17 @@
                             <tbody>
                             @foreach($totalByCategories as $categoryName => $amount)
                                 <tr>
-                                    <td><strong>{{ $categoryName }}</strong></td>
+                                    <td>{{ $categoryName }}</td>
                                     <td>{{ $amount }}</td>
                                 </tr>
                             @endforeach
                             </tbody>
+                            <tfoot>
+                            <tr>
+                                <th><strong>Total</strong></th>
+                                <th>{{ $total }}</th>
+                            </tr>
+                            </tfoot>
                         </table>
                     </div>
 
