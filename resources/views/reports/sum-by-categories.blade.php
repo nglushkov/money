@@ -45,13 +45,15 @@
                             <tbody>
                             @foreach($result as $categoryName => $currency)
                                 <tr>
-                                    <td><strong>{{ $categoryName }}</strong> <small class="text-body-secondary">{{ $totalByCategories->get($categoryName) }}</small></td>
+                                    <td><strong>{{ $categoryName }}</strong>
+                                        <small class="text-body-secondary">{{ $totalByCategories->get($categoryName) }}</small>
+                                    </td>
                                 </tr>
                                 @foreach($currency as $currencyName => $amounts)
                                     <tr>
                                         <td>
                                             <span>{{ $amounts->get('amount') }}</span>
-                                            @if($amounts->get('operation_currency') !== $defaultCurrencyName)
+                                            @if($amounts->get('operation_currency') !== $defaultCurrencyName && count($currency) > 1)
                                                 <small class="text-body-secondary">{{ $amounts->get('amount_in_default_currency') }}</small>
                                             @endif
                                         </td>
