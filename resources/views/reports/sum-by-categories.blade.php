@@ -49,8 +49,11 @@
                                 </tr>
                                 @foreach($currency as $currencyName => $amounts)
                                     <tr>
-                                        <td>{{ $amounts->get('amount') }} <small
-                                                class="text-body-secondary">{{ $amounts->get('amount_in_default_currency') }}</small>
+                                        <td>
+                                            <span>{{ $amounts->get('amount') }}</span>
+                                            @if($amounts->get('operation_currency') !== $defaultCurrencyName)
+                                                <small class="text-body-secondary">{{ $amounts->get('amount_in_default_currency') }}</small>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
