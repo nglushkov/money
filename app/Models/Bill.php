@@ -43,6 +43,7 @@ class Bill extends Model
         }
 
         $operations = $this->operations()
+            ->withoutGlobalScope(IsNotCorrectionScope::class)
             ->isNotDraft()
             ->where('currency_id', $currencyId)->get();
 
