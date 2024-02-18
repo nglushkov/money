@@ -42,6 +42,15 @@
                             </li> -->
                         </ul>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Reports
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('reports.sum-by-categories') }}">📊 Sum by Categories</a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link disabled">|</a>
                     </li>

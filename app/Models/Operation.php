@@ -49,12 +49,12 @@ class Operation extends Move
 
     public function getIsExpenseAttribute(): bool
     {
-        return $this->type === 0;
+        return $this->type === self::TYPE_EXPENSE;
     }
 
     public function getIsIncomeAttribute(): bool
     {
-        return $this->type === 1;
+        return $this->type === self::TYPE_INCOME;
     }
 
     public function bill(): BelongsTo
@@ -102,7 +102,7 @@ class Operation extends Move
         return MoneyFormatter::get($this->amount);
     }
 
-    public function getAmountInDefaultCurrencyAttribute(): float
+    public function getAmountInDefaultCurrencyAttribute(): string
     {
         return $this->currency->convertToDefault($this->amount, $this->date);
     }
@@ -133,5 +133,15 @@ class Operation extends Move
     public function scopeIsNotCorrection($query)
     {
         return $query->where('is_correction', false);
+    }
+
+    public function scopeIsExpense($query)
+    {
+        return $query->where('type', self::TYPE_EXPENSE);
+    }
+
+    public function scopeIsIncome($query)
+    {
+        return $query->where('type', self::TYPE_INCOME);
     }
 }

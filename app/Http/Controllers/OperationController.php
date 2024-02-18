@@ -173,6 +173,6 @@ class OperationController extends Controller
     {
         Operation::withoutGlobalScope(IsNotCorrectionScope::class)->findOrFail($id)->delete();
 
-        return redirect()->back();
+        return redirect()->route('operations.index');
     }
 }

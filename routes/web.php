@@ -12,6 +12,7 @@ use App\Http\Controllers\OperationController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\PlannedExpenseController;
 use App\Http\Controllers\RateController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TransferController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -53,6 +54,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [MoveController::class, 'index'])->name('home');
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('/reports/sum-by-categories', [ReportController::class, 'getSumByCategories'])->name('reports.sum-by-categories');
 
     Route::get('/get-cat-url', function () {
         $image = Cache::remember('catImage2', 60 * 60 * 24, function () {

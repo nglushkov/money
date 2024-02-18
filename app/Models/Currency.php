@@ -56,7 +56,7 @@ class Currency extends Model
         return $this->where('is_default', true)->first();
     }
 
-    public function convertToDefault($amount, $date)
+    public function convertToDefault($amount, $date): string
     {
         if ($this->is_default) {
             return $amount;
