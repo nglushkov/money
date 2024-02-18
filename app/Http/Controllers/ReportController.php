@@ -57,7 +57,7 @@ class ReportController extends Controller
             return $operations->map(function ($operation) {
                 return $operation->amount_in_default_currency;
             })->sum();
-        });
+        })->sortDesc();
         $totalByCategories->transform(function ($total) use ($defaultCurrencyName) {
             return MoneyFormatter::getWithCurrencyName($total, $defaultCurrencyName);
         });

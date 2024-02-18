@@ -6,7 +6,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-title p-3 pb-0 mb-0">
-                <h4>Report:</h4>
+                <h4>Sum by Categories:</h4>
             </div>
             <div class="card-body">
                 <div class="row mb-3">
@@ -39,8 +39,8 @@
                         </div>
                     </div>
 
-                    <div class="col-10">
-                        <p>Total: <strong>{{ $total }}</strong></p>
+                    <div class="col-6">
+                        <h5>Total: <strong class="text-success">{{ $total }}</strong></h5>
                         <table class="table">
                             <tbody>
                             @foreach($result as $categoryName => $currency)
@@ -59,6 +59,20 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-4">
+                        <h5>Total by Categories</h5>
+                        <table class="table">
+                            <tbody>
+                            @foreach($totalByCategories as $categoryName => $amount)
+                                <tr>
+                                    <td><strong>{{ $categoryName }}</strong></td>
+                                    <td>{{ $amount }}</td>
+                                </tr>
                             @endforeach
                             </tbody>
                         </table>
