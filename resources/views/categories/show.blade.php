@@ -18,7 +18,7 @@
         </div>
 
         <hr>
-        @include('blocks.latest-operations', ['operations' => $lastOperations])
+        @include('blocks.latest-operations', ['operations' => $lastOperations, 'routeParameters' => ['category_id' => $category->id]])
     </div>
 </div>
 @endsection

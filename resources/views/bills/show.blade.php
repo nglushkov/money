@@ -45,7 +45,7 @@
             </div>
 
             <hr>
-            @include('blocks.latest-operations', ['operations' => $lastOperations])
+            @include('blocks.latest-operations', ['operations' => $lastOperations, 'routeParameters' => ['bill_id' => $bill->id]])
         </div>
     </div>
 
