@@ -89,12 +89,12 @@ class Operation extends Move
 
     public function getAmountTextAttribute(): string
     {
-        return MoneyFormatter::getWithSymbolAndSign($this->amount, $this->currency->name, $this->type);
+        return MoneyFormatter::getWithCurrencyNameAndSign($this->amount, $this->currency->name, $this->type);
     }
 
     public function getAmountTextWithCurrencyAttribute(): string
     {
-        return MoneyFormatter::getWithSymbol($this->amount, $this->currency->name);
+        return MoneyFormatter::getWithCurrencyName($this->amount, $this->currency->name);
     }
 
     public function getAmountFormattedAttribute(): string
@@ -104,7 +104,7 @@ class Operation extends Move
 
     public function getAmountInDefaultCurrencyAttribute(): string
     {
-        return $this->currency->convertToDefault($this->amount, $this->date);
+        return Currency::convertToDefault($this->currency, $this->amount, $this->date);
     }
 
     public function getAmountInDefaultCurrencyFormattedAttribute(): string
@@ -112,7 +112,7 @@ class Operation extends Move
         if ($this->amount_in_default_currency == 0) {
             return '';
         }
-        return MoneyFormatter::getWithSymbol($this->amount_in_default_currency, $this->currency->defaultCurrency->name);
+        return MoneyFormatter::getWithCurrencyName($this->amount_in_default_currency, $this->currency->defaultCurrency->name);
     }
 
     public function scopeLatestDate($query)

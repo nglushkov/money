@@ -33,19 +33,20 @@ class ReportController extends Controller
         $total = $operations->map(function ($operation) {
             return $operation->amount_in_default_currency;
         })->sum();
-        $total = MoneyFormatter::getWithSymbol($total, Currency::default()->first()->name);
+        $total = MoneyFormatter::getWithCurrencyName($total, Currency::default()->first()->name);
 
         // Получение суммы операций по категориям в виде массива [категория => [валюта => сумма]]
         $categories = $operations->groupBy(['category.name', 'currency.name']);
         $categories = $categories->map(function ($currencies) {
-            return $currencies->map(function ($operations) {
-                return $operations->sum('amount');
+            return $currencies->map(function ($operations, $currencyName) {
+                return collect([
+                    'amount' => MoneyFormatter::getWithCurrencyName($operations->sum('amount'), $currencyName),
+                    'amount_in_default_currency' => MoneyFormatter::getWithCurrencyName(
+                        $operations->sum('amount_in_default_currency'),
+                        Currency::default()->first()->name
+                    ),
+                ]);
             })->sortKeys();
-        });
-        $categories = $categories->map(function ($currencies) {
-            return $currencies->map(function ($amount, $currency) {
-                return MoneyFormatter::getWithSymbol($amount, $currency);
-            });
         });
         $result = $categories->sortKeys();
 

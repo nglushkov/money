@@ -56,13 +56,13 @@ class Currency extends Model
         return $this->where('is_default', true)->first();
     }
 
-    public function convertToDefault($amount, $date): string
+    public static function convertToDefault(Currency $currency, string $amount, \DateTime $date): string
     {
-        if ($this->is_default) {
+        if ($currency->is_default) {
             return $amount;
         }
 
-        $rate = $this->ratesTo()->where('from_currency_id', $this->defaultCurrency->id)
+        $rate = $currency->ratesTo()->where('from_currency_id', $currency->defaultCurrency->id)
             ->where('date', '<=', $date)
             ->orderBy('date', 'desc')
             ->first();

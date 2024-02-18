@@ -43,23 +43,23 @@ class ExchangeController extends Controller
                 ->where('to_currency_id', $exchange->to_currency_id)
                 ->where('date', $exchange->date)
                 ->count();
-                
+
             if ($rate > 0) {
                 return redirect()->route('exchanges.create')
                     ->withErrors(['Rate already exists'])
                     ->withInput($request->all());
             }
-            
-            $rate = Rate::create([
+
+            Rate::create([
                 'from_currency_id' => $exchange->to_currency_id, // 955000
                 'to_currency_id' => $exchange->from_currency_id, // 800
                 'date' => $exchange->date,
-                'rate' => $exchange->amount_to / $exchange->amount_from
+                'rate' => bcdiv($exchange->amount_to, $exchange->amount_from, 2)
             ]);
         }
         $exchange->user_id = auth()->id();
         $exchange->save();
-        
+
         return redirect()->route('home');
     }
 

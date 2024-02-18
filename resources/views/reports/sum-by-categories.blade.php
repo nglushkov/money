@@ -30,7 +30,6 @@
 
                         <div class="btn-group-vertical">
                             @foreach($months as $number => $name)
-                                </button>
                                 <a href="{{ route('reports.sum-by-categories', ['month' => $number, 'year' => request('year', date('Y'))]) }}"
                                     @class(['active' => $number == request('month', date('n')), 'btn' => true, 'btn-secondary' => true, 'position-relative' => true])
                                 >
@@ -48,9 +47,11 @@
                                 <tr>
                                     <td><strong>{{ $categoryName }}</strong></td>
                                 </tr>
-                                @foreach($currency as $currencyName => $amount)
+                                @foreach($currency as $currencyName => $amounts)
                                     <tr>
-                                        <td>{{ $currencyName }}: {{ $amount }}</td>
+                                        <td>{{ $amounts->get('amount') }} <small
+                                                class="text-body-secondary">{{ $amounts->get('amount_in_default_currency') }}</small>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @endforeach

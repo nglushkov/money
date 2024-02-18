@@ -19,7 +19,7 @@ class Transfer extends Move
         'date',
         'currency_id',
     ];
-    
+
     public function from()
     {
         return $this->belongsTo(Bill::class, 'from_bill_id');
@@ -42,12 +42,12 @@ class Transfer extends Move
 
     public function getAmountTextAttribute($value): string
     {
-        return MoneyFormatter::getWithSymbolAndSign($this->amount, $this->currency->name, $this->type);
+        return MoneyFormatter::getWithCurrencyNameAndSign($this->amount, $this->currency->name, $this->type);
     }
 
     public function getAmountTextWithCurrencyAttribute($value): string
     {
-        return MoneyFormatter::getWithSymbol($this->amount, $this->currency->name);
+        return MoneyFormatter::getWithCurrencyName($this->amount, $this->currency->name);
     }
 
     public function getAmountFormattedAttribute(): string

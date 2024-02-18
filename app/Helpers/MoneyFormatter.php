@@ -9,14 +9,14 @@ class MoneyFormatter
         return number_format($amount, $decimals, '.', ' ');
     }
 
-    public static function getWithSymbol(float $amount, string $currencySymbol): string
+    public static function getWithCurrencyName(float $amount, string $currencyName): string
     {
-        return self::get($amount) . ' ' . $currencySymbol;
+        return self::get($amount) . ' ' . $currencyName;
     }
 
-    public static function getWithSymbolAndSign(float $amount, string $currencySymbol, $type): string
+    public static function getWithCurrencyNameAndSign(float $amount, string $currencyName, $type): string
     {
-        $formattedAmount = self::getWithSymbol($amount, $currencySymbol);
+        $formattedAmount = self::getWithCurrencyName($amount, $currencyName);
 
         return $type === 0 ? '-' . $formattedAmount : '+' . $formattedAmount;
     }

@@ -81,7 +81,7 @@ class PlannedExpense extends Model
 
     public function getAmountFormattedAttribute(): string
     {
-        return MoneyFormatter::getWithSymbol($this->amount, $this->currency->name);
+        return MoneyFormatter::getWithCurrencyName($this->amount, $this->currency->name);
     }
 
     /**
@@ -115,7 +115,7 @@ class PlannedExpense extends Model
 
     public function getAmountInDefaultCurrencyAttribute(): float
     {
-        return $this->currency->convertToDefault($this->amount, Carbon::today());
+        return Currency::convertToDefault($this->currency, $this->amount, Carbon::today());
     }
 
     public function getAmountInDefaultCurrencyFormattedAttribute(): string
@@ -123,7 +123,7 @@ class PlannedExpense extends Model
         if ($this->amount_in_default_currency == 0) {
             return '';
         }
-        return MoneyFormatter::getWithSymbol($this->amount_in_default_currency, $this->currency->defaultCurrency->name);
+        return MoneyFormatter::getWithCurrencyName($this->amount_in_default_currency, $this->currency->defaultCurrency->name);
     }
 
     public function currency()
