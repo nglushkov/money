@@ -12,7 +12,8 @@
         "laravel/framework": "^10.10",
         "laravel/pail": "^1.1",
         "laravel/sanctum": "^3.3",
-        "laravel/tinker": "^2.8"
+        "laravel/tinker": "^2.8",
+        "spatie/laravel-backup": "^8.6"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
