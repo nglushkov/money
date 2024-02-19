@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\MoneyFormatter;
 use App\Models\Bill;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Operation;
+use App\Service\ReportService;
 use Illuminate\Http\Request;
 use Telegram\Bot\Api;
 
@@ -16,11 +18,18 @@ class BotController extends Controller
         2 => 61089668,
     ];
 
-    private $telegram;
+    const COMMAND_REPORT = '/report';
+    const COMMANDS = [
+        self::COMMAND_REPORT,
+    ];
 
-    public function __construct(Api $telegram)
+    private $telegram;
+    private ReportService $reportService;
+
+    public function __construct(Api $telegram, ReportService $reportService)
     {
         $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+        $this->reportService = $reportService;
     }
 
     public function handleWebhook()
@@ -36,12 +45,6 @@ class BotController extends Controller
             'user_id' => $userId,
         ]);
 
-        logger()->info('test', [
-            'user_ids' => self::USER_IDS,
-            'user_id' => $userId,
-            'in_array' => in_array($userId, self::USER_IDS),
-        ]);
-
         if (!in_array($userId, self::USER_IDS)) {
             $this->telegram->sendMessage([
                 'chat_id' => $userId,
@@ -55,7 +58,11 @@ class BotController extends Controller
             return;
         }
 
-        $this->createExpense($text, $userId);
+        if ($text === self::COMMAND_REPORT) {
+            $this->handleReportCommand($userId);
+        } else {
+            $this->createExpense($text, $userId);
+        }
     }
 
     private function createExpense(string $text, int $userId)
@@ -135,5 +142,36 @@ class BotController extends Controller
                 'exception' => $e,
             ]);
         }
+    }
+
+    private function handleReportCommand(int $userId): void
+    {
+        $month = date('n');
+        $year = date('Y');
+
+        // @todo: move together with \App\Service\ReportService::getOperations
+        $operations = $this->reportService->getOperations($month, $year);
+
+        $total = $operations->map(function ($operation) {
+            return $operation->amount_in_default_currency;
+        })->sum();
+        $total = MoneyFormatter::getWithCurrencyName($total, Currency::default()->first()->name);
+
+        $data = $this->reportService->getTotalByCategories(
+            $operations,
+            $month,
+            $year,
+            Currency::default()->first()->name
+        );
+        $text = 'Report for ' . date('F Y') . ':' . PHP_EOL;
+        $text .= 'Total: ' . $total . PHP_EOL . PHP_EOL;
+        foreach ($data as $key => $value) {
+            $text .= $key . ': ' . $value . PHP_EOL;
+        }
+
+        $this->telegram->sendMessage([
+            'chat_id' => $userId,
+            'text' => $text,
+        ]);
     }
 }

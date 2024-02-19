@@ -26,7 +26,7 @@ class TelegramBot extends Command
      */
     public function handle()
     {
-        $telegram = new Api('6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04');
-        $telegram->setWebhook(['url' => env('BOT_DOMAIN') . '/6579986722:AAHGHHcKjOIFROkXNPeQcTEffL9bN-3La04/webhook']);
+        $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+        $telegram->setWebhook(['url' => env('BOT_DOMAIN') . '/' . env('TELEGRAM_BOT_TOKEN') . '/webhook']);
     }
 }

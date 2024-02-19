@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\MoneyFormatter;
 use App\Models\Currency;
 use App\Models\Operation;
+use App\Service\ReportService;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -12,6 +13,13 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+    private ReportService $reportService;
+
+    public function __construct(ReportService $reportService)
+    {
+        $this->reportService = $reportService;
+    }
+
     /**
      * Получение суммы операций по категориям за выбранный месяц
      * @param Request $request
@@ -23,12 +31,7 @@ class ReportController extends Controller
         $year = $request->input('year', date('Y'));
         $defaultCurrencyName = Currency::default()->first()->name;
 
-        $operations = Operation::whereMonth('date', $month)
-            ->whereYear('date', $year)
-            ->isExpense()
-            ->isNotDraft()
-            ->with(['category', 'currency'])
-            ->get();
+        $operations = $this->reportService->getOperations($month, $year);
 
         // Получение общей суммы операций в валюте по умолчанию
         $total = $operations->map(function ($operation) {
@@ -53,14 +56,12 @@ class ReportController extends Controller
         $result = $categories->sortKeys();
 
         // Получение суммы операций по категориям в валюте по умолчанию
-        $totalByCategories = $operations->groupBy('category.name')->map(function ($operations, $categoryName) {
-            return $operations->map(function ($operation) {
-                return $operation->amount_in_default_currency;
-            })->sum();
-        })->sortDesc();
-        $totalByCategories->transform(function ($total) use ($defaultCurrencyName) {
-            return MoneyFormatter::getWithCurrencyName($total, $defaultCurrencyName);
-        });
+        $totalByCategories = $this->reportService->getTotalByCategories(
+            $this->reportService->getOperations($month, $year),
+            $defaultCurrencyName,
+            $month,
+            $year
+        );
 
         // Получение списка месяцев и годов для фильтрации
         $months = [];

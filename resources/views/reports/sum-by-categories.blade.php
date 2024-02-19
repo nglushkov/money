@@ -11,7 +11,7 @@
             <div class="card-body">
                 <div class="row mb-3">
 
-                    <div class="col-2">
+                    <div class="col-3">
                         <div class="mb-2">
                             <a href="{{ route('reports.sum-by-categories', ['year' => date('Y'), 'month' => date('n')]) }}"
                                 @class(['btn' => true, 'btn-light' => true])
@@ -39,7 +39,7 @@
                         </div>
                     </div>
 
-                    <div class="col-6">
+                    <div class="col-5">
                         <h5>Total: <strong class="text-success">{{ $total }}</strong></h5>
                         <table class="table">
                             <tbody>
