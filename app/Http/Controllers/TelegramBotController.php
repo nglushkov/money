@@ -11,7 +11,7 @@ use App\Service\ReportService;
 use Illuminate\Http\Request;
 use Telegram\Bot\Api;
 
-class BotController extends Controller
+class TelegramBotController extends Controller
 {
     const USER_IDS = [
         1 => 106809815,

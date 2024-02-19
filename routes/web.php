@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\BillController;
-use App\Http\Controllers\BotController;
+use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExchangeController;
@@ -72,4 +72,4 @@ Route::middleware('auth')->group(function () {
 Route::get('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
 
-Route::post('/' . env('TELEGRAM_BOT_TOKEN') . '/webhook', [BotController::class, 'handleWebhook']);
+Route::post('/' . env('TELEGRAM_BOT_TOKEN') . '/webhook', [TelegramBotController::class, 'handleWebhook']);
