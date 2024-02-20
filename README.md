@@ -1,8 +1,24 @@
 ### Requirements
 * PHP 8.3
+
 ### Prerequisites (temporary)
 * One Bill must be default=True
 * One Currency must be active=True
+
+### Database
+For migrations run the following command:
+```
+sail artisan migrate
+```
+For seeders run:
+```
+sail artisan db:seed
+```
+Seeders will create some data and user with email/password:
+```
+default@example.com
+password
+```
 
 ### Development environment
 Run the following commands:
