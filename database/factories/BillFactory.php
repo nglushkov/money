@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,7 @@ class BillFactory extends Factory
         return [
             'name' => $this->faker->unique()->word(),
             'notes' => $this->faker->text(10),
-            'user_id' => rand(1, 10),
+            'user_id' => User::inRandomOrder()->first()->id,
         ];
     }
 }

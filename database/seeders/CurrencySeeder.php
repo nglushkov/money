@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Currency;
 use Illuminate\Database\Seeder;
 
 class CurrencySeeder extends Seeder
@@ -12,7 +12,6 @@ class CurrencySeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\Currency::factory(10)->create();
         $names = [
             'USD',
             'KZT',
@@ -21,7 +20,7 @@ class CurrencySeeder extends Seeder
             'ARS',
         ];
         foreach ($names as $name) {
-            \App\Models\Currency::factory()->create([
+            Currency::factory()->create([
                 'name' => $name,
                 'is_default' => $name === 'USD',
             ]);

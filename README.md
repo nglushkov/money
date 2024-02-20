@@ -1,8 +1,10 @@
+### Requirements
+* PHP 8.3
 ### Prerequisites (temporary)
 * One Bill must be default=True
 * One Currency must be active=True
 
-### For development environment
+### Development environment
 Run the following commands:
 1. Clone the repository
 2. Install dependencies `composer install`
@@ -35,3 +37,11 @@ TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 TELEGRAM_BOT_DOMAIN=https://your_localxpose_url`
 ```
 2. Set webhook `sail artisan app:bot-set-webhook`
+
+### Testing
+In this project used PHPUnit for testing. To run tests, use the following command:
+```
+sail artisan test
+```
+Tests located in `tests/Feature` and `tests/Unit` directories.
+Config located in `phpunit.xml` file.
