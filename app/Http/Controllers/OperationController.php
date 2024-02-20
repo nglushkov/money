@@ -90,26 +90,9 @@ class OperationController extends Controller
             'users' => User::orderBy('name', 'asc')->get(),
             'places' => Place::orderBy('name', 'asc')->get(),
             'currencies' => Currency::orderBy('name', 'asc')->get(),
-
-            'topCategories' => Category::select('categories.*', DB::raw('COUNT(operations.category_id) as count'))
-                ->leftJoin('operations', 'categories.id', '=', 'operations.category_id')
-                ->groupBy('categories.id')
-                ->orderBy('count', 'desc')
-                ->take(10)
-                ->get(),
-
-            'topPlaces' => Place::select('places.*', DB::raw('COUNT(operations.place_id) as count'))
-                ->leftJoin('operations', 'places.id', '=', 'operations.place_id')
-                ->groupBy('places.id')
-                ->orderBy('count', 'desc')
-                ->take(15)
-                ->get(),
-            'topBills' => Bill::select('bills.*', DB::raw('COUNT(operations.bill_id) as count'))
-                ->leftJoin('operations', 'bills.id', '=', 'operations.bill_id')
-                ->groupBy('bills.id')
-                ->orderBy('count', 'desc')
-                ->take(5)
-                ->get(),
+            'topCategories' => $this->getTopCategories(),
+            'topPlaces' => $this->getTopPlaces(),
+            'topBills' => $this->getTopBills(),
             'plannedExpense' => $plannedExpense ?? null,
         ]);
     }
@@ -150,6 +133,9 @@ class OperationController extends Controller
             'users' => User::orderBy('name', 'asc')->get(),
             'places' => Place::orderBy('name', 'asc')->get(),
             'currencies' => Currency::orderBy('name', 'asc')->get(),
+            'topCategories' => $this->getTopCategories(),
+            'topPlaces' => $this->getTopPlaces(),
+            'topBills' => $this->getTopBills(),
         ]);
     }
 
@@ -174,5 +160,35 @@ class OperationController extends Controller
         Operation::withoutGlobalScope(IsNotCorrectionScope::class)->findOrFail($id)->delete();
 
         return redirect()->route('operations.index');
+    }
+
+    private function getTopCategories()
+    {
+        return Category::select('categories.*', DB::raw('COUNT(operations.category_id) as count'))
+            ->leftJoin('operations', 'categories.id', '=', 'operations.category_id')
+            ->groupBy('categories.id')
+            ->orderBy('count', 'desc')
+            ->take(10)
+            ->get();
+    }
+
+    private function getTopPlaces()
+    {
+        return Place::select('places.*', DB::raw('COUNT(operations.place_id) as count'))
+            ->leftJoin('operations', 'places.id', '=', 'operations.place_id')
+            ->groupBy('places.id')
+            ->orderBy('count', 'desc')
+            ->take(15)
+            ->get();
+    }
+
+    private function getTopBills()
+    {
+        return Bill::select('bills.*', DB::raw('COUNT(operations.bill_id) as count'))
+            ->leftJoin('operations', 'bills.id', '=', 'operations.bill_id')
+            ->groupBy('bills.id')
+            ->orderBy('count', 'desc')
+            ->take(5)
+            ->get();
     }
 }

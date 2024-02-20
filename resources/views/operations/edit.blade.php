@@ -1,22 +1,22 @@
-@extends('layouts.app')
+@extends('operations.create-update')
 
 @section('title', 'Edit Operation')
 
-@section('content')
-<div class="row justify-content-md-center">
-    <div class="col-md-6">
-        <div class="card">
+@section('form')
+
+<div class="col-md-4">
+    <div class="card">
         <div class="card-body">
             <h5 class="card-title">Edit Operation @if($operation->is_draft)<span class="badge bg-warning">Draft</span>@endif</h5>
             <form action="{{ route('operations.update', $operation) }}" method="POST">
                 @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
 
                 @csrf
@@ -24,7 +24,7 @@
                 <div class="form-group mb-2">
                     <label for="amount">Amount:</label>
                     <input type="text" name="amount" id="amount" class="form-control" required autofocus
-                        value="{{ old('amount', $operation->amount) }}">
+                           value="{{ old('amount', $operation->amount) }}">
                 </div>
                 <div class="form-group mb-2">
                     <label for="type">Type:</label>
@@ -37,8 +37,8 @@
                     <label for="bill">Bill:</label>
                     <select name="bill_id" id="bill" class="form-control">
                         @foreach($bills as $bill)
-                        <option value="{{ $bill->id }}" @selected(old('bill_id', $operation->bill_id) == $bill->id)>{{
-                            $bill->name_with_user }}</option>
+                            <option value="{{ $bill->id }}" @selected(old('bill_id', $operation->bill_id) == $bill->id)>{{
+                        $bill->name_with_user }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -64,8 +64,8 @@
                     <select name="place_id" id="place" class="form-control" required>
                         <option value="">Select Place</option>
                         @foreach($places as $place)
-                        <option value="{{ $place->id }}" @selected(old('place_id', $operation->place_id) == $place->id)>{{
-                            $place->name }}</option>
+                            <option value="{{ $place->id }}" @selected(old('place_id', $operation->place_id) == $place->id)>{{
+                        $place->name }}</option>
                         @endforeach
                     </select>
                 </div>
