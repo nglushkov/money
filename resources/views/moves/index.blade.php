@@ -60,7 +60,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div><small class="text-body-secondary fw-light">{{ $move->date_humans }}</small></div>
+                                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
                                     <td><small class="text-body-secondary">{{ Str::limit($move->notes, 40) }}</small></td>
                                     <td>
