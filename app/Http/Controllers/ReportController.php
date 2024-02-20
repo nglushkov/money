@@ -58,9 +58,9 @@ class ReportController extends Controller
         // Получение суммы операций по категориям в валюте по умолчанию
         $totalByCategories = $this->reportService->getTotalByCategories(
             $this->reportService->getOperations($month, $year),
-            $defaultCurrencyName,
             $month,
-            $year
+            $year,
+            $defaultCurrencyName
         );
 
         // Получение списка месяцев и годов для фильтрации
