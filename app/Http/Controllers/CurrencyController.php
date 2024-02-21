@@ -45,7 +45,12 @@ class CurrencyController extends Controller
         if ($currency->is_default) {
             $currencies = Currency::where('is_default', false)->orderBy('name')->get();
         }
-        $lastOperations = $currency->operations()->latestDate()->paginate(10);
+        $lastOperations = $currency->operations()->with([
+            'bill',
+            'category',
+            'currency',
+            'place',
+        ])->latestDate()->paginate(10);
 
         $currencyRates = $currency->ratesFrom()
             ->orderBy('date', 'desc')

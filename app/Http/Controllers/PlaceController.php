@@ -41,7 +41,12 @@ class PlaceController extends Controller
      */
     public function show(Place $place)
     {
-        $lastOperations = $place->operations()->latestDate()->paginate(20);
+        $lastOperations = $place->operations()->with([
+            'bill',
+            'category',
+            'currency',
+            'place',
+        ])->latestDate()->paginate(20);
 
         return view('places.show', [
             'place' => $place,
