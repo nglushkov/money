@@ -18,6 +18,7 @@ return new class extends Migration
             $table->smallInteger('month')->nullable();
             $table->enum('frequency', ['monthly', 'annually']);
             $table->foreignId('currency_id')->constrained();
+            // todo: remove nullable
             $table->foreignId('category_id')->nullable()->constrained();
             $table->foreignId('place_id')->nullable()->constrained();
             $table->foreignId('user_id')->constrained();

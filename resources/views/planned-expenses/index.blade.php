@@ -6,9 +6,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-{{--                <div class="bg-light p-3">--}}
-{{--                    <a href="{{ route('planned-expenses.create') }}" class="btn btn-success">Create</a>--}}
-{{--                </div>--}}
+                <div class="bg-light p-3">
+                    <a href="{{ route('planned-expenses.create') }}" class="btn btn-success">Create</a>
+                </div>
                 <table class="table">
                     <thead>
                         <tr>
@@ -21,7 +21,7 @@
                     </thead>
                     <tbody>
                         @foreach($plannedExpenses as $plannedExpense)
-                            <tr @class(['table-primary' => $plannedExpense->next_payment_date->isToday()]) onclick="window.location.href = '{{ route('operations.create', ['planned_expense_id' => $plannedExpense]) }}';" style="cursor: pointer;">
+                            <tr @class(['table-primary' => $plannedExpense->next_payment_date->isToday()]) onclick="window.location.href = '{{ route('planned-expenses.show', $plannedExpense) }}';" style="cursor: pointer;">
                                 <td>{{ $plannedExpense->next_payment_date_formatted }} ({{ $plannedExpense->next_payment_date_humans }})</td>
                                 <td>{{ $plannedExpense->amount_formatted }}
                                     @if(!$plannedExpense->currency->is_default)

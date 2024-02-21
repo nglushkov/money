@@ -44,12 +44,14 @@ class PlannedExpense extends Model
             }
             return $today->addMonthsNoOverflow()->setDay($this->day);
         }
-
-        if ($this->day >= $today->day && $this->month >= $today->month) {
-            return $today->setDay($this->day)->setMonth($this->month);
-
+        if ($this->month < $today->month) {
+            return $today->addYearsNoOverflow()->setDay($this->day)->setMonth($this->month);
         }
-        return $today->addYearsNoOverflow()->setDay($this->day)->setMonth($this->month);
+        if ($this->month == $today->month && $this->day < $today->day) {
+            return $today->addYearsNoOverflow()->setDay($this->day)->setMonth($this->month);
+        }
+
+        return $today->setDay($this->day)->setMonth($this->month);
     }
 
     public function getNextPaymentDateFormattedAttribute(): string
@@ -144,5 +146,13 @@ class PlannedExpense extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function setMonthAttribute($value)
+    {
+        $this->attributes['month'] = $value;
+        if ($this->frequency === 'monthly') {
+            $this->attributes['month'] = null;
+        }
     }
 }

@@ -173,8 +173,8 @@ class PlannedExpenseTest extends TestCase
     {
         $today = Carbon::parse('2024-01-20');
         $day = 15;
-        $month = 2;
-        $resultDate = '2025-02-15';
+        $month = 5;
+        $resultDate = '2024-05-15';
 
         $plan = new PlannedExpense([
             'amount' => 100,

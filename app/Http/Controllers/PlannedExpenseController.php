@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePlannedExpenseRequest;
+use App\Http\Requests\UpdatePlannedExpenseRequest;
+use App\Models\Category;
+use App\Models\Currency;
+use App\Models\Place;
 use App\Models\PlannedExpense;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -43,6 +48,7 @@ class PlannedExpenseController extends Controller
 
     /**
      * Скрыть сообщение о запланированном расходе.
+     * todo: Refactor this method
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -59,15 +65,24 @@ class PlannedExpenseController extends Controller
      */
     public function create()
     {
-        //
+        return view('planned-expenses.create', [
+            'categories' => Category::orderBy('name', 'asc')->get(),
+            'places' => Place::orderBy('name', 'asc')->get(),
+            'currencies' => Currency::orderBy('name', 'asc')->get(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePlannedExpenseRequest $request)
     {
-        //
+        $plannedExpense = new PlannedExpense();
+        $plannedExpense->fill($request->validated());
+        $plannedExpense->user_id = auth()->id();
+        $plannedExpense->save();
+
+        return redirect()->route('planned-expenses.index');
     }
 
     /**
@@ -75,7 +90,9 @@ class PlannedExpenseController extends Controller
      */
     public function show(PlannedExpense $plannedExpense)
     {
-        //
+        return view('planned-expenses.show', [
+            'plannedExpense' => $plannedExpense,
+        ]);
     }
 
     /**
@@ -83,15 +100,23 @@ class PlannedExpenseController extends Controller
      */
     public function edit(PlannedExpense $plannedExpense)
     {
-        //
+        return view('planned-expenses.edit', [
+            'plannedExpense' => $plannedExpense,
+            'categories' => Category::orderBy('name', 'asc')->get(),
+            'places' => Place::orderBy('name', 'asc')->get(),
+            'currencies' => Currency::orderBy('name', 'asc')->get(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PlannedExpense $plannedExpense)
+    public function update(UpdatePlannedExpenseRequest $request, PlannedExpense $plannedExpense)
     {
-        //
+        $plannedExpense->fill($request->validated());
+        $plannedExpense->save();
+
+        return redirect()->route('planned-expenses.index');
     }
 
     /**
@@ -99,6 +124,7 @@ class PlannedExpenseController extends Controller
      */
     public function destroy(PlannedExpense $plannedExpense)
     {
-        //
+        $plannedExpense->delete();
+        return redirect()->route('planned-expenses.index');
     }
 }
