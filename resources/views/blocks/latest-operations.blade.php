@@ -19,7 +19,7 @@
             </td>
             <td><a href="{{ route('categories.show', $operation->category) }}">{{ $operation->category->name }}</a></td>
             <td><a href="{{ route('places.show', $operation->place) }}">{{ $operation->place->name }}</a></td>
-            <td><a href="{{ route('bills.show', $operation->bill) }}">{{ $operation->bill->name }}</a></td>
+            <td><a href="{{ route('bills.show', $operation->bill) }}">{{ $operation->bill->name_with_user }}</a></td>
         </tr>
         @endforeach
     </tbody>
