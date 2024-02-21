@@ -25,14 +25,14 @@ class ReportService
                 'categoryId' => $operations->first()->category->id,
                 'total' => $operations->sum('amount_in_default_currency'),
             ]);
-        })->values();
+        })->sortByDesc('total')->values();
 
         $data->transform(function ($item) use ($defaultCurrencyName) {
             $item['total'] = MoneyFormatter::getWithCurrencyName($item['total'], $defaultCurrencyName);
             return $item;
         });
 
-        return $data->sortByDesc('total')->values();
+        return $data;
     }
 
     // @toto: Move
