@@ -16,7 +16,6 @@
     </div>
 </div>
 
-<!-- Add rates -->
 @if ($currency->is_default)
 <div class="row">
     <div class="col-md-4">
@@ -35,7 +34,7 @@
                     @csrf
 
                     <h5>Add Rate</h5>
-                    
+
                     <div class="form-group mb-3">
                         <label for="rate">1 {{ $currency->name }} =</label>
                         <input type="text" name="rate" id="rate" class="form-control" value="{{ old('rate') }}" required>
@@ -65,7 +64,6 @@
         </div>
     </div>
 
-    <!-- Rates -->
     <div class="col-md-8">
         <div class="card mt-3 mb-3">
             <div class="card-body">
@@ -100,4 +98,10 @@
     </div>
 </div>
 @endif
+
+<div class="card">
+    <div class="card-body">
+        @include('blocks.latest-operations', ['operations' => $lastOperations, 'routeParameters' => ['currency_id' => $currency->id]])
+    </div>
+</div>
 @endsection

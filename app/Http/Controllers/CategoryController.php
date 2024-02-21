@@ -41,11 +41,11 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $lastOperartions = $category->operations()->latestDate()->paginate(20);
+        $lastOperations = $category->operations()->latestDate()->paginate(20);
 
         return view('categories.show', [
             'category' => $category,
-            'lastOperations' => $lastOperartions,
+            'lastOperations' => $lastOperations,
         ]);
     }
 

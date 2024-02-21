@@ -1,4 +1,4 @@
-<h5>Last Operations <small><a href="{{ route('operations.index', $routeParameters) }}">all</a></small></h5>
+<h5>Last Operations <small><a href="{{ route('operations.index', $routeParameters) }}" class="btn btn-sm btn-light">Show All</a></small></h5>
 <table class="table">
     <thead>
         <tr>

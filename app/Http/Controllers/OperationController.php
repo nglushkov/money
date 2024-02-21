@@ -33,6 +33,10 @@ class OperationController extends Controller
             $operations->where('category_id', $request->category_id);
         }
 
+        if ($request->get('currency_id')) {
+            $operations->where('currency_id', $request->currency_id);
+        }
+
         if ($request->get('date_from')) {
             $operations->where('date', '>=', $request->date_from);
         }
