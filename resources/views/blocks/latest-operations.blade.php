@@ -23,5 +23,16 @@
         </tr>
         @endforeach
     </tbody>
+    <tfoot>
+    <tr>
+        <th>Total</th>
+        <th>
+            {{ \App\Helpers\MoneyFormatter::getWithCurrencyName($operations->sum('amount_in_default_currency'), \App\Models\Currency::getDefaultCurrencyName()) }}
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </tfoot>
 </table>
 {{ $lastOperations->links() }}

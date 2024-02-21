@@ -53,7 +53,7 @@ class Currency extends Model
 
     public function getDefaultCurrencyAttribute()
     {
-        return $this->where('is_default', true)->first();
+        return $this->default()->first();
     }
 
     public static function convertToDefault(Currency $currency, string $amount, \DateTime $date): string
@@ -73,5 +73,10 @@ class Currency extends Model
     public function scopeActive($query)
     {
         return $query->where('active', true);
+    }
+
+    public static function getDefaultCurrencyName()
+    {
+        return self::default()->first()->name;
     }
 }
