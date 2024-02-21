@@ -22,8 +22,11 @@
                 </thead>
                 <tbody>
                     @foreach ($operations as $operation)
-                    <a href="{{ route('operations.show', $operation->id) }}">
-                        <tr onclick="window.location.href = '{{ route('operations.show', $operation->id) }}';" style="cursor: pointer;">
+                        <tr
+                            @if(!$operation->is_correction)
+                                onclick="window.location.href = '{{ route('operations.show', $operation->id) }}';" style="cursor: pointer;"
+                            @endif
+                        >
                             <td>{{ $operation->date_formatted }}</td>
                             <td @class([
                                 'text-success' => $operation->type === 1,
@@ -31,24 +34,24 @@
                             <td>{{ $operation->amount_in_default_currency_formatted }}</td>
                             <td>
                                 @if(!$operation->is_correction)
-                                <a class="text-body" href="{{ route('categories.show', $operation->category) }}">{{ Str::limit($operation->category->name, 15, '...') }}</a>
+                                    <a class="text-body" href="{{ route('categories.show', $operation->category) }}">{{ Str::limit($operation->category->name, 15, '...') }}</a>
                                 @else
-                                    <form action="{{ route('operations.destroy', $operation) }}" method="post">
-                                        <span class="badge bg-warning">Correction</span>
+                                    <span class="badge bg-warning">Correction</span>
+                                    <a href="#" class="btn btn-sm btn-light"
+                                        onclick="event.preventDefault(); if (confirm('Are you sure you want to delete?')) { document.getElementById('draft-delete-{{ $operation->id }}').submit(); }">Delete</a>
+                                    <form action="{{ route('operations.destroy', $operation) }}" method="post" id="draft-delete-{{ $operation->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-light btn-sm">Delete</button>
                                     </form>
                                 @endif
                             </td>
                             <td>
                                 @if(!$operation->is_correction)
-                                <a class="text-body" href="{{ route('places.show', $operation->place) }}">{{ Str::limit($operation->place->name, 15, '...') }}</a>
+                                    <a class="text-body" href="{{ route('places.show', $operation->place) }}">{{ Str::limit($operation->place->name, 15, '...') }}</a>
                                 @endif
                             </td>
                             <td><a class="text-body" href="{{ route('bills.show', $operation->bill) }}">{{ Str::limit($operation->bill->name, 15, '...') }}</td>
                         </tr>
-                    </a>
                     @endforeach
                 </tbody>
             </table>
