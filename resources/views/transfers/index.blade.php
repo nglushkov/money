@@ -24,8 +24,8 @@
                             <tr onclick="window.location.href = '{{ route('transfers.show', $transfer->id) }}';" style="cursor: pointer;">
                                 <td>{{ $transfer->date_formatted }}</td>
                                 <td>{{ $transfer->amount_text_with_currency }}</td>
-                                <td>{{ $transfer->from->name }}</td>
-                                <td>{{ $transfer->to->name }}</td>
+                                <td>{{ $transfer->from->name_with_user }}</td>
+                                <td>{{ $transfer->to->name_with_user }}</td>
                                 <td>{{ Str::limit($transfer->notes, 20) }}</td>
                             </tr>
                         @endforeach
