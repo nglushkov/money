@@ -68,10 +68,10 @@
                         <h5>Total by Categories</h5>
                         <table class="table">
                             <tbody>
-                            @foreach($totalByCategories as $categoryName => $amount)
+                            @foreach($totalByCategories as $item)
                                 <tr>
-                                    <td>{{ $categoryName }}</td>
-                                    <td>{{ $amount }}</td>
+                                    <td><a class="text-body" href="{{ route('categories.show', $item['categoryId']) }}">{{ $item['categoryName'] }}</a></td>
+                                    <td>{{ $item['total'] }}</td>
                                 </tr>
                             @endforeach
                             </tbody>

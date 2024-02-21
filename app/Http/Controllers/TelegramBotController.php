@@ -159,14 +159,12 @@ class TelegramBotController extends Controller
 
         $data = $this->reportService->getTotalByCategories(
             $operations,
-            $month,
-            $year,
             Currency::default()->first()->name
         );
         $text = 'Report for ' . date('F Y') . ':' . PHP_EOL;
         $text .= 'Total: ' . $total . PHP_EOL . PHP_EOL;
-        foreach ($data as $key => $value) {
-            $text .= $key . ': ' . $value . PHP_EOL;
+        foreach ($data as $value) {
+            $text .= $value['categoryName'] . ': ' . $value['total'] . PHP_EOL;
         }
 
         $this->telegram->sendMessage([

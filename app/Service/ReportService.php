@@ -17,19 +17,22 @@ class ReportService
      * @param string $defaultCurrencyName
      * @return Collection
      */
-    public function getTotalByCategories(Collection $operations, string $month, string $year, string $defaultCurrencyName)
+    public function getTotalByCategories(Collection $operations, string $defaultCurrencyName)
     {
-        $totalByCategories = $operations->groupBy('category.name')->map(function ($operations) {
-            return $operations->map(function ($operation) {
-                return $operation->amount_in_default_currency;
-            })->sum();
-        })->sortDesc();
+        $data = $operations->groupBy('category_id')->map(function (Collection $operations) use($defaultCurrencyName) {
+            return collect([
+                'categoryName' => $operations->first()->category->name,
+                'categoryId' => $operations->first()->category->id,
+                'total' => $operations->sum('amount_in_default_currency'),
+            ]);
+        })->values();
 
-        $totalByCategories->transform(function ($total) use ($defaultCurrencyName) {
-            return MoneyFormatter::getWithCurrencyName($total, $defaultCurrencyName);
+        $data->transform(function ($item) use ($defaultCurrencyName) {
+            $item['total'] = MoneyFormatter::getWithCurrencyName($item['total'], $defaultCurrencyName);
+            return $item;
         });
 
-        return $totalByCategories;
+        return $data->sortByDesc('total')->values();
     }
 
     // @toto: Move
