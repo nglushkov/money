@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Events\MoveProcessed;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\MoneyFormatter;
 
 class Move extends Model
 {
     protected $dispatchesEvents = [
-        'created' => \App\Events\MoveProcessed::class,
-        'updated' => \App\Events\MoveProcessed::class,
-        'deleted' => \App\Events\MoveProcessed::class,
+        'created' => MoveProcessed::class,
+        'updated' => MoveProcessed::class,
+        'deleted' => MoveProcessed::class,
     ];
 
     protected $casts = [

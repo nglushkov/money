@@ -26,16 +26,4 @@ class MoveProcessed
         $this->move = $move;
         MonoLog::info('MoveProcessed event created', ['id' => $move->id, 'type' => get_class($move)]);
     }
-
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
-    public function broadcastOn(): array
-    {
-        return [
-            new PrivateChannel('channel-name'),
-        ];
-    }
 }
