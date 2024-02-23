@@ -73,7 +73,7 @@
                         </div>
                         <div class="form-group mb-2">
                             <label for="notes">Notes:</label>
-                            <input class="form-control" type="text" id="notes" name="notes">{{ old('notes', $plannedExpense->notes) }}
+                            <input class="form-control" type="text" id="notes" name="notes" value="{{ old('notes', $plannedExpense->notes) }}">
                         </div>
                         <hr>
                         <button type="submit" class="btn btn-primary">Update</button>
