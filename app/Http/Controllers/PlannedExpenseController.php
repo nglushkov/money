@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePlannedExpenseRequest;
 use App\Http\Requests\UpdatePlannedExpenseRequest;
+use App\Models\Bill;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Place;
@@ -69,6 +70,7 @@ class PlannedExpenseController extends Controller
             'categories' => Category::orderBy('name', 'asc')->get(),
             'places' => Place::orderBy('name', 'asc')->get(),
             'currencies' => Currency::orderBy('name', 'asc')->get(),
+            'bills' => Bill::orderBy('name')->get(),
         ]);
     }
 
@@ -105,6 +107,7 @@ class PlannedExpenseController extends Controller
             'categories' => Category::orderBy('name', 'asc')->get(),
             'places' => Place::orderBy('name', 'asc')->get(),
             'currencies' => Currency::orderBy('name', 'asc')->get(),
+            'bills' => Bill::orderBy('name')->get(),
         ]);
     }
 

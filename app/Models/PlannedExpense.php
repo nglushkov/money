@@ -24,6 +24,7 @@ class PlannedExpense extends Model
         'user_id',
         'notes',
         'reminder_days',
+        'bill_id',
     ];
 
     public function scopeIsMonthly($query)
@@ -146,6 +147,11 @@ class PlannedExpense extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function bill()
+    {
+        return $this->belongsTo(Bill::class);
     }
 
     public function setMonthAttribute($value)

@@ -35,6 +35,7 @@ class UpdatePlannedExpenseRequest extends FormRequest
             'frequency' => ['required', 'in:monthly,annually'],
             'currency_id' => ['required', 'exists:currencies,id'],
             'category_id' => ['required', 'exists:categories,id'],
+            'bill_id' => ['nullable', 'exists:bills,id'],
             'place_id' => ['required', 'exists:places,id'],
             'notes' => ['nullable', 'string'],
             'reminder_days' => ['nullable', 'integer', 'min:1', 'max:30'],

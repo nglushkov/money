@@ -70,6 +70,13 @@
                             @endforeach
                         </select>
                     </div>
+                    <label for="bill_id">Bill:</label>
+                    <select class="form-control" id="bill_id" name="bill_id">
+                        <option value="">Select Bill</option>
+                        @foreach($bills as $bill)
+                            <option value="{{ $bill->id }}" @selected(old('bill_id') === $bill->id)>{{ $bill->name }}</option>
+                        @endforeach
+                    </select>
                     <div class="form-group mb-2">
                         <label for="notes">Notes:</label>
                         <input class="form-control" type="text" id="notes" name="notes">{{ old('notes') }}
