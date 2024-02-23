@@ -25,12 +25,12 @@
                         <input type="text" name="name" id="name" class="form-control" value="{{ $currency->name }}"
                             required>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="is_default" @checked(old('is_default', $currency->is_default)) id="is_default">
-                        <label class="form-check-label" for="is_default">
-                            Is Default
-                        </label>
-                    </div>
+{{--                    <div class="form-check">--}}
+{{--                        <input class="form-check-input" type="checkbox" name="is_default" @checked(old('is_default', $currency->is_default)) id="is_default">--}}
+{{--                        <label class="form-check-label" for="is_default">--}}
+{{--                            Is Default--}}
+{{--                        </label>--}}
+{{--                    </div>--}}
                     <hr>
                     <button type="submit" class="btn btn-primary">Update</button>
                     <a href="{{ route('currencies.index') }}" class="btn btn-secondary">Cancel</a>

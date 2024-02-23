@@ -33,7 +33,7 @@
                             <li><a class="dropdown-item" href="{{ route('transfers.index') }}">🔁 Transfers</a></li>
                             <li><a class="dropdown-item" href="{{ route('exchanges.index') }}">🔁 Exchanges</a></li>
                             <li><a class="dropdown-item" href="{{ route('external-rates.index') }}">💹 External Rates</a></li>
-                            <li><a class="dropdown-item" href="{{ route('currencies.show', \App\Models\Currency::default()->first()) }}">⛩️ Default Currency</a></li>
+                            <li><a class="dropdown-item" href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrencyId()) }}">⛩️ Default Currency</a></li>
                             <li><a class="dropdown-item" href="{{ route('currencies.index') }}">💱 Currencies</a></li>
                             <!-- <li>
                                 <hr class="dropdown-divider">

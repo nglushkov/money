@@ -24,7 +24,7 @@
                                 <td>{{ $exchange->bill->name }}</td>
                                 <td>{{ $exchange->amount_from_formatted }} → {{ $exchange->amount_to_formatted }}</td>
                                 <td>{{ $exchange->rate_text }}</td>
-                                <td>{{ Str::limit($exchange->notes, 20) }}</td>
+                                <td>{{ $exchange->notes ? Str::limit($exchange->notes, 20) : '' }}</td>
                             </tr>
                         @endforeach
                     </tbody>

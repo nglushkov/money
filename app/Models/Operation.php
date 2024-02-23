@@ -112,7 +112,7 @@ class Operation extends Move
         if ($this->amount_in_default_currency == 0) {
             return '';
         }
-        return MoneyFormatter::getWithCurrencyName($this->amount_in_default_currency, $this->currency->defaultCurrency->name);
+        return MoneyFormatter::getWithCurrencyName($this->amount_in_default_currency, Currency::getDefaultCurrencyName());
     }
 
     public function scopeLatestDate($query)

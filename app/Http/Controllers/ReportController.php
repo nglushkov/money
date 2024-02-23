@@ -29,7 +29,7 @@ class ReportController extends Controller
     {
         $month = $request->input('month', date('m'));
         $year = $request->input('year', date('Y'));
-        $defaultCurrencyName = Currency::default()->first()->name;
+        $defaultCurrencyName = Currency::getDefaultCurrencyName();
 
         $operations = $this->reportService->getOperations($month, $year);
 
@@ -41,14 +41,16 @@ class ReportController extends Controller
 
         // Получение суммы операций по категориям и валютам
         $categories = $operations->groupBy(['category.name', 'currency.name']);
-        $categories = $categories->map(function ($currencies) {
-            return $currencies->map(function ($operations, $currencyName) {
+        $defaultCurrencyName = Currency::getDefaultCurrencyName();
+
+        $categories = $categories->map(function ($currencies) use ($defaultCurrencyName) {
+            return $currencies->map(function ($operations, $currencyName) use ($defaultCurrencyName) {
                 return collect([
                     'amount' => MoneyFormatter::getWithCurrencyName($operations->sum('amount'), $currencyName),
                     'operation_currency' => $currencyName,
                     'amount_in_default_currency' => MoneyFormatter::getWithCurrencyName(
                         $operations->sum('amount_in_default_currency'),
-                        Currency::default()->first()->name
+                        $defaultCurrencyName
                     ),
                 ]);
             })->sortKeys();

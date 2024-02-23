@@ -53,6 +53,7 @@ class CurrencyController extends Controller
         ])->latestDate()->paginate(10);
 
         $currencyRates = $currency->ratesFrom()
+            ->with(['currencyFrom', 'currencyTo'])
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(50);
@@ -74,8 +75,6 @@ class CurrencyController extends Controller
     public function update(UpdateCurrencyRequest $request, Currency $currency)
     {
         $currency->name = $request->name;
-        $currencyDefault = Currency::where('is_default', true)->first();
-        $currency->is_default = !$currencyDefault && $request->has('is_default');
         $currency->save();
 
         return redirect()->route('currencies.show', $currency);

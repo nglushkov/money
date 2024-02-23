@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Helpers\MoneyFormatter;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
@@ -126,7 +126,7 @@ class PlannedExpense extends Model
         if ($this->amount_in_default_currency == 0) {
             return '';
         }
-        return MoneyFormatter::getWithCurrencyName($this->amount_in_default_currency, $this->currency->defaultCurrency->name);
+        return MoneyFormatter::getWithCurrencyName($this->amount_in_default_currency, Currency::getDefaultCurrencyName());
     }
 
     public function currency()

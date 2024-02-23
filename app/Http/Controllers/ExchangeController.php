@@ -70,7 +70,7 @@ class ExchangeController extends Controller
     {
         return view('exchanges.show', [
             'exchange' => $exchange,
-            'defaultCurrency' => Currency::default()->first(),
+            'defaultCurrency' => Currency::getDefaultCurrency(),
         ]);
     }
 

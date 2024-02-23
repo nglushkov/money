@@ -2,18 +2,26 @@
 
 namespace App\Models;
 
+use App\Events\CurrencyProcessed;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Currency extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'active', 'is_default'];
+    protected $fillable = ['name'];
 
     protected $casts = [
         'active' => 'boolean',
         'is_default' => 'boolean'
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => CurrencyProcessed::class,
+        'updated' => CurrencyProcessed::class,
+        'deleted' => CurrencyProcessed::class,
     ];
 
     public function billsInitial()
@@ -51,23 +59,15 @@ class Currency extends Model
         return $this->hasMany(Rate::class, 'from_currency_id');
     }
 
-    public function getDefaultCurrencyAttribute()
-    {
-        return $this->default()->first();
-    }
-
-    public static function convertToDefault(Currency $currency, string $amount, \DateTime $date): string
+    public static function convertToDefault(Currency $currency, string $amount, Carbon $date): string
     {
         if ($currency->is_default) {
             return $amount;
         }
 
-        $rate = $currency->ratesTo()->where('from_currency_id', $currency->defaultCurrency->id)
-            ->where('date', '<=', $date)
-            ->orderBy('date', 'desc')
-            ->first();
+        $rate = self::getCurrencyRate($currency, $date);
 
-        return $rate ? bcdiv($amount, $rate->rate, 2) : 0;
+        return $rate ? bcdiv($amount, $rate, 2) : 0;
     }
 
     public function scopeActive($query)
@@ -75,8 +75,44 @@ class Currency extends Model
         return $query->where('active', true);
     }
 
-    public static function getDefaultCurrencyName()
+    public static function getDefaultCurrency(): Currency
     {
-        return self::default()->first()->name;
+        $cacheKey = 'default_currency';
+        if (cache()->has($cacheKey)) {
+            return cache()->get($cacheKey);
+        }
+
+        $currency = self::default()->first();
+        cache()->forever($cacheKey, $currency);
+
+        return $currency;
+    }
+
+    public static function getDefaultCurrencyName(): string
+    {
+        return self::getDefaultCurrency()->name;
+    }
+
+    public static function getDefaultCurrencyId(): int
+    {
+        return self::getDefaultCurrency()->id;
+    }
+
+    public static function getCurrencyRate(Currency $currency, Carbon $date): string
+    {
+        $rateCacheKey = sprintf('currency_rate_%s_%s', $currency->id, $date->toDateString());
+        $rate = cache()->tags(['currency_rates'])->get($rateCacheKey);
+        if ($rate !== null) {
+            return $rate;
+        }
+
+        $rate = $currency->ratesTo()->where('from_currency_id', Currency::getDefaultCurrencyId())
+            ->where('date', '<=', $date)
+            ->orderBy('date', 'desc')
+            ->first();
+
+        cache()->tags(['currency_rates'])->put($rateCacheKey, $rate ? $rate->rate : 0);
+
+        return $rate->rate;
     }
 }

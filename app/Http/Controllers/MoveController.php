@@ -40,7 +40,7 @@ class MoveController extends Controller
 
         $paginator = $this->paginate($moves, 50);
         $moves = $paginator->items();
-        $defaultCurrency = Currency::default()->first();
+        $defaultCurrency = Currency::getDefaultCurrency();
 
         $plannedExpenses = PlannedExpense::getNearest()->filter(function ($plannedExpense) {
             return !$plannedExpense->isDismissed();

@@ -23,6 +23,7 @@ services:
             - sail
         depends_on:
             - pgsql
+            - memcached
     pgsql:
         image: 'postgres:15'
         ports:
@@ -48,6 +49,12 @@ services:
                 - '${DB_USERNAME}'
             retries: 3
             timeout: 5s
+    memcached:
+        image: 'memcached:alpine'
+        ports:
+            - '${FORWARD_MEMCACHED_PORT:-11211}:11211'
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge

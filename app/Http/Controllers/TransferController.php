@@ -16,7 +16,7 @@ class TransferController extends Controller
     public function index()
     {
         return view('transfers.index', [
-            'transfers' => Transfer::with('from', 'to', 'currency')->orderBy('date', 'desc')->paginate(20)
+            'transfers' => Transfer::with(['from.user', 'to.user', 'currency'])->orderBy('date', 'desc')->paginate(20)
         ]);
     }
 

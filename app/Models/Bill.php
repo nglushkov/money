@@ -38,7 +38,7 @@ class Bill extends Model
     public function getAmount(int $currencyId): float
     {
         $amount = $this->getAmountFromCache($currencyId);
-        if ($amount) {
+        if ($amount !== null) {
             return $amount;
         }
 
@@ -87,7 +87,7 @@ class Bill extends Model
     private function setAmountInCache(int $currencyId, float $amount): void
     {
         $key = 'bill_amount_' . $this->id . '_currency_' . $currencyId;
-        cache()->put($key, $amount, now()->addYears(10));
+        cache()->forever($key, $amount);
     }
 
     private function getAmountFromCache(int $currencyId): ?float

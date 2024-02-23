@@ -13,7 +13,8 @@ class ExternalRateController extends Controller
     public function index()
     {
         return view('external-rates.index', [
-            'externalRates' => ExternalRate::orderBy('date', 'desc')
+            'externalRates' => ExternalRate::with(['fromCurrency', 'toCurrency'])
+                ->orderBy('date', 'desc')
                 ->orderBy('from_currency_id')
                 ->orderBy('to_currency_id')
                 ->paginate(50),

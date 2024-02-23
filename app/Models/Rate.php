@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\RateProcessed;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,12 @@ class Rate extends Model
         'to_currency_id',
         'date',
         'rate',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => RateProcessed::class,
+        'updated' => RateProcessed::class,
+        'deleted' => RateProcessed::class,
     ];
 
     public function currencyFrom()

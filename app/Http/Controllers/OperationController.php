@@ -75,7 +75,7 @@ class OperationController extends Controller
             'categories' => Category::orderBy('name', 'asc')->get(),
             'users' => User::orderBy('name', 'asc')->get(),
             'places' => Place::orderBy('name', 'asc')->get(),
-            'defaultCurrency' => Currency::default()->first(),
+            'defaultCurrency' => Currency::getDefaultCurrency(),
         ]);
     }
 
@@ -121,7 +121,7 @@ class OperationController extends Controller
     {
         return view('operations.show', [
             'operation' => $operation,
-            'defaultCurrency' => Currency::default()->first(),
+            'defaultCurrency' => Currency::getDefaultCurrency(),
         ]);
     }
 

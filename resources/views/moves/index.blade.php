@@ -10,7 +10,7 @@
                 <a href="{{ route('operations.create') }}" class="btn btn-success">New Operation</a>
                 <a href="{{ route('transfers.create') }}" class="btn btn-success">New Transfer</a>
                 <a href="{{ route('exchanges.create') }}" class="btn btn-success">New Exchange</a>&nbsp;
-                <a href="{{ route('currencies.show', \App\Models\Currency::default()->first()) }}" class="btn btn-light">{{ \App\Models\Currency::default()->first()->name }} rates</a>
+                <a href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrencyId()) }}" class="btn btn-light">{{ \App\Models\Currency::getDefaultCurrencyName() }} rates</a>
             </div>
             @if($plannedExpenses->count() > 0)
                 @foreach($plannedExpenses as $plannedExpense)
@@ -62,7 +62,7 @@
                                     <td>
                                         <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
-                                    <td><small class="text-body-secondary">{{ Str::limit($move->notes, 40) }}</small></td>
+                                    <td><small class="text-body-secondary">{{ $move->notes ? Str::limit($move->notes, 40) : '' }}</small></td>
                                     <td>
                                         @if($move->is_draft)
                                             <form action="{{ route('operations.destroy', $move) }}" method="post">
@@ -124,7 +124,7 @@
                                     <td>
                                         <span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
                                     </td>
-                                    <td><small class="text-body-secondary">{{ Str::limit($move->notes, 20) }}</small></td>
+                                    <td><small class="text-body-secondary">{{ $move->notes ? Str::limit($move->notes, 20) : '' }}</small></td>
                                 </tr>
                             </table
                         </li>

@@ -155,11 +155,11 @@ class TelegramBotController extends Controller
         $total = $operations->map(function ($operation) {
             return $operation->amount_in_default_currency;
         })->sum();
-        $total = MoneyFormatter::getWithCurrencyName($total, Currency::default()->first()->name);
+        $total = MoneyFormatter::getWithCurrencyName($total, Currency::getDefaultCurrencyName());
 
         $data = $this->reportService->getTotalByCategories(
             $operations,
-            Currency::default()->first()->name
+            Currency::getDefaultCurrencyName()
         );
         $text = 'Report for ' . date('F Y') . ':' . PHP_EOL;
         $text .= 'Total: ' . $total . PHP_EOL . PHP_EOL;
