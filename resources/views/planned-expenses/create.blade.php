@@ -21,7 +21,7 @@
                     @csrf
                     <div class="form-group mb-2">
                         <label for="amount">Amount:</label>
-                        <input type="number" class="form-control" id="amount" name="amount" value="{{ old('amount') }}">
+                        <input type="text" class="form-control" id="amount" name="amount" value="{{ old('amount') }}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="day">Day Number:</label>
