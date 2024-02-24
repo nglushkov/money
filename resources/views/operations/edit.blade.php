@@ -78,7 +78,7 @@
                     <input type="date" name="date" id="date" class="form-control" required value="{{ $operation->date->format('Y-m-d') }}">
                 </div>
                 <hr>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Update</button>
                 <a href="{{ route('home') }}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
