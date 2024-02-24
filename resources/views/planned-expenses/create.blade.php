@@ -71,7 +71,7 @@
                         </select>
                     </div>
                     <label for="bill_id">Bill:</label>
-                    <select class="form-control" id="bill_id" name="bill_id">
+                    <select class="form-control mb-2" id="bill_id" name="bill_id">
                         <option value="">Select Bill</option>
                         @foreach($bills as $bill)
                             <option value="{{ $bill->id }}" @selected(old('bill_id') == $bill->id)>{{ $bill->name }}</option>
