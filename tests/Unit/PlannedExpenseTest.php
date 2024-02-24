@@ -3,8 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\PlannedExpense;
-use App\Models\PlannedExpensePayment;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use PHPUnit\Framework\TestCase;
 
 /**
