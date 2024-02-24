@@ -15,7 +15,7 @@
             @if($plannedExpenses->count() > 0)
                 @foreach($plannedExpenses as $plannedExpense)
                     <div class="alert alert-info alert-dismissible mt-3" role="alert">
-                            <p class="m-0">У вас есть <a href="{{ route('planned-expenses.index', ['id' => $plannedExpense]) }}" class="alert-link">
+                            <p class="m-0">У вас есть <a href="{{ route('planned-expenses.show', $plannedExpense) }}" class="alert-link">
                                     запланированные расходы</a> на {{ $plannedExpense->next_payment_date_formatted }} ({{ $plannedExpense->next_payment_date_humans }})
                                     на {{ $plannedExpense->amount_formatted }} в категории {{ $plannedExpense->category->name }} ({{ $plannedExpense->place->name }})
                             </p>
