@@ -34,7 +34,7 @@
             <select name="bill_id" id="bill" class="form-control" required>
                 <option value="">Select Bill</option>
                 @foreach($bills as $bill)
-                    <option value="{{ $bill->id }}" @selected(old('bill_id') == $bill->id)>{{
+                    <option value="{{ $bill->id }}" @selected(old('bill_id', $plannedExpense->bill_id ?? '') == $bill->id)>{{
                                     $bill->name_with_user }}</option>
                 @endforeach
             </select>

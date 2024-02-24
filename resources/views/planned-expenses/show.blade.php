@@ -9,6 +9,7 @@
             <div class="alert alert-danger">{{ $message }}</div>
             @enderror
             <h5 class="card-title">Planned Expense Details</h5>
+            <a href="{{ route('operations.create', ['planned_expense_id' => $plannedExpense]) }}" class="btn btn-primary">Create operation</a>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"><strong>Amount:</strong> {{ $plannedExpense->amount }}</li>
                 <li class="list-group-item"><strong>Day:</strong> {{ $plannedExpense->day }}</li>
