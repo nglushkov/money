@@ -48,7 +48,7 @@
                         <select class="form-control" id="currency_id" name="currency_id">
                             <option value="">Select Currency</option>
                             @foreach($currencies as $currency)
-                                <option value="{{ $currency->id }}" @selected(old('currency_id') === $currency->id)>{{ $currency->name }}</option>
+                                <option value="{{ $currency->id }}" @selected(old('currency_id') == $currency->id)>{{ $currency->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -57,7 +57,7 @@
                         <select class="form-control" id="category_id" name="category_id">
                             <option value="">Select Category</option>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}" @selected(old('category_id') === $category->id)>{{ $category->name }}</option>
+                                <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>{{ $category->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -66,7 +66,7 @@
                         <select class="form-control" id="place_id" name="place_id">
                             <option value="">Select Place</option>
                             @foreach($places as $place)
-                                <option value="{{ $place->id }}" @selected(old('place_id') === $place->id)>{{ $place->name }}</option>
+                                <option value="{{ $place->id }}" @selected(old('place_id') == $place->id)>{{ $place->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -74,12 +74,12 @@
                     <select class="form-control" id="bill_id" name="bill_id">
                         <option value="">Select Bill</option>
                         @foreach($bills as $bill)
-                            <option value="{{ $bill->id }}" @selected(old('bill_id') === $bill->id)>{{ $bill->name }}</option>
+                            <option value="{{ $bill->id }}" @selected(old('bill_id') == $bill->id)>{{ $bill->name }}</option>
                         @endforeach
                     </select>
                     <div class="form-group mb-2">
                         <label for="notes">Notes:</label>
-                        <input class="form-control" type="text" id="notes" name="notes">{{ old('notes') }}
+                        <input class="form-control" type="text" id="notes" name="notes" value="{{ old('notes') }}">
                     </div>
                     <hr>
                     <button type="submit" class="btn btn-primary">Create</button>
