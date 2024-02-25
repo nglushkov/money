@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
+/**
+ * @property Currency currency
+ */
 #[ScopedBy([IsNotCorrectionScope::class])]
 class Operation extends Move
 {
@@ -104,7 +107,7 @@ class Operation extends Move
 
     public function getAmountInDefaultCurrencyAttribute(): string
     {
-        return Currency::convertToDefault($this->currency, $this->amount, $this->date);
+        return $this->currency->convertToDefault($this->amount, $this->date);
     }
 
     public function getAmountInDefaultCurrencyFormattedAttribute(): string

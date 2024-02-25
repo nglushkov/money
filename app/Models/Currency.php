@@ -59,13 +59,13 @@ class Currency extends Model
         return $this->hasMany(Rate::class, 'from_currency_id');
     }
 
-    public static function convertToDefault(Currency $currency, string $amount, Carbon $date): string
+    public function convertToDefault(string $amount, Carbon $date): string
     {
-        if ($currency->is_default) {
+        if ($this->is_default) {
             return $amount;
         }
 
-        $rate = self::getCurrencyRate($currency, $date);
+        $rate = $this->getCurrencyRate($date);
 
         return $rate ? bcdiv($amount, $rate, 2) : 0;
     }
@@ -98,21 +98,21 @@ class Currency extends Model
         return self::getDefaultCurrency()->id;
     }
 
-    public static function getCurrencyRate(Currency $currency, Carbon $date): string
+    public function getCurrencyRate(Carbon $date): string
     {
-        $rateCacheKey = sprintf('currency_rate_%s_%s', $currency->id, $date->toDateString());
+        $rateCacheKey = sprintf('currency_rate_%s_%s', $this->id, $date->toDateString());
         $rate = cache()->tags(['currency_rates'])->get($rateCacheKey);
         if ($rate !== null) {
             return $rate;
         }
 
-        $rate = $currency->ratesTo()->where('from_currency_id', Currency::getDefaultCurrencyId())
+        $rate = $this->ratesTo()->where('from_currency_id', Currency::getDefaultCurrencyId())
             ->where('date', '<=', $date)
             ->orderBy('date', 'desc')
             ->first();
 
         cache()->tags(['currency_rates'])->put($rateCacheKey, $rate ? $rate->rate : 0);
 
-        return $rate->rate;
+        return $rate->rate ?? '';
     }
 }

@@ -9,6 +9,13 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * @property Currency currency
+ * @property Category category
+ * @property Place place
+ * @property User user
+ * @property Bill bill
+ */
 class PlannedExpense extends Model
 {
     use HasFactory;
@@ -118,7 +125,7 @@ class PlannedExpense extends Model
 
     public function getAmountInDefaultCurrencyAttribute(): float
     {
-        return Currency::convertToDefault($this->currency, $this->amount, Carbon::today());
+        return $this->currency->convertToDefault($this->amount, Carbon::today());
     }
 
     public function getAmountInDefaultCurrencyFormattedAttribute(): string
