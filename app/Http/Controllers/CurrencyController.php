@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
 use App\Models\Currency;
+use App\Models\Rate;
 
 class CurrencyController extends Controller
 {
@@ -55,8 +56,12 @@ class CurrencyController extends Controller
         $currencyRates = $currency->ratesFrom()
             ->with(['currencyFrom', 'currencyTo'])
             ->orderBy('date', 'desc')
-            ->orderBy('id', 'desc')
-            ->paginate(50);
+            ->orderBy('id', 'desc');
+        if (request()->has('rate_currency_id')) {
+            $currencyRates->where('to_currency_id', request('rate_currency_id'));
+        }
+        $currencyRates = $currencyRates->paginate(20);
+        $currencyRates->appends(request()->query());
 
         return view('currencies.show', compact('currency', 'currencies', 'currencyRates', 'lastOperations'));
     }

@@ -68,6 +68,20 @@
         <div class="card mt-3 mb-3">
             <div class="card-body">
                 <h5>Rates</h5>
+                <div class="btn-group">
+                    <a href="{{ route('currencies.show', ['currency' => $currency]) }}"
+                        @class(['active' => !request('rate_currency_id'), 'btn' => true, 'btn-light' => true])
+                    >
+                        All
+                    </a>
+                    @foreach ($currencies as $currencyRate)
+                    <a href="{{ route('currencies.show', ['currency' => $currency, 'rate_currency_id' => $currencyRate]) }}"
+                        @class(['active' => $currencyRate->id == request('rate_currency_id'), 'btn' => true, 'btn-light' => true])
+                    >
+                        {{ $currencyRate->name }}
+                    </a>
+                    @endforeach
+                </div>
                 <table class="table">
                     <thead>
                         <tr>
