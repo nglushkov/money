@@ -18,7 +18,11 @@
             </li>
             <li class="list-group-item">
                 <strong>Currency Rate:</strong> {{ $operation->getCurrencyRate() ? $operation->getCurrencyRate()->rate_human_readable : 'N/A' }}
-                <a href="{{ route('currencies.show', $defaultCurrency->id) }}">Rates</a>
+                @if($defaultCurrency->id !== $operation->currency->id)
+                    <a href="{{ route('currencies.show', ['currency' => $defaultCurrency->id, 'rate_currency_id' => $operation->currency->id]) }}">Rates</a>
+                @else
+                    <a href="{{ route('currencies.show', ['currency' => $defaultCurrency->id]) }}">Rates</a>
+                @endif
             </li>
             <li class="list-group-item"><strong>Type:</strong> {{ $operation->type_name }}</li>
             <li class="list-group-item"><strong>Bill:</strong> <a href="{{ route('bills.show', $operation->bill->id) }}">{{ $operation->bill->name }}</a></li>

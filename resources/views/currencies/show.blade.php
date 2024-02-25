@@ -19,7 +19,7 @@
 @if ($currency->is_default)
 <div class="row">
     <div class="col-md-4">
-        <div class="card mt-3">
+        <div class="card mt-3 mb-3">
             <div class="card-body">
                 @if ($errors->any())
                         <div class="alert alert-danger">
