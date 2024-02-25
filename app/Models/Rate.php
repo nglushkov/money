@@ -6,6 +6,10 @@ use App\Events\RateProcessed;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property Currency currencyFrom
+ * @property Currency currencyTo
+ */
 class Rate extends Model
 {
     use HasFactory;

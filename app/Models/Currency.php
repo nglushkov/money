@@ -67,7 +67,11 @@ class Currency extends Model
 
         $rate = $this->getCurrencyRate($date);
 
-        return $rate ? bcdiv($amount, $rate, 2) : 0;
+        if ($rate === null) {
+            return '0';
+        }
+
+        return $rate->rate ? bcdiv($amount, $rate->rate, 2) : '0';
     }
 
     public function scopeActive($query)
@@ -98,7 +102,7 @@ class Currency extends Model
         return self::getDefaultCurrency()->id;
     }
 
-    public function getCurrencyRate(Carbon $date): string
+    public function getCurrencyRate(Carbon $date): ?Rate
     {
         $rateCacheKey = sprintf('currency_rate_%s_%s', $this->id, $date->toDateString());
         $rate = cache()->tags(['currency_rates'])->get($rateCacheKey);
@@ -111,8 +115,8 @@ class Currency extends Model
             ->orderBy('date', 'desc')
             ->first();
 
-        cache()->tags(['currency_rates'])->put($rateCacheKey, $rate ? $rate->rate : 0);
+        cache()->tags(['currency_rates'])->put($rateCacheKey, $rate ?? null);
 
-        return $rate->rate ?? '';
+        return $rate;
     }
 }
