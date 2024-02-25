@@ -41,4 +41,9 @@ class Rate extends Model
     {
         return date('d.m.Y', strtotime($this->date));
     }
+
+    public function getRateHumanReadableAttribute()
+    {
+        return sprintf('1 %s = %s %s (%s)', $this->currencyFrom->name, $this->rate, $this->currencyTo->name, $this->date_formatted);
+    }
 }

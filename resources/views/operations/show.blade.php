@@ -14,7 +14,11 @@
                     'text-success' => $operation->is_income,
                     ])>{{ $operation->amount_text }}</span></li>
             <li class="list-group-item"><strong>Amount in {{ $defaultCurrency->name }}:</strong>
-                {{ $operation->amount_in_default_currency_formatted }} <small><a href="{{ route('currencies.show', $defaultCurrency->id) }}">rates</a></small>
+                {{ $operation->amount_in_default_currency_formatted }}
+            </li>
+            <li class="list-group-item">
+                <strong>Currency Rate:</strong> {{ $operation->getCurrencyRate() ? $operation->getCurrencyRate()->rate_human_readable : 'N/A' }}
+                <a href="{{ route('currencies.show', $defaultCurrency->id) }}">Rates</a>
             </li>
             <li class="list-group-item"><strong>Type:</strong> {{ $operation->type_name }}</li>
             <li class="list-group-item"><strong>Bill:</strong> <a href="{{ route('bills.show', $operation->bill->id) }}">{{ $operation->bill->name }}</a></li>

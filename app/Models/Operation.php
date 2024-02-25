@@ -118,6 +118,11 @@ class Operation extends Move
         return MoneyFormatter::getWithCurrencyName($this->amount_in_default_currency, Currency::getDefaultCurrencyName());
     }
 
+    public function getCurrencyRate(): ?Rate
+    {
+        return $this->currency->getCurrencyRate($this->date);
+    }
+
     public function scopeLatestDate($query)
     {
         return $query->orderBy('date', 'desc');
