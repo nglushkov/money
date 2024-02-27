@@ -120,7 +120,7 @@ class PlannedExpense extends Model
 
     public function isDismissed(): bool
     {
-        return Cache::get('dismissed_planned_expense_' . $this->id) === true;
+        return cache()->get('dismissed_planned_expense_' . $this->id) === true;
     }
 
     public function getAmountInDefaultCurrencyAttribute(): float

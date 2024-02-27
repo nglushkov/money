@@ -56,8 +56,7 @@ class PlannedExpenseController extends Controller
     public function dismiss($id)
     {
         $plannedExpense = PlannedExpense::find($id);
-        // 10 дней
-        Cache::set('dismissed_planned_expense_' . $plannedExpense->id, true, 60 * 60 * 24 * 10);
+        cache()->forever('dismissed_planned_expense_' . $plannedExpense->id, true);
         return back();
     }
 
