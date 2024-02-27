@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\Enum\OperationType;
+
 class MoneyFormatter
 {
     public static function get(float $amount, int $decimals = 2): string
@@ -18,7 +20,7 @@ class MoneyFormatter
     {
         $formattedAmount = self::getWithCurrencyName($amount, $currencyName);
 
-        return $type === 0 ? '-' . $formattedAmount : '+' . $formattedAmount;
+        return $type === OperationType::Expense->name ? '-' . $formattedAmount : '+' . $formattedAmount;
     }
 
     public static function  getWithoutDecimals(float $amount): string
