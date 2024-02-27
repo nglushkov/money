@@ -18,7 +18,11 @@
                 <small class="text-body-secondary">{{ $operation->amount_in_default_currency_formatted }}</small>
             </td>
             <td><a href="{{ route('categories.show', $operation->category) }}">{{ $operation->category->name }}</a></td>
-            <td><a href="{{ route('places.show', $operation->place) }}">{{ $operation->place->name }}</a></td>
+            <td>
+                @if($operation->place)
+                <a href="{{ route('places.show', $operation->place) }}">{{ $operation->place->name }}</a>
+                @endif
+            </td>
             <td><a href="{{ route('bills.show', $operation->bill) }}">{{ $operation->bill->name_with_user }}</a></td>
         </tr>
         @endforeach
