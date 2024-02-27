@@ -51,7 +51,7 @@ class Bill extends Model
         $amount = $this->currenciesInitial->find($currencyId)->pivot->amount ?? 0;
 
         foreach ($operations as $operation) {
-            if ($operation->type === 0) {
+            if ($operation->type === OperationType::Expense->name) {
                 $amount -= $operation->amount;
             } else {
                 $amount += $operation->amount;

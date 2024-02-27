@@ -6,6 +6,7 @@ use App\Helpers\MoneyFormatter;
 use App\Models\Bill;
 use App\Models\Category;
 use App\Models\Currency;
+use App\Models\Enum\OperationType;
 use App\Models\Operation;
 use App\Service\ReportService;
 use Illuminate\Http\Request;
@@ -103,7 +104,7 @@ class TelegramBotController extends Controller
             $operation->bill_id = $bill->id;
             $operation->currency_id = $currency->id;
             $operation->date = date('Y-m-d');
-            $operation->type = 0;
+            $operation->type = OperationType::Expense;
 
             $operation->user_id = array_search($userId, self::USER_IDS);
             if ($operation->user_id === false) {

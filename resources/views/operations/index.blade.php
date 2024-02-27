@@ -29,7 +29,7 @@
                         >
                             <td>{{ $operation->date_formatted }}</td>
                             <td @class([
-                                'text-success' => $operation->type === 1,
+                                'text-success' => $operation->type === OperationType::Income->name,
                             ])>{{ $operation->amount_text }}</td>
                             <td>{{ $operation->amount_in_default_currency_formatted }}</td>
                             <td>
