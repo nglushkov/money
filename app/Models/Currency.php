@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enum\CacheKey;
+use App\Enum\CacheTag;
 use App\Events\CurrencyProcessed;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -76,7 +78,7 @@ class Currency extends Model
 
     public static function getDefaultCurrency(): Currency
     {
-        $cacheKey = 'default_currency';
+        $cacheKey = CacheKey::default_currency->name;
         if (cache()->has($cacheKey)) {
             return cache()->get($cacheKey);
         }
@@ -99,8 +101,8 @@ class Currency extends Model
 
     public function getCurrencyRate(Carbon $date): ?Rate
     {
-        $rateCacheKey = sprintf('currency_rate_%s_%s', $this->id, $date->toDateString());
-        $rate = cache()->tags(['currency_rates'])->get($rateCacheKey);
+        $rateCacheKey = sprintf('%s_%s_%s', CacheKey::currency_rate->name, $this->id, $date->toDateString());
+        $rate = cache()->tags(CacheTag::currency_rates->name)->get($rateCacheKey);
         if ($rate !== null) {
             return $rate;
         }
@@ -110,7 +112,7 @@ class Currency extends Model
             ->orderBy('date', 'desc')
             ->first();
 
-        cache()->tags(['currency_rates'])->put($rateCacheKey, $rate ?? null);
+        cache()->tags(CacheTag::currency_rates->name)->put($rateCacheKey, $rate ?? null);
 
         return $rate;
     }

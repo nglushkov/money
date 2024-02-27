@@ -9,12 +9,11 @@ use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Place;
 use App\Models\PlannedExpense;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Service\PlannedExpenseService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 
 class PlannedExpenseController extends Controller
 {
@@ -48,15 +47,16 @@ class PlannedExpenseController extends Controller
     }
 
     /**
-     * Скрыть сообщение о запланированном расходе.
-     * todo: Refactor this method
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
+     * Hide message about planned expense.
+     *
+     * @param int $id
+     * @param PlannedExpenseService $plannedExpenseService
+     * @return RedirectResponse
      */
-    public function dismiss($id)
+    public function dismiss(int $id, PlannedExpenseService $plannedExpenseService)
     {
-        $plannedExpense = PlannedExpense::find($id);
-        cache()->forever('dismissed_planned_expense_' . $plannedExpense->id, true);
+        $plannedExpense = PlannedExpense::findOrFail($id);
+        $plannedExpenseService->setDismissed($plannedExpense);
         return back();
     }
 

@@ -6,8 +6,6 @@ use App\Helpers\MoneyFormatter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * @property Currency currency
@@ -44,6 +42,11 @@ class PlannedExpense extends Model
         return $query->where('frequency', 'annually');
     }
 
+    /**
+     * todo: Move to service
+     * @param Carbon $today
+     * @return Carbon
+     */
     public function getNextPaymentDate(Carbon $today): Carbon
     {
         if ($this->frequency === 'monthly') {
@@ -85,42 +88,13 @@ class PlannedExpense extends Model
         if ($this->frequency === 'monthly') {
             return "Every month on day {$this->day}";
         }
-        // with sprintf function and month name
+
         return sprintf('Every year on %s %d', Carbon::create()->month($this->month)->format('F'), $this->day);
     }
 
     public function getAmountFormattedAttribute(): string
     {
         return MoneyFormatter::getWithCurrencyName($this->amount, $this->currency->name);
-    }
-
-    /**
-     * Получить ближайшие планируемые расходы
-     * @todo: move to Service
-     * @return Collection
-     */
-    public static function getNearest(): Collection
-    {
-        $plannedExpenses = PlannedExpense::all();
-        $plannedExpensesToBePaid = collect();
-
-        foreach ($plannedExpenses as $plannedExpense) {
-            if ($plannedExpense->isNearest()) {
-                $plannedExpensesToBePaid->push($plannedExpense);
-            }
-        }
-
-        return $plannedExpensesToBePaid->sortBy('next_payment_date');
-    }
-
-    public function isNearest(): bool
-    {
-        return $this->next_payment_date->diffInDays(today()) <= $this->reminder_days;
-    }
-
-    public function isDismissed(): bool
-    {
-        return cache()->get('dismissed_planned_expense_' . $this->id) === true;
     }
 
     public function getAmountInDefaultCurrencyAttribute(): float

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Currency;
 use App\Models\PlannedExpense;
+use App\Service\PlannedExpenseService;
 use Illuminate\Http\Request;
 use App\Models\Operation;
 use App\Models\Transfer;
@@ -14,6 +15,13 @@ use Illuminate\Support\Collection;
 
 class MoveController extends Controller
 {
+    private PlannedExpenseService $plannedExpenseService;
+
+    public function __construct(PlannedExpenseService $plannedExpenseService)
+    {
+        $this->plannedExpenseService = $plannedExpenseService;
+    }
+
     public function index()
     {
         $operations = Operation::orderBy('date', 'desc')->with([
@@ -42,9 +50,7 @@ class MoveController extends Controller
         $moves = $paginator->items();
         $defaultCurrency = Currency::getDefaultCurrency();
 
-        $plannedExpenses = PlannedExpense::getNearest()->filter(function ($plannedExpense) {
-            return !$plannedExpense->isDismissed();
-        });
+        $plannedExpenses = $this->plannedExpenseService->getPlannedExpensesToBeReminded();
 
         return view('moves.index', [
             'moves' => $moves,

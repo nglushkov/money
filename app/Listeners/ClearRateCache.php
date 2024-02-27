@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Enum\CacheTag;
 use App\Events\RateProcessed;
 
 class ClearRateCache
@@ -18,7 +19,7 @@ class ClearRateCache
      */
     public function handle(RateProcessed $event): void
     {
-        cache()->tags('currency_rates')->flush();
+        cache()->tags(CacheTag::currency_rates->name)->flush();
         logger('Rate cache cleared', ['id' => $event->rate->id, 'currency_to_id' => $event->rate->currencyTo->id]);
     }
 }
