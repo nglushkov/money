@@ -1,7 +1,9 @@
+@php use App\Models\Enum\OperationType; @endphp
+
 <form action="{{ route('operations.index') }}" method="GET">
     <a href="{{ route('operations.create') }}" class="btn btn-success">Create</a>
     <a class="btn btn-light" data-bs-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false"
-        aria-controls="collapseFilter">
+       aria-controls="collapseFilter">
         Show filters
     </a>
     <a href="{{ route('operations.index', ['user_id' => Auth::id()]) }}" class="btn btn-light">Show My Operations</a>
@@ -14,8 +16,8 @@
                     <select name="bill_id" id="bill_id" class="form-control">
                         <option value="">All</option>
                         @foreach ($bills as $bill)
-                        <option value="{{ $bill->id }}" @selected(request('bill_id') == $bill->id)>{{ $bill->name }}
-                        </option>
+                            <option value="{{ $bill->id }}" @selected(request('bill_id') == $bill->id)>{{ $bill->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -26,7 +28,8 @@
                     <select name="category_id" id="category_id" class="form-control">
                         <option value="">All</option>
                         @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" @selected(request('category_id') == $category->id)>{{ $category->name }}</option>
+                            <option
+                                value="{{ $category->id }}" @selected(request('category_id') == $category->id)>{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -35,14 +38,14 @@
                 <div class="form-group">
                     <label for="date_from">Date from</label>
                     <input type="date" name="date_from" id="date_from" class="form-control"
-                        value="{{ request('date_from') }}">
+                           value="{{ request('date_from') }}">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="date_to">Date to</label>
                     <input type="date" name="date_to" id="date_to" class="form-control"
-                        value="{{ request('date_to') }}">
+                           value="{{ request('date_to') }}">
                 </div>
             </div>
         </div>
@@ -52,8 +55,9 @@
                     <label for="type">Type</label>
                     <select name="type" id="type" class="form-control">
                         <option value="">All</option>
-                        <option value="0" @if(request('type')==='0' ) selected @endif>Expense</option>
-                        <option value="1" @if(request('type')==='1' ) selected @endif>Income</option>
+                        @foreach(OperationType::cases() as $operationType)
+                            <option value="{{ $operationType->name }}" @selected(request('type') === $operationType->name)>{{ $operationType->name }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -63,7 +67,7 @@
                     <select name="user_id" id="user_id" class="form-control">
                         <option value="">All</option>
                         @foreach ($users as $user)
-                        <option value="{{ $user->id }}" @if(request('user_id')==$user->id) selected @endif>{{
+                            <option value="{{ $user->id }}" @if(request('user_id')==$user->id) selected @endif>{{
                             $user->name }}</option>
                         @endforeach
                     </select>
@@ -75,7 +79,7 @@
                     <select name="place_id" id="place_id" class="form-control">
                         <option value="">All</option>
                         @foreach ($places as $place)
-                        <option value="{{ $place->id }}" @if(request('place_id')==$place->id) selected @endif>{{
+                            <option value="{{ $place->id }}" @if(request('place_id')==$place->id) selected @endif>{{
                             $place->name }}</option>
                         @endforeach
                     </select>
@@ -93,14 +97,14 @@
                 <div class="form-group">
                     <label for="amount_from">Amount from</label>
                     <input type="number" name="amount_from" id="amount_from" class="form-control"
-                        value="{{ request('amount_from') }}">
+                           value="{{ request('amount_from') }}">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="amount_to">Amount to</label>
                     <input type="number" name="amount_to" id="amount_to" class="form-control"
-                        value="{{ request('amount_to') }}">
+                           value="{{ request('amount_to') }}">
                 </div>
             </div>
             <div class="col-md-3 d-flex align-items-end">

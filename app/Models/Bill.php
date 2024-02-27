@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Enum\OperationType;
 use App\Models\Scopes\IsNotCorrectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -155,7 +156,7 @@ class Bill extends Model
             'bill_id' => $bill->id,
             'currency_id' => $currency->id,
             'amount' => $amount > $billAmount ? $amount - $billAmount : $billAmount - $amount,
-            'type' => $amount > $billAmount ? Operation::TYPE_INCOME : Operation::TYPE_EXPENSE,
+            'type' => $amount > $billAmount ? OperationType::Income->name : OperationType::Expense->name,
             'date' => now(),
             'notes' => 'Correction',
             'user_id' => auth()->id(),

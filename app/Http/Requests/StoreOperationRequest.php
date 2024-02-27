@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Enum\OperationType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOperationRequest extends FormRequest
@@ -27,7 +28,7 @@ class StoreOperationRequest extends FormRequest
             'currency_id' => 'required|exists:currencies,id',
             'date' => 'required|date|before_or_equal:today',
             'amount' => 'required|numeric',
-            'type' => 'required|in:0,1',
+            'type' => 'required|in:' . implode(',', OperationType::names()),
             'place_id' => 'required|exists:places,id',
             'notes' => 'nullable|string|max:255',
         ];

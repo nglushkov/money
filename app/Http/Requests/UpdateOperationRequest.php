@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Enum\OperationType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateOperationRequest extends FormRequest
@@ -30,7 +31,7 @@ class UpdateOperationRequest extends FormRequest
     {
         return [
             'amount' => 'required|numeric',
-            'type' => 'required|in:0,1', // '0' => 'Expense', '1' => 'Income
+            'type' => 'required|in:' . implode(',', OperationType::names()),
             'bill_id' => 'required|exists:bills,id',
             'category_id' => 'required|exists:categories,id',
             'currency_id' => 'required|exists:currencies,id',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOperationRequest;
 use App\Http\Requests\UpdateOperationRequest;
+use App\Models\Enum\OperationType;
 use App\Models\Operation;
 use App\Models\Bill;
 use App\Models\Category;
@@ -45,7 +46,7 @@ class OperationController extends Controller
             $operations->where('date', '<=', $request->date_to);
         }
 
-        if (in_array($request->type, ['0', '1'], true)) {
+        if (in_array($request->get('type'), OperationType::names())) {
             $operations->where('type', $request->type);
         }
 

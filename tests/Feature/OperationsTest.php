@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Bill;
 use App\Models\Category;
 use App\Models\Currency;
+use App\Models\Enum\OperationType;
 use App\Models\Operation;
 use App\Models\Place;
 use App\Models\User;
@@ -85,7 +86,7 @@ class OperationsTest extends TestCase
         return [
             'date' => '2021-01-01',
             'amount' => rand(0, 100000000) / 100,
-            'type' => Operation::TYPE_EXPENSE,
+            'type' => OperationType::Expense->name,
             'bill_id' => Bill::inRandomOrder()->first()->id,
             'currency_id' => Currency::inRandomOrder()->first()->id,
             'category_id' => Category::inRandomOrder()->first()->id,

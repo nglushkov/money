@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Bill;
 use App\Models\Category;
 use App\Models\Currency;
+use App\Models\Enum\OperationType;
 use App\Models\Place;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,7 +24,7 @@ class OperationFactory extends Factory
     {
         return [
             'amount' => $this->faker->randomFloat(2, 1, 100000),
-            'type' => $this->faker->randomElement([0, 1]), // 0 - expense, 1 - income
+            'type' => $this->faker->randomElement(OperationType::names()),
             'bill_id' => Bill::inRandomOrder()->first()->id,
             'category_id' => Category::inRandomOrder()->first()->id,
             'currency_id' => Currency::inRandomOrder()->first()->id,

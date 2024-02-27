@@ -88,7 +88,6 @@ class BillController extends Controller
             }
         });
 
-
         return redirect()->route('bills.index');
     }
 
@@ -130,7 +129,6 @@ class BillController extends Controller
             $bill->update($request->validated());
             $bill->currenciesInitial()->detach();
 
-
             foreach ($request->input('amount') as $currencyId => $amount) {
                 if (is_null($amount) || $amount == 0) {
                     continue;
@@ -144,7 +142,6 @@ class BillController extends Controller
                 $bill->clearAmountCache();
             }
         });
-
 
         return redirect()->route('bills.show', $bill);
     }

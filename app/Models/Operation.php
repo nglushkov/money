@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\MoneyFormatter;
+use App\Models\Enum\OperationType;
 use App\Models\Scopes\IsNotCorrectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,16 +16,6 @@ use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 class Operation extends Move
 {
     use HasFactory;
-
-    // @todo: refactor to enum
-    CONST TYPE_EXPENSE = 0;
-    CONST TYPE_INCOME = 1;
-    CONST TYPE_CORRECTION = 2;
-    const TYPES = [
-        self::TYPE_EXPENSE,
-        self::TYPE_INCOME,
-        self::TYPE_CORRECTION,
-    ];
 
     protected $fillable = [
         'amount',
@@ -52,12 +43,12 @@ class Operation extends Move
 
     public function getIsExpenseAttribute(): bool
     {
-        return $this->type === self::TYPE_EXPENSE;
+        return $this->type === OperationType::Expense->name;
     }
 
     public function getIsIncomeAttribute(): bool
     {
-        return $this->type === self::TYPE_INCOME;
+        return $this->type === OperationType::Income->name;
     }
 
     public function bill(): BelongsTo
@@ -87,7 +78,7 @@ class Operation extends Move
 
     public function getTypeNameAttribute(): string
     {
-        return $this->is_expense ? 'Расход' : 'Приход';
+        return $this->is_expense ? OperationType::Expense->name : OperationType::Income->name;
     }
 
     public function getAmountTextAttribute(): string
@@ -145,11 +136,11 @@ class Operation extends Move
 
     public function scopeIsExpense($query)
     {
-        return $query->where('type', self::TYPE_EXPENSE);
+        return $query->where('type', OperationType::Expense->name);
     }
 
     public function scopeIsIncome($query)
     {
-        return $query->where('type', self::TYPE_INCOME);
+        return $query->where('type', OperationType::Income->name);
     }
 }
