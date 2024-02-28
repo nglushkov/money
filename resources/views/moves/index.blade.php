@@ -126,7 +126,7 @@
                                     </td>
                                     <td><small class="text-body-secondary">{{ $move->notes ? Str::limit($move->notes, 20) : '' }}</small></td>
                                 </tr>
-                            </table
+                            </table>
                         </li>
                         @endif
                     @endforeach
