@@ -12,12 +12,6 @@
                 <div class="row mb-3">
 
                     <div class="col-3">
-                        <div class="mb-2">
-                            <a href="{{ route('reports.total-by-categories', ['year' => date('Y'), 'month' => date('n')]) }}"
-                                @class(['btn' => true, 'btn-light' => true])
-                            >Current</a>
-                        </div>
-
                         <div class="btn-group-vertical align-top">
                             @foreach($years as $year)
                                 <a href="{{ route('reports.total-by-categories', ['year' => $year, 'month' => request('month', date('n'))]) }}"
@@ -40,11 +34,38 @@
                     </div>
 
                     <div class="col-5">
+                        <a href="{{ route('reports.total-by-categories', ['year' => date('Y'), 'month' => date('n')]) }}"
+                            @class(['btn' => true, 'btn-light' => true])
+                        >Current</a>
+                        <a class="btn btn-light " href="{{ route('reports.total-by-categories', array_merge(request()->all(), ['filter_category_ids' => $categoryIds])) }}">
+                           Filter All
+                        </a>
                         <table class="table">
+                            <thead>
+                            <tr>
+                                <th><strong>Total</strong></th>
+                                <th>{{ $total }}</th>
+                            </tr>
                             <tbody>
                             @foreach($totalByCategories as $item)
-                                <tr>
-                                    <td><a class="text-body" href="{{ route('categories.show', $item['categoryId']) }}">{{ $item['categoryName'] }}</a></td>
+                                <tr @class(['table-danger' => in_array($item['categoryId'], request('filter_category_ids', []))])>
+                                    <td>
+                                        @if (in_array($item['categoryId'], $filterCategoryIds))
+                                            <a class="btn btn-sm btn-light"
+                                               href="{{ route('reports.total-by-categories', array_merge(request()->all(), ['filter_category_ids' => array_diff($filterCategoryIds, [$item['categoryId']])])) }}"
+                                            >
+                                                +
+                                            </a>
+                                        @else
+                                            <a class="btn btn-sm btn-light"
+                                               href="{{ route('reports.total-by-categories', array_merge(request()->all(), ['filter_category_ids' => array_merge($filterCategoryIds, [$item['categoryId']])])) }}"
+                                            >
+                                                –
+                                            </a>
+                                        @endif
+
+                                        <a class="text-body" href="{{ route('categories.show', $item['categoryId']) }}">{{ $item['categoryName'] }}</a>
+                                    </td>
                                     <td>{{ $item['total'] }}</td>
                                 </tr>
                             @endforeach

@@ -31,7 +31,8 @@ class ReportController extends Controller
         $year = $request->input('year', date('Y'));
         $defaultCurrencyName = Currency::getDefaultCurrencyName();
 
-        $operations = $this->reportService->getOperations($month, $year);
+        $filterCategoryIds = $request->input('filter_category_ids', []);
+        $operations = $this->reportService->getOperations($month, $year, $filterCategoryIds);
 
         // Получение общей суммы операций в валюте по умолчанию
         $total = $operations->map(function ($operation) {
@@ -79,6 +80,8 @@ class ReportController extends Controller
             ->pluck('year')
             ->toArray();
 
+        $categoryIds = $totalByCategories->pluck('categoryId')->toArray();
+
         return view('reports.total-by-categories', [
             'result' => $result,
             'months' => $months,
@@ -86,6 +89,8 @@ class ReportController extends Controller
             'total' => $total,
             'defaultCurrencyName' => $defaultCurrencyName,
             'totalByCategories' => $totalByCategories,
+            'filterCategoryIds' => $filterCategoryIds,
+            'categoryIds' => $categoryIds,
         ]);
     }
 }
