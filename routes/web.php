@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('/reports/sum-by-categories', [ReportController::class, 'getSumByCategories'])->name('reports.sum-by-categories');
+    Route::get('/reports/total-by-categories', [ReportController::class, 'getSumByCategories'])->name('reports.total-by-categories');
 });
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');

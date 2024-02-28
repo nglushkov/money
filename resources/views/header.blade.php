@@ -46,7 +46,7 @@
                             Reports
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ route('reports.sum-by-categories') }}">📊 Sum by Categories</a></li>
+                            <li><a class="dropdown-item" href="{{ route('reports.total-by-categories') }}">📊 Total by Categories</a></li>
                         </ul>
                     </li>
                     @if (Auth::check())

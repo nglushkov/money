@@ -79,7 +79,7 @@ class ReportController extends Controller
             ->pluck('year')
             ->toArray();
 
-        return view('reports.sum-by-categories', [
+        return view('reports.total-by-categories', [
             'result' => $result,
             'months' => $months,
             'years' => $years,

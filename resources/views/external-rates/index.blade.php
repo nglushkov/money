@@ -10,10 +10,7 @@
                     <thead>
                         <tr>
                             <th>Date</th>
-                            <th>From Currency</th>
-                            <th>To Currency</th>
-                            <th>Buy</th>
-                            <th>Sell</th>
+                            <th>Direction</th>
                             <th>Rate</th>
                         </tr>
                     </thead>
@@ -21,11 +18,8 @@
                         @foreach($externalRates as $externalRate)
                             <tr>
                                 <td>{{ $externalRate->date }}</td>
-                                <td>{{ $externalRate->fromCurrency->name }}</td>
-                                <td>{{ $externalRate->toCurrency->name }}</td>
-                                <td>{{ $externalRate->buy }}</td>
-                                <td>{{ $externalRate->sell }}</td>
-                                <td>{{ $externalRate->rate }}</td>
+                                <td>{{ $externalRate->fromCurrency->name }} → {{ $externalRate->toCurrency->name }}</td>
+                                <td>{{ $externalRate->rate ?: $externalRate->sell }}</td>
                             </tr>
                         @endforeach
                     </tbody>
