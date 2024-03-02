@@ -26,11 +26,26 @@ class Currency extends Model
         'deleted' => CurrencyProcessed::class,
     ];
 
+    public function billsInitial()
+    {
+        return $this->belongsToMany(Bill::class, 'bill_currency_initial')
+                    ->withPivot('amount')
+                    ->withTimestamps();
+    }
+
     public function operations()
     {
         return $this->hasMany(Operation::class);
     }
 
+    public function getSum($bills)
+    {
+        $sum = 0;
+        foreach ($bills as $bill) {
+            $sum += $bill->getAmount($this->id);
+        }
+        return $sum;
+    }
     public function scopeDefault($query)
     {
         return $query->where('is_default', true);
