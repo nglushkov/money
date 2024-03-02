@@ -26,13 +26,6 @@ class Currency extends Model
         'deleted' => CurrencyProcessed::class,
     ];
 
-    public function billsInitial()
-    {
-        return $this->belongsToMany(Bill::class, 'bill_currency_initial')
-                    ->withPivot('amount')
-                    ->withTimestamps();
-    }
-
     public function operations()
     {
         return $this->hasMany(Operation::class);
