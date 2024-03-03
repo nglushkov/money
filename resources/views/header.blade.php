@@ -35,9 +35,12 @@
                             <li><a class="dropdown-item" href="{{ route('external-rates.index') }}">💹 External Rates</a></li>
                             <li><a class="dropdown-item" href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrencyId()) }}">⛩️ Default Currency</a></li>
                             <li><a class="dropdown-item" href="{{ route('currencies.index') }}">💱 Currencies</a></li>
-                            <!-- <li>
+                            <li>
                                 <hr class="dropdown-divider">
-                            </li> -->
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('logout') }}">🚪 Logout</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -50,13 +53,10 @@
                         </ul>
                     </li>
                     @if (Auth::check())
-                    <li class="nav-item">
-                        <a href="#" class="nav-link disabled">{{ Auth::user()->name }}</a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link disabled">{{ Auth::user()->name }}</a>
+                        </li>
                     @endif
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('logout') }}">🚪 Logout</a>
-                    </li>
                 </ul>
             </div>
         </div>
