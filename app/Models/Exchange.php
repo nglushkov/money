@@ -18,6 +18,7 @@ class Exchange extends Move
         'bill_id',
         'date',
         'notes',
+        'place_id',
     ];
 
     public function from()
@@ -40,6 +41,11 @@ class Exchange extends Move
         return $this->belongsTo(User::class);
     }
 
+    public function place()
+    {
+        return $this->belongsTo(ExchangePlace::class);
+    }
+
     public function getAmountFromFormattedAttribute(): string
     {
         return MoneyFormatter::getWithCurrencyName($this->amount_from, $this->from->name);
@@ -57,6 +63,6 @@ class Exchange extends Move
 
     public function getRateTextAttribute($value): string
     {
-        return sprintf('1 %s = %s %s', $this->to->name, $this->rate_formatted, $this->from->name);
+        return sprintf('1 %s = %s %s', $this->from->name, $this->rate_formatted, $this->to->name);
     }
 }

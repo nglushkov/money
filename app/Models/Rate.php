@@ -19,6 +19,7 @@ class Rate extends Model
         'to_currency_id',
         'date',
         'rate',
+        'exchange_id',
     ];
 
     protected $dispatchesEvents = [
@@ -35,6 +36,11 @@ class Rate extends Model
     public function currencyTo()
     {
         return $this->belongsTo(Currency::class, 'to_currency_id');
+    }
+
+    public function exchange()
+    {
+        return $this->belongsTo(Exchange::class);
     }
 
     public function getDateFormattedAttribute()

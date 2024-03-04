@@ -1,3 +1,4 @@
+<a href="{{ route($routePart . '.create', $model) }}" class="card-link text-success">Create New</a>
 <a href="{{ route($routePart . '.edit', $model) }}" class="card-link">Edit</a>
 <a href="{{ route($routePart . '.index') }}" class="card-link">Show All</a>
 <a href="#" class="card-link link-danger"

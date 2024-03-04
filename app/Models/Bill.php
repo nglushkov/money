@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\MoneyFormatter;
 use App\Models\Enum\OperationType;
 use App\Models\Scopes\IsNotCorrectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -82,7 +83,11 @@ class Bill extends Model
         $this->setAmountInCache($currencyId, $amount);
 
         return $amount;
+    }
 
+    public function getAmountWithCurrency(int $currencyId): string
+    {
+        return MoneyFormatter::getWithCurrencyName($this->getAmount($currencyId), Currency::find($currencyId)->name);
     }
 
     private function setAmountInCache(int $currencyId, float $amount): void

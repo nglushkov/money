@@ -28,7 +28,10 @@ class StoreExchangeRequest extends FormRequest
             'amount_to' => 'required|numeric|min:0.01',
             'bill_id' => 'required|exists:bills,id',
             'date' => 'required|date|before_or_equal:today',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
+            'place_id' => 'nullable|exists:exchange_places,id',
+            'place_name' => 'nullable|string|max:255',
+            'create_currency_rate' => 'nullable|boolean',
         ];
     }
 }
