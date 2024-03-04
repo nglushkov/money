@@ -95,7 +95,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div><small class="text-body-secondary fw-light">{{ $move->date_humans }}</small></div>
+                                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
                                     <td></td>
                                     <td></td>
@@ -119,7 +119,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div><small class="text-body-secondary fw-light">{{ $move->date_humans }}</small></div>
+                                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
                                     </td>
                                     <td>
                                         <span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
