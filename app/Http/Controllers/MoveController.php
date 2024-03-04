@@ -44,7 +44,9 @@ class MoveController extends Controller
             'user',
         ])->latest()->get();
 
-        $moves = $operations->concat($transfers)->concat($exchanges)->sortByDesc('date');
+        $moves = $operations->concat($transfers)->concat($exchanges)->sortByDesc(function ($move) {
+            return $move->date->format('U') . $move->created_at->format('U');
+        });
 
         $paginator = $this->paginate($moves, 50);
         $moves = $paginator->items();
