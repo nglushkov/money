@@ -42,6 +42,7 @@ class MoveController extends Controller
             'to',
             'bill',
             'user',
+            'place'
         ])->latest()->get();
 
         $moves = $operations->concat($transfers)->concat($exchanges)->sortByDesc(function ($move) {
