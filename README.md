@@ -19,6 +19,13 @@ Seeders will create some data and user with email/password:
 default@example.com
 password
 ```
+### Refresh Database from backup
+1. Put backup file to `storage/app/backup` directory
+2. Run the following command:
+```
+sail artisan backup:restore --reset &&
+sail artisan cache:clear
+```
 
 ### Development environment
 Run the following commands:
