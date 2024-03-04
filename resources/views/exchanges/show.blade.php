@@ -15,13 +15,13 @@
                 <a href="{{ route('currencies.show', ['currency' => $defaultCurrency->id, 'rate_currency_id' => $exchange->to->id]) }}">Rates</a>
             </li>
             <li class="list-group-item"><strong>Bill:</strong> <a href="{{ route('bills.show', $exchange->bill->id) }}">{{ $exchange->bill->name }}</a></li>
-            <li class="list-group-item"><strong>User:</strong> {{ $exchange->user->name }}</li>
             @if ($exchange->place)
                 <li class="list-group-item"><strong>Place:</strong> {{ $exchange->place->name }}</li>
             @endif
             @if ($exchange->notes)
                 <li class="list-group"><strong>Notes:</strong> {{ $exchange->notes }}</li>
             @endif
+            <li class="list-group-item"><strong>User:</strong> {{ $exchange->user->name }}</li>
         </ul>
         <div class="card-footer">
             @include('blocks.delete-link', ['model' => $exchange, 'routePart' => 'exchanges'])
