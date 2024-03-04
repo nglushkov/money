@@ -54,7 +54,7 @@ class CurrencyController extends Controller
         ])->latestDate()->paginate(10);
 
         $currencyRates = $currency->ratesFrom()
-            ->with(['currencyFrom', 'currencyTo'])
+            ->with(['currencyFrom'])
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc');
         if (request()->has('rate_currency_id')) {

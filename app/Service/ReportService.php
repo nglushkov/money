@@ -12,8 +12,6 @@ class ReportService
      * Получение суммы операций по категориям в валюте по умолчанию вида ["Категория => Сумма"]
      *
      * @param Collection $operations
-     * @param string $month
-     * @param string $year
      * @param string $defaultCurrencyName
      * @return Collection
      */
