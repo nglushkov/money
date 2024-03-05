@@ -31,7 +31,7 @@ class StoreOperationRequest extends FormRequest
             'type' => 'required|in:' . implode(',', OperationType::names()),
             'place_id' => 'required|exists:places,id',
             'notes' => 'nullable|string|max:255',
-            'attachment' => 'nullable|file|mimes:jpeg,png,pdf|max:2048',
+            'attachment' => 'nullable|file|mimes:jpeg,png,pdf|max:8192',
         ];
     }
 }

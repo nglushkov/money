@@ -38,7 +38,7 @@ class UpdateOperationRequest extends FormRequest
             'place_id' => 'required|exists:places,id',
             'notes' => 'nullable|string',
             'date' => 'required|date|before_or_equal:today',
-            'attachment' => 'nullable|file|mimes:jpeg,png,pdf|max:2048',
+            'attachment' => 'nullable|file|mimes:jpeg,png,pdf|max:8192',
         ];
     }
 }
