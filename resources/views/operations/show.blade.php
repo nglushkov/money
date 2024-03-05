@@ -10,6 +10,7 @@
             @if($operation->is_draft)
                 <li class="list-group-item"><span class="badge bg-warning">Draft</span></li>
             @endif
+            <li class="list-group-item"><strong>Date:</strong> {{ $operation->date_formatted }}</li>
             <li class="list-group-item"><strong>Amount:</strong> <span @class([ 'text-danger'=> $operation->is_expense,
                     'text-success' => $operation->is_income,
                     ])>{{ $operation->amount_text }}</span></li>
@@ -33,9 +34,13 @@
             @if($operation->place)
                 <li class="list-group-item"><strong>Place:</strong> <a href="{{ route('places.show', $operation->place->id) }}">{{ $operation->place->name }}</a></li>
             @endif
-            <li class="list-group-item"><strong>User:</strong> {{ $operation->user->name }}</li>
             <li class="list-group-item"><strong>Notes:</strong> {{ $operation->notes }}</li>
-            <li class="list-group-item"><strong>Date:</strong> {{ $operation->date_formatted }}</li>
+            @if ($operation->attachment)
+                <li class="list-group-item">
+                    <strong>📎 File attachment:</strong> <a href="{{ route('operations.get-attachment', $operation) }}" target="_blank">{{ $operation->attachment }}</a>
+                </li>
+            @endif
+            <li class="list-group-item"><strong>User:</strong> {{ $operation->user->name }}</li>
         </ul>
     </div>
     <div class="card-footer">

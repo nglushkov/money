@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\StorageFilePath;
 use App\Http\Requests\StoreOperationRequest;
 use App\Http\Requests\UpdateOperationRequest;
 use App\Models\Enum\OperationType;
@@ -16,6 +17,7 @@ use App\Models\Place;
 use App\Models\Currency;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class OperationController extends Controller
 {
@@ -109,6 +111,12 @@ class OperationController extends Controller
     {
         $operation = new Operation();
         $operation->fill($request->validated());
+        if ($request->has('attachment')) {
+            $originalName = $request->file('attachment')->getClientOriginalName();
+            $operation->attachment = basename(
+                $request->file('attachment')->storeAs(StorageFilePath::OperationAttachments->value, $originalName)
+            );
+        }
         $operation->user_id = auth()->id();
         $operation->save();
 
@@ -149,6 +157,13 @@ class OperationController extends Controller
      */
     public function update(UpdateOperationRequest $request, Operation $operation)
     {
+        if ($request->has('attachment')) {
+            Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $operation->attachment);
+            $originalName = $request->file('attachment')->getClientOriginalName();
+            $operation->attachment = basename(
+                $request->file('attachment')->storeAs(StorageFilePath::OperationAttachments->value, $originalName)
+            );
+        }
         $operation->fill($request->validated());
         $operation->date = $request->date;
         $operation->is_draft = false;
@@ -165,6 +180,25 @@ class OperationController extends Controller
         Operation::withoutGlobalScope(IsNotCorrectionScope::class)->findOrFail($id)->delete();
 
         return redirect()->route('operations.index');
+    }
+
+    public function getAttachment(Operation $operation)
+    {
+        $response = response()->file(Storage::path(StorageFilePath::OperationAttachments->value . '/' . $operation->attachment));
+        $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT');
+
+        return $response;
+    }
+
+    public function deleteAttachment(Operation $operation)
+    {
+        Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $operation->attachment);
+        $operation->attachment = null;
+        $operation->save();
+
+        return redirect()->back();
     }
 
     private function getTopCategories()

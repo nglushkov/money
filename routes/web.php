@@ -35,6 +35,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('operations', OperationController::class)->except(['delete']);
     Route::delete('operations/{id}', [OperationController::class, 'destroy'])->name('operations.destroy')->whereNumber('id');
 
+    Route::get('operations/{operation}/attachment', [OperationController::class, 'getAttachment'])->name('operations.get-attachment');
+    Route::delete('operations/{operation}/attachment', [OperationController::class, 'deleteAttachment'])->name('operations.delete-attachment');
+
     Route::resource('places', PlaceController::class);
     Route::resource('bills', BillController::class);
     Route::put('bills/{bill}/correct', [BillController::class, 'correct'])->name('bills.correct')->whereNumber('id');

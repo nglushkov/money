@@ -7,7 +7,7 @@
 @section('form')
 
     <div class="col-md-4">
-        <form action="{{ route('operations.store') }}" method="POST">
+        <form action="{{ route('operations.store') }}" method="POST" enctype="multipart/form-data">
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -83,10 +83,14 @@
                 <input type="text" name="notes" id="notes" class="form-control"
                        value="{{ old('notes', $plannedExpense->notes ?? '') }}">
             </div>
-            <div class="form-group">
+            <div class="form-group mb-2">
                 <label for="date">Date:</label>
                 <input type="date" name="date" id="date" class="form-control" required
                        value="{{ old('date', date('Y-m-d')) }}">
+            </div>
+            <div class="form-group">
+                <label for="time">Attachment:</label>
+                <input type="file" name="attachment" id="attachment" class="form-control">
             </div>
             <hr>
             <button type="submit" class="btn btn-primary">Create</button>

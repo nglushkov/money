@@ -12,7 +12,7 @@
                 <h5 class="card-title">Edit Operation @if($operation->is_draft)
                         <span class="badge bg-warning">Draft</span>
                     @endif</h5>
-                <form action="{{ route('operations.update', $operation) }}" method="POST">
+                <form action="{{ route('operations.update', $operation) }}" method="POST" enctype="multipart/form-data">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -88,14 +88,32 @@
                         <input type="text" name="notes" id="notes" class="form-control"
                                value="{{ old('notes', $operation->notes) }}">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-2">
                         <label for="date">Date:</label>
                         <input type="date" name="date" id="date" class="form-control" required
                                value="{{ $operation->date->format('Y-m-d') }}">
                     </div>
+                    <div class="form-group mb-2">
+                        <label for="time">Attachment:</label>
+                        <input type="file" name="attachment" id="attachment" class="form-control">
+                    </div>
+                    @if ($operation->attachment)
+                        <div class="form-group">
+                            📎 File attachment:<br><a href="{{ route('operations.get-attachment', $operation) }}" target="_blank">{{ $operation->attachment }}</a>
+                            <br>
+                            <p class="mt-2"><a href="#" class="text-danger"
+                               onclick="event.preventDefault(); if (confirm('Are you sure you want to delete?')) { document.getElementById('delete-attachment').submit(); }">Delete</a>
+                            </p>
+                        </div>
+                    @endif
                     <hr>
                     <button type="submit" class="btn btn-primary">Update</button>
                     <a href="{{ route('home') }}" class="btn btn-secondary">Cancel</a>
+                </form>
+                <form action="{{ route('operations.delete-attachment', $operation) }}" id="delete-attachment" method="post">
+                    @method('DELETE')
+                    @csrf
+                    <input type="hidden" name="attachment" value="{{ $operation->attachment }}">
                 </form>
             </div>
         </div>
