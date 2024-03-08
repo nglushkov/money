@@ -171,9 +171,8 @@ class TelegramBotController extends Controller
 
     public function getUserIds(): array
     {
-        $userIds = env('TELEGRAM_USER_IDS', []);
-        $userIds = explode(',', $userIds);
-        $userIds = array_map('intval', $userIds);
+        $userIds = env('TELEGRAM_USER_IDS', '');
+        $userIds = json_decode($userIds, true);
 
         if (empty($userIds)) {
             throw new \Exception('TELEGRAM_USER_IDS is not set');
