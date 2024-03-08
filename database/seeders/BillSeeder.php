@@ -21,7 +21,7 @@ class BillSeeder extends Seeder
         foreach ($names as $key => $name) {
             Bill::create([
                 'name' => $name,
-                'active' => $key === 0 ? true : false,
+                'default' => $key === 0,
                 'user_id' => User::inRandomOrder()->first()->id,
             ]);
         }
