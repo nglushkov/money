@@ -19,7 +19,7 @@ class BillSeeder extends Seeder
             'Карта BankOld 6742',
         ];
         foreach ($names as $key => $name) {
-            Bill::factory()->create([
+            Bill::create([
                 'name' => $name,
                 'active' => $key === 0 ? true : false,
                 'user_id' => User::inRandomOrder()->first()->id,
