@@ -1,3 +1,9 @@
+Веб приложение на Laravel 10 для учета расходов и доходов.
+
+Код писался в основном на скорую руку и в свободное время, лишь бы завелось и хоть как-то работало.
+Поэтому в нем много мест, которые можно улучшить.
+Например, валидация форм, обработка ошибок, архитектура, тесты и т.д.
+
 ### Requirements
 1. PHP 8.2 for Composer
 2. Tool sail – [Laravel doc](https://laravel.com/docs/10.x/sail)
@@ -8,13 +14,13 @@ Run the following commands:
 1. Clone the repository
 2. Install dependencies, run: `composer install`
 3. Run `sail up -d`
-5. Run `cp .env.example .env`
-6. Generate application key `sail artisan key:generate`
-7. Run migrations `sail artisan migrate`
-8. Run seeders `sail artisan db:seed`
-9. Run `sail test`
-10. Go to url `localhost`
-11. Login as `default@example.com`, password: `password`
+4. Run `cp .env.example .env`
+5. Generate application key `sail artisan key:generate`
+6. Run migrations `sail artisan migrate`
+7. Run seeders `sail artisan db:seed`
+8. Run `sail test`
+9. Go to url `localhost`
+10. Login as `default@example.com`, password: `password`
 
 For debug, you can add to `.env` file:
 ```
