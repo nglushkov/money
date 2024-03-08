@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('bills', function (Blueprint $table) {
             $table->dropUnique('bills_name_user_id_unique');
-            $table->string('name')->unique();
+            $table->unique('name');
         });
     }
 };
