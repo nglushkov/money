@@ -64,8 +64,11 @@ To test local Telegram Bot, you can use https://localxpose.io/ to expose your lo
 
 1. Add to `.env` file:
 You can get Telegram user id from `@userinfobot`
+Add mapping of user id in DB and user id in Telegram, for example:
 ```
-TELEGRAM_USER_IDS=111,222
+TELEGRAM_USER_IDS='{"1": 863548221, "2": 625332123}'
+```
+```
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 TELEGRAM_BOT_DOMAIN=https://your_localxpose_url`
 ```
