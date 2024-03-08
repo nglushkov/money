@@ -14,11 +14,6 @@ use Telegram\Bot\Api;
 
 class TelegramBotController extends Controller
 {
-    const USER_IDS = [
-        1 => 106809815,
-        2 => 61089668,
-    ];
-
     const COMMAND_REPORT = '/report';
     const COMMANDS = [
         self::COMMAND_REPORT,
@@ -46,7 +41,7 @@ class TelegramBotController extends Controller
             'user_id' => $userId,
         ]);
 
-        if (!in_array($userId, self::USER_IDS)) {
+        if (!in_array($userId, $this->getUserIds())) {
             $this->telegram->sendMessage([
                 'chat_id' => $userId,
                 'text' => 'You are not allowed to use this bot',
@@ -106,7 +101,7 @@ class TelegramBotController extends Controller
             $operation->date = date('Y-m-d');
             $operation->type = OperationType::Expense->name;
 
-            $operation->user_id = array_search($userId, self::USER_IDS);
+            $operation->user_id = array_search($userId, $this->getUserIds());
             if ($operation->user_id === false) {
                 $operation->user_id = 1;
             }
@@ -172,5 +167,18 @@ class TelegramBotController extends Controller
             'chat_id' => $userId,
             'text' => $text,
         ]);
+    }
+
+    public function getUserIds(): array
+    {
+        $userIds = env('TELEGRAM_USER_IDS', []);
+        $userIds = explode(',', $userIds);
+        $userIds = array_map('intval', $userIds);
+
+        if (empty($userIds)) {
+            throw new \Exception('TELEGRAM_USER_IDS is not set');
+        }
+
+        return $userIds;
     }
 }
