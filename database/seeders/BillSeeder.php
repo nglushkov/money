@@ -12,6 +12,17 @@ class BillSeeder extends Seeder
      */
     public function run(): void
     {
-        Bill::factory(10)->create();
+        $names = [
+            'Наличные',
+            'Карта Сбер 0846',
+            'Карта BankOld 6742',
+        ];
+        foreach ($names as $key => $name) {
+            Bill::factory()->create([
+                'name' => $name,
+                'active' => $key === 0 ? true : false,
+                'user_id' => User::inRandomOrder()->first()->id,
+            ]);
+        }
     }
 }
