@@ -14,9 +14,9 @@ class BillSeeder extends Seeder
     public function run(): void
     {
         $names = [
-            'Наличные',
-            'Карта Сбер 0846',
-            'Карта BankOld 6742',
+            'Cash',
+            'Card Another Bank 0846',
+            'Card BankOld 6742',
         ];
         foreach ($names as $key => $name) {
             Bill::create([
