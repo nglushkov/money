@@ -52,6 +52,15 @@
                             <li><a class="dropdown-item" href="{{ route('reports.total-by-categories') }}">📊 Total by Categories</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Settings
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('users.index') }}">🧑‍💻 Users</a></li>
+                        </ul>
+                    </li>
                     @if (Auth::check())
                         <li class="nav-item">
                             <a href="#" class="nav-link disabled">{{ Auth::user()->name }}</a>
