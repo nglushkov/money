@@ -14,7 +14,7 @@ class Bill extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'notes'];
+    protected $fillable = ['name', 'notes', 'user_id'];
 
     protected $casts = [
         'default' => 'boolean',
@@ -137,6 +137,11 @@ class Bill extends Model
 
     public function getNameWithUserAttribute(): string
     {
+        if ($this->isMyBill()) {
+            return $this->name;
+        } else if ($this->isCommonBill()) {
+            return $this->name . ' (Common)';
+        }
         return $this->name . ' (' . $this->user->name . ')';
     }
 
@@ -175,5 +180,20 @@ class Bill extends Model
             $operation->user_id = auth()->id();
             $operation->save();
         }
+    }
+
+    public function getOwnerNameAttribute(): string
+    {
+        return $this->user->name ?? '<Common>';
+    }
+
+    private function isMyBill(): bool
+    {
+        return $this->user_id === auth()->id();
+    }
+
+    private function isCommonBill(): bool
+    {
+        return $this->user_id === null;
     }
 }

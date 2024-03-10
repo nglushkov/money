@@ -26,6 +26,7 @@ class StoreBillRequest extends FormRequest
             'notes' => ['nullable', 'string', 'max:255'],
             'amount' => ['required', 'array', 'min:1'],
             'amount.*' => ['required', 'numeric', 'min:0'],
+            'user_id' => ['nullable', 'exists:users,id'],
         ];
     }
 }

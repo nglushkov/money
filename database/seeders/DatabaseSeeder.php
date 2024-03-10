@@ -11,12 +11,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
+        $seeders = [
             UserSeeder::class,
             BillSeeder::class,
-            //CategorySeeder::class,
             CurrencySeeder::class,
-            //PlaceSeeder::class,
-        ]);
+        ];
+        if (app()->environment('testing')) {
+            $seeders = array_merge($seeders, [
+                CategorySeeder::class,
+                PlaceSeeder::class,
+            ]);
+        }
+        $this->call($seeders);
     }
 }

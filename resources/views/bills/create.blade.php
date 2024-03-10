@@ -28,6 +28,15 @@
                         <label for="notes">Notes</label>
                         <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
                     </div>
+                    <div class="form-group mb-2">
+                        <label for="user_id">User</label>
+                        <select name="user_id" id="user_id" class="form-control" required>
+                            <option value="">Bill is Common</option>
+                            @foreach($users as $user)
+                            <option value="{{ $user->id }}" @if(old('user_id') == $user->id) selected @endif>{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <hr>
                     <h5>Начальный остаток:</h5>
                     @foreach($currencies as $currency)

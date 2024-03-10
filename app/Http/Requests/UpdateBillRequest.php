@@ -26,6 +26,7 @@ class UpdateBillRequest extends FormRequest
             'notes' => ['nullable', 'string', 'max:255'],
             'amount' => ['required', 'array'],
             'amount.*' => ['required', 'numeric'],
+            'user_id' => ['nullable', 'exists:users,id'],
         ];
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateBillRequest;
 use App\Models\Bill;
 use App\Models\BillCurrencyInitial;
 use App\Models\Currency;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +20,7 @@ class BillController extends Controller
     {
         $bills = Bill::orderBy('name');
         if ($request->get('user_id')) {
-            $bills->where('user_id', $request->user_id);
+            $bills->where('user_id', $request->user_id)->orWhere('user_id', null);
         }
 
         return view('bills.index', [
@@ -35,7 +36,8 @@ class BillController extends Controller
     public function create()
     {
         return view('bills.create', [
-            'currencies' => Currency::orderBy('name')->get()
+            'currencies' => Currency::orderBy('name')->get(),
+            'users' => User::orderBy('name')->get(),
         ]);
     }
 
@@ -72,7 +74,6 @@ class BillController extends Controller
 
         DB::transaction(function () use ($request) {
             $bill = new Bill($request->validated());
-            $bill->user_id = auth()->id();
             $bill->save();
 
             foreach ($request->input('amount') as $currencyId => $amount) {
@@ -116,7 +117,8 @@ class BillController extends Controller
     {
         return view('bills.edit', [
             'bill' => $bill,
-            'currencies' => Currency::orderBy('name')->get()
+            'currencies' => Currency::orderBy('name')->get(),
+            'users' => User::orderBy('name')->get()
         ]);
     }
 

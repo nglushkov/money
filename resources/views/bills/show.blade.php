@@ -21,7 +21,7 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"><strong>Name:</strong> {{ $bill->name }}</li>
                 <li class="list-group-item"><strong>Notes:</strong> {{ $bill->notes }}</li>
-                <li class="list-group-item"><strong>User:</strong> {{ $bill->user->name }}</li>
+                <li class="list-group-item"><strong>User:</strong> {{ $bill->owner_name }}</li>
                 <li class="list-group-item border-0"><h5>Currencies:</h5></li>
                 @foreach ($bill->getAmountNotNull() as $currencyName => $amount)
                     <form id="form-{{ $currencyName }}" action="{{ route('bills.correct', $bill) }}" method="post">

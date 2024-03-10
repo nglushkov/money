@@ -26,7 +26,7 @@
                     @foreach ($bills as $bill)
                         <tr onclick="window.location.href = '{{ route('bills.show', $bill->id) }}';" style="cursor: pointer;">
                             <td>{{ $bill->name }}</td>
-                            <td>{{ $bill->user->name }}</td>
+                            <td>{{ $bill->owner_name }}</td>
                             @foreach ($bill->getAmounts() as $amount)
                                 <td>
                                     {{ \App\Helpers\MoneyFormatter::getWithoutDecimals($amount)}}
