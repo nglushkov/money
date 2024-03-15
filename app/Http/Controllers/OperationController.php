@@ -11,6 +11,7 @@ use App\Models\Bill;
 use App\Models\Category;
 use App\Models\PlannedExpense;
 use App\Models\Scopes\IsNotCorrectionScope;
+use App\Service\OperationService;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Place;
@@ -175,10 +176,13 @@ class OperationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         Operation::withoutGlobalScope(IsNotCorrectionScope::class)->findOrFail($id)->delete();
 
+        if ($request->has('back_route')) {
+            return redirect($request->back_route);
+        }
         return redirect()->route('operations.index');
     }
 
@@ -199,6 +203,17 @@ class OperationController extends Controller
         $operation->save();
 
         return redirect()->back();
+    }
+
+    public function createDraft(Request $request, OperationService $operationService)
+    {
+        try {
+            $operationService->createDraft($request->get('raw_text'));
+        } catch (\InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+        }
+
+        return redirect()->route('home');
     }
 
     private function getTopCategories()

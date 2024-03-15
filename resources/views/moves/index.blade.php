@@ -6,12 +6,30 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="bg-light p-3">
-                <a href="{{ route('operations.create') }}" class="btn btn-success">New Operation</a>
-                <a href="{{ route('transfers.create') }}" class="btn btn-success">New Transfer</a>
-                <a href="{{ route('exchanges.create') }}" class="btn btn-success">New Exchange</a>&nbsp;
-                <a href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrencyId()) }}" class="btn btn-light">{{ \App\Models\Currency::getDefaultCurrencyName() }} rates</a>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="bg-light p-3">
+                        <a href="{{ route('operations.create') }}" class="btn btn-success">New Operation</a>
+                        <a href="{{ route('transfers.create') }}" class="btn btn-success">New Transfer</a>
+                        <a href="{{ route('exchanges.create') }}" class="btn btn-success">New Exchange</a>&nbsp;
+                        <a href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrencyId()) }}" class="btn btn-light">{{ \App\Models\Currency::getDefaultCurrencyName() }} rates</a>
+                        <div class="float-end">
+                            <form action="{{ route('operations.create-draft') }}" method="POST">
+                                {{ csrf_field() }}
+                                <input type="text" class="form-control" style="width: 20rem" id="search" placeholder="Create: Amount Category Place..." name="raw_text" onkeydown="if (event.keyCode == 13) { this.form.submit(); return false; }">
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+            @if (Session::has('error'))
+            <div class="alert alert-danger mt-3">
+                <ul>
+                    <li>{{ Session::get('error') }}</li>
+                </ul>
+            </div>
+            @endif
             @if($plannedExpenses->count() > 0)
                 @foreach($plannedExpenses as $plannedExpense)
                     <div class="alert alert-info alert-dismissible mt-3" role="alert">
@@ -76,6 +94,7 @@
                                                 <span class="badge bg-warning">Draft</span>
                                                 @csrf
                                                 @method('DELETE')
+                                                <input type="hidden" name="back_route" value="{{ route('home') }}">
                                                 <button type="submit" class="btn btn-light btn-sm">Delete</button>
                                             </form>
                                         @endif
@@ -107,7 +126,7 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
-                            </table
+                            </table>
                         </li>
 
                         @elseif ($move instanceof App\Models\Exchange)
