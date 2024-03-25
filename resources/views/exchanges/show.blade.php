@@ -19,7 +19,7 @@
                 <li class="list-group-item"><strong>Place:</strong> {{ $exchange->place->name }}</li>
             @endif
             @if ($exchange->notes)
-                <li class="list-group"><strong>Notes:</strong> {{ $exchange->notes }}</li>
+                <li class="list-group-item"><strong>Notes:</strong> {{ $exchange->notes }}</li>
             @endif
             <li class="list-group-item"><strong>User:</strong> {{ $exchange->user->name }}</li>
         </ul>
