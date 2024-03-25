@@ -16,9 +16,10 @@ class OperationService
      * Create draft
      * todo: Refactor this
      * @param string $rawText
+     * @param int $userId
      * @return void
      */
-    public function createDraft(string $rawText): void
+    public function createDraft(string $rawText, int $userId): void
     {
         $data = explode(' ', $rawText);
 
@@ -59,7 +60,7 @@ class OperationService
             'date' => Carbon::now(),
             'is_draft' => true,
         ]);
-        $operation->user_id = 1;
+        $operation->user_id = $userId;
         $operation->save();
     }
 }

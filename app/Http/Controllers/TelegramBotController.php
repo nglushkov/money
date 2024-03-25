@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\MoneyFormatter;
-use App\Models\Bill;
-use App\Models\Category;
 use App\Models\Currency;
-use App\Models\Enum\OperationType;
-use App\Models\Operation;
+use App\Service\OperationService;
 use App\Service\ReportService;
-use Illuminate\Http\Request;
 use Telegram\Bot\Api;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class TelegramBotController extends Controller
 {
@@ -22,10 +19,13 @@ class TelegramBotController extends Controller
     private $telegram;
     private ReportService $reportService;
 
-    public function __construct(Api $telegram, ReportService $reportService)
+    private OperationService $operationService;
+
+    public function __construct(Api $telegram, ReportService $reportService, OperationService $operationService)
     {
         $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
         $this->reportService = $reportService;
+        $this->operationService = $operationService;
     }
 
     public function handleWebhook()
@@ -61,83 +61,35 @@ class TelegramBotController extends Controller
         }
     }
 
-    private function createExpense(string $text, int $userId)
+    /**
+     * @param string $text
+     * @param int $telegramUserId
+     * @return void
+     * @throws TelegramSDKException
+     */
+    private function createExpense(string $text, int $telegramUserId)
     {
+        $userId = $this->getUserIdByTelegramUserId($telegramUserId);
+
         try {
-            $text = explode(' ', $text);
-            $amount = $text[0];
-            if (!is_numeric($amount)) {
-                $this->telegram->sendMessage([
-                    'chat_id' => $userId,
-                    'text' => 'Invalid amount',
-                ]);
+            $this->operationService->createDraft($text, $userId);
 
-                logger()->warning('Invalid amount', [
-                    'user_id' => $userId,
-                    'text' => $text,
-                ]);
-                return;
-            }
-            $categoryName = $text[1] ?? '';
-
-            $category = null;
-            if ($categoryName) {
-                $category = Category::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($categoryName) . '%'])->first();
-            }
-            $bill = Bill::default()->firstOrFail();
-            $currency = Currency::active()->firstOrFail();
-
-            $operation = new Operation();
-            $operation->amount = $amount;
-
-            if ($category) {
-                $operation->category_id = $category->id;
-            } else {
-                $operation->notes = $categoryName;
-            }
-
-            $operation->bill_id = $bill->id;
-            $operation->currency_id = $currency->id;
-            $operation->date = date('Y-m-d');
-            $operation->type = OperationType::Expense->name;
-
-            $operation->user_id = array_search($userId, $this->getUserIds());
-            if ($operation->user_id === false) {
-                $operation->user_id = 1;
-            }
-
-            $operation->is_draft = true;
-
-            $operation->save();
-
-            if ($category) {
-                $this->telegram->sendMessage([
-                    'chat_id' => $userId,
-                    'text' => sprintf('Expense of %s %s for %s created', $amount, $currency->name, $category->name)
-                ]);
-            } else if (strlen($operation->notes) > 0) {
-                $this->telegram->sendMessage([
-                    'chat_id' => $userId,
-                    'text' => sprintf('Expense of %s %s with notes %s created', $amount, $currency->name, $operation->notes)
-                ]);
-            } else {
-                $this->telegram->sendMessage([
-                    'chat_id' => $userId,
-                    'text' => sprintf('Expense of %s %s created', $amount, $currency->name)
-                ]);
-            }
+        } catch (\InvalidArgumentException $e) {
+            $this->telegram->sendMessage([
+                'chat_id' => $telegramUserId,
+                'text' => $e->getMessage(),
+            ]);
         } catch (\Exception $e) {
             $this->telegram->sendMessage([
-                'chat_id' => $userId,
+                'chat_id' => $telegramUserId,
                 'text' => 'Error creating expense: ' . $e->getMessage(),
             ]);
-
-            logger()->error('Error creating expense', [
-                'user_id' => $userId,
-                'text' => $text,
-                'exception' => $e,
-            ]);
         }
+
+        $this->telegram->sendMessage([
+            'chat_id' => $telegramUserId,
+            'text' => 'Expense created',
+        ]);
     }
 
     private function handleReportCommand(int $userId): void
@@ -179,5 +131,14 @@ class TelegramBotController extends Controller
         }
 
         return $userIds;
+    }
+
+    private function getUserIdByTelegramUserId($telegramUserId): int
+    {
+        $userId = array_search($telegramUserId, $this->getUserIds());
+        if ($userId === false) {
+            return 1;
+        }
+        return $userId;
     }
 }

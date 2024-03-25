@@ -208,7 +208,7 @@ class OperationController extends Controller
     public function createDraft(Request $request, OperationService $operationService)
     {
         try {
-            $operationService->createDraft($request->get('raw_text'));
+            $operationService->createDraft($request->get('raw_text'), auth()->id());
         } catch (\InvalidArgumentException $e) {
             Session::flash('error', $e->getMessage());
         }
