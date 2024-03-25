@@ -74,6 +74,11 @@ class TelegramBotController extends Controller
         try {
             $this->operationService->createDraft($text, $userId);
 
+            $this->telegram->sendMessage([
+                'chat_id' => $telegramUserId,
+                'text' => 'Expense created',
+            ]);
+
         } catch (\InvalidArgumentException $e) {
             $this->telegram->sendMessage([
                 'chat_id' => $telegramUserId,
@@ -85,11 +90,6 @@ class TelegramBotController extends Controller
                 'text' => 'Error creating expense: ' . $e->getMessage(),
             ]);
         }
-
-        $this->telegram->sendMessage([
-            'chat_id' => $telegramUserId,
-            'text' => 'Expense created',
-        ]);
     }
 
     private function handleReportCommand(int $userId): void
