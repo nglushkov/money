@@ -138,8 +138,10 @@ class OperationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Operation $operation)
+    public function edit(Request $request, Operation $operation)
     {
+        Session::put('index_url', $request->headers->get('referer'));
+
         return view('operations.edit', [
             'operation' => $operation,
             'bills' => Bill::orderBy('name', 'asc')->get(),
@@ -170,7 +172,7 @@ class OperationController extends Controller
         $operation->is_draft = false;
         $operation->save();
 
-        return redirect()->route('operations.show', $operation);
+        return Session::has('index_url') ? redirect(Session::get('index_url')) : back();
     }
 
     /**
