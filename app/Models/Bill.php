@@ -47,7 +47,8 @@ class Bill extends Model
         $operations = $this->operations()
             ->withoutGlobalScope(IsNotCorrectionScope::class)
             ->isNotDraft()
-            ->where('currency_id', $currencyId)->get();
+            ->where('currency_id', $currencyId)
+            ->get();
 
         $amount = $this->currenciesInitial->find($currencyId)->pivot->amount ?? 0;
 
@@ -59,23 +60,23 @@ class Bill extends Model
             }
         }
 
-        $transfers = Transfer::where('from_bill_id', $this->id)
+        $transfersFrom = $this->transfersFrom()
             ->where('currency_id', $currencyId)
             ->sum('amount');
 
-        $amount -= $transfers;
+        $amount -= $transfersFrom;
 
-        $transfers = Transfer::where('to_bill_id', $this->id)
+        $transfersTo = $this->transfersTo()
             ->where('currency_id', $currencyId)
             ->sum('amount');
-        $amount += $transfers;
+        $amount += $transfersTo;
 
-        $exchangeFrom = Exchange::where('bill_id', $this->id)
+        $exchangeFrom = $this->exchanges()
             ->where('from_currency_id', $currencyId)
             ->sum('amount_from');
         $amount -= $exchangeFrom;
 
-        $exchangeTo = Exchange::where('bill_id', $this->id)
+        $exchangeTo = $this->exchanges()
             ->where('to_currency_id', $currencyId)
             ->sum('amount_to');
         $amount += $exchangeTo;
@@ -133,6 +134,16 @@ class Bill extends Model
     public function transfersFrom(): HasMany
     {
         return $this->hasMany(Transfer::class, 'from_bill_id');
+    }
+
+    public function transfersTo(): HasMany
+    {
+        return $this->hasMany(Transfer::class, 'to_bill_id');
+    }
+
+    public function exchanges(): HasMany
+    {
+        return $this->hasMany(Exchange::class, 'bill_id');
     }
 
     public function getNameWithUserAttribute(): string

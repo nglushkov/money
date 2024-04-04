@@ -24,20 +24,20 @@ class MoveController extends Controller
 
     public function index()
     {
-        $operations = Operation::orderBy('date', 'desc')->with([
+        $operations = Operation::with([
             'bill',
             'category',
             'currency',
             'place',
             'user'
         ])->latest()->get();
-        $transfers = Transfer::orderBy('date', 'desc')->with([
+        $transfers = Transfer::with([
             'from',
             'to',
             'currency',
             'user',
         ])->latest()->get();
-        $exchanges = Exchange::orderBy('date', 'desc')->with([
+        $exchanges = Exchange::with([
             'from',
             'to',
             'bill',
@@ -49,7 +49,7 @@ class MoveController extends Controller
             return $move->date->format('U') . $move->created_at->format('U');
         });
 
-        $paginator = $this->paginate($moves, 50);
+        $paginator = $this->paginate($moves, 100);
         $moves = $paginator->items();
         $defaultCurrency = Currency::getDefaultCurrency();
 

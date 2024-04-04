@@ -44,8 +44,27 @@
                 @include('blocks.delete-link', ['model' => $bill, 'routePart' => 'bills'])
             </div>
 
-            <hr>
-            @include('blocks.latest-operations', ['operations' => $lastOperations, 'routeParameters' => ['bill_id' => $bill->id]])
+            <div class="btn-group mt-3">
+                <a href="{{ route('bills.show', ['bill' => $bill]) }}"
+                    @class(['active' => !request('currency_id'), 'btn' => true, 'btn-light' => true])
+                >
+                    All
+                </a>
+                @foreach ($currencies as $currency)
+                    <a href="{{ route('bills.show', ['bill' => $bill, 'currency_id' => $currency->id]) }}"
+                        @class(['active' => $currency->id == request('currency_id'), 'btn' => true, 'btn-light' => true])
+                    >
+                        {{ $currency->name }}
+                    </a>
+                @endforeach
+            </div>
+
+            <div class="card mb-3 mt-3">
+                <ul class="list-group list-group-flush">
+                    @include('blocks.moves', ['moves' => $moves])
+                </ul>
+            </div>
+            {{ $paginator->links() }}
         </div>
     </div>
 

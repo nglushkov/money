@@ -7,8 +7,13 @@ use App\Http\Requests\UpdateBillRequest;
 use App\Models\Bill;
 use App\Models\BillCurrencyInitial;
 use App\Models\Currency;
+use App\Models\Exchange;
+use App\Models\Transfer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class BillController extends Controller
@@ -95,19 +100,81 @@ class BillController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Bill $bill)
+    public function show(Request $request, Bill $bill)
     {
-        $lastOperations = $bill->operations()->with([
+        // todo: refactor this
+        $currencyId = $request->get('currency_id');
+
+        $operations = $bill->operations()->with([
             'bill',
             'category',
             'currency',
             'place',
-        ])->isNotDraft()->latestDate()->paginate(20);
+            'user'
+        ]);
+
+        if ($currencyId !== null) {
+            $operations->where('currency_id', $currencyId);
+        }
+        $operations = $operations->get();
+
+        $transfers = Transfer::with([
+            'from',
+            'to',
+            'currency',
+            'user',
+        ])->where(function ($query) use ($bill) {
+            $query->orWhere('from_bill_id', $bill->id)
+                ->orWhere('to_bill_id', $bill->id);
+        });
+
+        if ($currencyId !== null) {
+            $transfers->where('currency_id', $currencyId);
+        }
+        $transfers = $transfers->get();
+
+        $exchanges = Exchange::with([
+            'from',
+            'to',
+            'bill',
+            'user',
+            'place'
+        ])->where('bill_id', $bill->id);
+
+        if ($currencyId !== null) {
+            $exchanges->where(function ($query) use ($currencyId) {
+                $query->orWhere('from_currency_id', $currencyId)
+                    ->orWhere('to_currency_id', $currencyId);
+            });;
+        }
+        $exchanges = $exchanges->get();
+
+        $moves = $operations->concat($transfers)->concat($exchanges)->sortByDesc(function ($move) {
+            return $move->date->format('U') . $move->created_at->format('U');
+        });
+
+        $paginator = $this->paginate($moves, 100);
+        $moves = $paginator->items();
+        $defaultCurrency = Currency::getDefaultCurrency();
+
+        $currencies = Currency::orderBy('name')->get();
 
         return view('bills.show', [
             'bill' => $bill,
-            'lastOperations' => $lastOperations
+            'moves' => $moves,
+            'paginator' => $paginator,
+            'defaultCurrency' => $defaultCurrency,
+            'currencies' => $currencies,
         ]);
+    }
+
+    // todo: refactor this, remove doubles
+    public function paginate($items, $perPage = 15, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
     /**
