@@ -107,6 +107,18 @@
                            value="{{ request('amount_to') }}">
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="currency_id">Currency</label>
+                    <select name="currency_id" id="currency_id" class="form-control">
+                        <option value="">All</option>
+                        @foreach ($currencies as $currency)
+                            <option value="{{ $currency->id }}" @if(request('currency')==$currency->id) selected @endif>{{
+                            $currency->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <div class="col-md-3 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary align-bottom">Filter</button>
             </div>

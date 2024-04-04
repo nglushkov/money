@@ -79,6 +79,7 @@ class OperationController extends Controller
             'categories' => Category::orderBy('name', 'asc')->get(),
             'users' => User::orderBy('name', 'asc')->get(),
             'places' => Place::orderBy('name', 'asc')->get(),
+            'currencies' => Currency::orderBy('name', 'asc')->get(),
             'defaultCurrency' => Currency::getDefaultCurrency(),
         ]);
     }
