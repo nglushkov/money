@@ -120,7 +120,7 @@ class Bill extends Model
         return $amounts;
     }
 
-    public function getAmountNotNull(): array
+    public function getAmountsNotNull(): array
     {
         $amounts = $this->getAmounts();
         foreach ($amounts as $currency => $amount) {
@@ -161,6 +161,11 @@ class Bill extends Model
         return $query->where('default', true);
     }
 
+    public function scopeUserIdOrNull($query, int $userId)
+    {
+        return $query->where('user_id', $userId)->orWhere('user_id', null);
+    }
+
     /**
      * @param Bill $bill
      * @param string $currencyName
@@ -191,6 +196,11 @@ class Bill extends Model
             $operation->user_id = auth()->id();
             $operation->save();
         }
+    }
+
+    public static function getDefault(): self
+    {
+        return self::default()->first();
     }
 
     public function getOwnerNameAttribute(): string

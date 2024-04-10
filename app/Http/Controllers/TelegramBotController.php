@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\MoneyFormatter;
+use App\Models\Bill;
 use App\Models\Currency;
 use App\Service\OperationService;
 use App\Service\ReportService;
@@ -12,16 +13,14 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 class TelegramBotController extends Controller
 {
     const COMMAND_REPORT = '/report';
-    const COMMANDS = [
-        self::COMMAND_REPORT,
-    ];
+    const COMMAND_BALANCE = '/balance';
 
-    private $telegram;
+    private Api $telegram;
     private ReportService $reportService;
 
     private OperationService $operationService;
 
-    public function __construct(Api $telegram, ReportService $reportService, OperationService $operationService)
+    public function __construct(ReportService $reportService, OperationService $operationService)
     {
         $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
         $this->reportService = $reportService;
@@ -54,10 +53,15 @@ class TelegramBotController extends Controller
             return;
         }
 
-        if ($text === self::COMMAND_REPORT) {
-            $this->handleReportCommand($userId);
-        } else {
-            $this->createExpense($text, $userId);
+        switch ($text) {
+            case self::COMMAND_REPORT:
+                $this->handleReportCommand($userId);
+                break;
+            case self::COMMAND_BALANCE:
+                $this->handleBalanceCommand($userId);
+                break;
+            default:
+                $this->createExpense($text, $userId);
         }
     }
 
@@ -118,6 +122,40 @@ class TelegramBotController extends Controller
         $this->telegram->sendMessage([
             'chat_id' => $userId,
             'text' => $text,
+        ]);
+    }
+
+    public function handleBalanceCommand(int $telegramUserId): void
+    {
+        $userId = $this->getUserIdByTelegramUserId($telegramUserId);
+        $bills = Bill::userIdOrNull($userId)->orderBy('name')->get();
+
+        $messageText = '';
+        foreach ($bills as $bill) {
+            $amounts = $bill->getAmountsNotNull();
+            $billName = $bill->default ? '💰 ' . $bill->name : $bill->name;
+            if (count($amounts) === 0) {
+                continue;
+            } else if (count($amounts) > 1) {
+                $messageText .= $billName . ": \n";
+            }
+            foreach ($amounts as $currencyName => $amount) {
+                if (count($amounts) === 1) {
+                    $messageText .= $billName . ': <b>' . MoneyFormatter::get($amount) . ' ' . $currencyName . '</b>';
+                } else {
+                    $messageText .= MoneyFormatter::get($amount) . ' ' . $currencyName . "\n";
+                }
+            }
+            $messageText .= "\n";
+            if (count($amounts) === 1) {
+                $messageText .= "\n";
+            }
+        }
+
+        $this->telegram->sendMessage([
+            'chat_id' => $telegramUserId,
+            'text' => $messageText,
+            'parse_mode' => 'html',
         ]);
     }
 
