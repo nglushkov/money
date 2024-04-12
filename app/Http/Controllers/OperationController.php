@@ -113,16 +113,28 @@ class OperationController extends Controller
     {
         $operation = new Operation();
         $operation->fill($request->validated());
-        if ($request->has('attachment')) {
-            $originalName = $request->file('attachment')->getClientOriginalName();
-            $operation->attachment = basename(
-                $request->file('attachment')->storeAs(StorageFilePath::OperationAttachments->value, $originalName)
-            );
-        }
-        $operation->user_id = auth()->id();
-        $operation->save();
+
+        DB::transaction(function () use ($request, $operation) {
+            $operation->user_id = auth()->id();
+            $operation->save();
+
+            if ($request->has('attachment')) {
+                $originalName = $request->file('attachment')->getClientOriginalName();
+                $request->file('attachment')->storeAs(
+                    StorageFilePath::OperationAttachments->value, $this->getAttachmentFileNameEncrypted($operation->id, $originalName)
+                );
+
+                $operation->attachment = basename($originalName);
+            }
+            $operation->save();
+        });
 
         return redirect()->route('home');
+    }
+
+    private function getAttachmentFileNameEncrypted(int $operationId, string $fileName): string
+    {
+        return md5($operationId . $fileName);
     }
 
     /**
@@ -161,17 +173,25 @@ class OperationController extends Controller
      */
     public function update(UpdateOperationRequest $request, Operation $operation)
     {
-        if ($request->has('attachment')) {
-            Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $operation->attachment);
-            $originalName = $request->file('attachment')->getClientOriginalName();
-            $operation->attachment = basename(
-                $request->file('attachment')->storeAs(StorageFilePath::OperationAttachments->value, $originalName)
-            );
-        }
-        $operation->fill($request->validated());
-        $operation->date = $request->date;
-        $operation->is_draft = false;
-        $operation->save();
+        DB::transaction(function () use ($request, $operation) {
+            $operation->fill($request->validated());
+            $operation->date = $request->date;
+            $operation->is_draft = false;
+            $operation->save();
+
+            if ($request->has('attachment')) {
+                $originalName = $request->file('attachment')->getClientOriginalName();
+                $encryptedFileName = $this->getAttachmentFileNameEncrypted($operation->id, $originalName);
+
+                if ($operation->attachment) {
+                    Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $encryptedFileName);
+                }
+                $request->file('attachment')->storeAs(StorageFilePath::OperationAttachments->value, $encryptedFileName);
+
+                $operation->attachment = $originalName;
+                $operation->save();
+            }
+        });
 
         return Session::has('index_url') ? redirect(Session::get('index_url')) : back();
     }
@@ -179,9 +199,13 @@ class OperationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, Operation $operation)
     {
-        Operation::withoutGlobalScope(IsNotCorrectionScope::class)->findOrFail($id)->delete();
+        DB::transaction(function () use ($request, $operation) {
+            $operation->delete();
+
+            Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $this->getAttachmentFileNameEncrypted($operation->id, $operation->attachment));
+        });
 
         if ($request->has('back_route')) {
             return redirect($request->back_route);
@@ -191,7 +215,11 @@ class OperationController extends Controller
 
     public function getAttachment(Operation $operation)
     {
-        $response = response()->file(Storage::path(StorageFilePath::OperationAttachments->value . '/' . $operation->attachment));
+        $response = response()->file(
+            Storage::path(
+                StorageFilePath::OperationAttachments->value . '/' . $this->getAttachmentFileNameEncrypted($operation->id, $operation->attachment)
+            )
+        );
         $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT');
@@ -201,7 +229,7 @@ class OperationController extends Controller
 
     public function deleteAttachment(Operation $operation)
     {
-        Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $operation->attachment);
+        Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $this->getAttachmentFileNameEncrypted($operation->id, $operation->attachment));
         $operation->attachment = null;
         $operation->save();
 
