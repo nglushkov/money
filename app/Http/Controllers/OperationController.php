@@ -204,7 +204,9 @@ class OperationController extends Controller
         DB::transaction(function () use ($request, $operation) {
             $operation->delete();
 
-            Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $this->getAttachmentFileNameEncrypted($operation->id, $operation->attachment));
+            if ($operation->attachment) {
+                Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $this->getAttachmentFileNameEncrypted($operation->id, $operation->attachment));
+            }
         });
 
         if ($request->has('back_route')) {
