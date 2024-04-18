@@ -199,8 +199,10 @@ class OperationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Operation $operation)
+    public function destroy(Request $request, int $id)
     {
+        $operation = Operation::withoutGlobalScope(IsNotCorrectionScope::class)->findOrFail($id);
+
         DB::transaction(function () use ($request, $operation) {
             $operation->delete();
 
