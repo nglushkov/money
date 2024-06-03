@@ -12,15 +12,15 @@
                         <a href="{{ route('operations.create') }}" class="btn btn-success">New Operation</a>
                         <a href="{{ route('transfers.create') }}" class="btn btn-success">New Transfer</a>
                         <a href="{{ route('exchanges.create') }}" class="btn btn-success">New Exchange</a>&nbsp;
-                        <a href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrencyId()) }}" class="btn btn-light">{{ \App\Models\Currency::getDefaultCurrencyName() }} rates</a>
-                        <div class="float-end">
-                            <form action="{{ route('operations.create-draft') }}" method="POST">
-                                {{ csrf_field() }}
-                                <input type="text" class="form-control" style="width: 20rem" id="search" placeholder="Create: Amount Category Place..." name="raw_text" onkeydown="if (event.keyCode == 13) { this.form.submit(); return false; }">
-                            </form>
+                        <div class="btn-group" role="group">
+                            <a href="{{ route('home', ['date' => \Carbon\Carbon::today()->format('Y-m-d')]) }}" @class(['btn', 'btn-sm', 'btn-secondary', 'active' => request('date') == \Carbon\Carbon::today()->format('Y-m-d')])>
+                                Today
+                            </a>
+                            <a href="{{ route('home', ['date' => \Carbon\Carbon::yesterday()->format('Y-m-d')]) }}" @class(['btn', 'btn-sm', 'btn-secondary', 'active' => request('date') == \Carbon\Carbon::yesterday()->format('Y-m-d')])>
+                                Yesterday
+                            </a>
                         </div>
                     </div>
-
                 </div>
             </div>
             @if (Session::has('error'))
@@ -49,11 +49,17 @@
                     </div>
                 @endforeach
             @endif
+            @if (count($moves) == 0)
+                <div class="alert alert-info mt-3">
+                    No moves found
+                </div>
+            @else
             <div class="card mb-3">
                 <ul class="list-group list-group-flush">
                     @include('blocks.moves', ['moves' => $moves])
                 </ul>
             </div>
+            @endif
             {{ $paginator->links() }}
         </div>
     </div>

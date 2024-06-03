@@ -22,7 +22,7 @@ class MoveController extends Controller
         $this->plannedExpenseService = $plannedExpenseService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $operations = Operation::with([
             'bill',
@@ -30,20 +30,28 @@ class MoveController extends Controller
             'currency',
             'place',
             'user'
-        ])->latest()->get();
+        ])->latest();
         $transfers = Transfer::with([
             'from',
             'to',
             'currency',
             'user',
-        ])->latest()->get();
+        ])->latest();
         $exchanges = Exchange::with([
             'from',
             'to',
             'bill',
             'user',
             'place'
-        ])->latest()->get();
+        ])->latest();
+        if ($request->has('date')) {
+            $operations->where('date', $request->date);
+            $transfers->where('date', $request->date);
+            $exchanges->where('date', $request->date);
+        }
+        $operations = $operations->get();
+        $transfers = $transfers->get();
+        $exchanges = $exchanges->get();
 
         $moves = $operations->concat($transfers)->concat($exchanges)->sortByDesc(function ($move) {
             return $move->date->format('U') . $move->created_at->format('U');
