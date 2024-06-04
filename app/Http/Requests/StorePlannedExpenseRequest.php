@@ -31,7 +31,7 @@ class StorePlannedExpenseRequest extends FormRequest
             'bill_id' => ['nullable', 'exists:bills,id'],
             'place_id' => ['required', 'exists:places,id'],
             'notes' => ['nullable', 'string'],
-            'reminder_days' => ['nullable', 'integer', 'min:1', 'max:30'],
+            'reminder_days' => ['required', 'integer', 'min:1', 'max:30'],
         ];
     }
 }
