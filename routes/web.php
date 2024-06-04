@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\CoinController;
+use App\Http\Controllers\CryptoController;
+use App\Http\Controllers\WalletController;
+use App\Http\Controllers\TransactionController;
 
 
 /*
@@ -63,6 +67,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/total-by-categories', [ReportController::class, 'getSumByCategories'])->name('reports.total-by-categories');
 
     Route::resource('settings/users', UserController::class);
+    Route::resource('coins', CoinController::class);
+    Route::resource('wallets', WalletController::class);
+    Route::resource('transactions', TransactionController::class);
 });
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');
