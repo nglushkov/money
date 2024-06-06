@@ -80,6 +80,7 @@ class CurrencyController extends Controller
     public function update(UpdateCurrencyRequest $request, Currency $currency)
     {
         $currency->name = $request->name;
+        $currency->is_crypto = $request->has('is_crypto');
         $currency->save();
 
         return redirect()->route('currencies.show', $currency);

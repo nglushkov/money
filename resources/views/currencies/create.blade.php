@@ -24,6 +24,10 @@
                         <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}"
                             required>
                     </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="is_crypto" id="is_crypto" class="form-check-input"
+                            {{ old('is_crypto') ? 'checked' : '' }} value="1">&nbsp;
+                        <label for="is_crypto">Is Crypto</label>
                     <hr>
                     <button type="submit" class="btn btn-primary">Create</button>
                     <a href="{{ route('currencies.index') }}" class="btn btn-secondary">Cancel</a>

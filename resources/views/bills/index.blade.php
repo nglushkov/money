@@ -12,10 +12,9 @@
             </div>
 
             <table class="table table-striped table-hover">
-                <caption>Bills count: {{ $bills->count() }}</caption>
                 <thead>
                     <tr>
-                        <th>Счёт</th>
+                        <th>Bill Name</th>
                         <th>User</th>
                         @foreach ($currencies as $currency)
                             <th class="table-info">{{ $currency->name }}</th>
@@ -47,6 +46,33 @@
                     </tr>
                 </tfoot>
             </table>
+            @foreach ($cryptoBills as $bill)
+            <div class="card">
+                <div class="card-body">
+                    <h4><a href="{{ route('bills.show', $bill) }}">{{ $bill->name }}</a></h4>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Coin</th>
+                                <th>Amount</th>
+                                <th>Rate (USDT)</th>
+                                <th>Amount (USDT)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($bill->getCryptoAmounts() as $currencyName => $amount)
+                                <tr>
+                                    <td>{{ $currencyName }}</td>
+                                    <td>{{ \App\Helpers\MoneyFormatter::getWithoutDecimals($amount) }}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>&nbsp;
+            @endforeach
         </div>
     </div>
 </div>

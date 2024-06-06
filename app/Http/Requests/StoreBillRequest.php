@@ -27,6 +27,7 @@ class StoreBillRequest extends FormRequest
             'amount' => ['required', 'array', 'min:1'],
             'amount.*' => ['required', 'numeric', 'min:0'],
             'user_id' => ['nullable', 'exists:users,id'],
+            'is_crypto' => ['boolean'],
         ];
     }
 }

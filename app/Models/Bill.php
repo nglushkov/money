@@ -14,10 +14,11 @@ class Bill extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'notes', 'user_id'];
+    protected $fillable = ['name', 'notes', 'user_id', 'is_crypto'];
 
     protected $casts = [
         'default' => 'boolean',
+        'is_crypto' => 'boolean',
     ];
 
     public function currenciesInitial()
@@ -114,8 +115,21 @@ class Bill extends Model
     public function getAmounts(): array
     {
         $amounts = [];
-        foreach (Currency::orderBy('name')->get() as $currency) {
+        foreach (Currency::isNotCrypto()->orderBy('name')->get() as $currency) {
             $amounts[$currency->name] = $this->getAmount($currency->id);
+        }
+        return $amounts;
+    }
+
+    public function getCryptoAmounts(): array
+    {
+        $amounts = [];
+        foreach (Currency::isCrypto()->orderBy('name')->get() as $currency) {
+            $amount = $this->getAmount($currency->id);
+            if ($amount === .0) {
+                continue;
+            }
+            $amounts[$currency->name] = $amount;
         }
         return $amounts;
     }
@@ -164,6 +178,16 @@ class Bill extends Model
     public function scopeUserIdOrNull($query, int $userId)
     {
         return $query->where('user_id', $userId)->orWhere('user_id', null);
+    }
+
+    public function scopeIsCrypto($query)
+    {
+        return $query->where('is_crypto', true);
+    }
+
+    public function scopeIsNotCrypto($query)
+    {
+        return $query->where('is_crypto', false);
     }
 
     /**

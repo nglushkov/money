@@ -8,7 +8,8 @@
         <h5 class="card-title">Currency Details</h5>
         <ul class="list-group list-group-flush">
             <li class="list-group-item"><strong>Name:</strong> {{ $currency->name }}</li>
-            <li class="list-group-item"><strong>По умолчанию:</strong> {{ $currency->is_default ? 'Да' : 'Нет' }}</li>
+            <li class="list-group-item"><strong>Is Crypto:</strong> {{ $currency->is_crypto ? 'Yes' : 'No' }}</li>
+            <li class="list-group-item"><strong>По умолчанию:</strong> {{ $currency->is_default ? 'Yes' : 'No' }}</li>
         </ul>
         <div class="card-footer">
             @include('blocks.delete-link', ['model' => $currency, 'routePart' => 'currencies'])

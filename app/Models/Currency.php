@@ -13,11 +13,12 @@ class Currency extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'is_crypto'];
 
     protected $casts = [
         'active' => 'boolean',
-        'is_default' => 'boolean'
+        'is_default' => 'boolean',
+        'is_crypto' => 'boolean',
     ];
 
     protected $dispatchesEvents = [
@@ -42,6 +43,16 @@ class Currency extends Model
     public function scopeDefault($query)
     {
         return $query->where('is_default', true);
+    }
+
+    public function scopeIsCrypto($query)
+    {
+        return $query->where('is_crypto', true);
+    }
+
+    public function scopeIsNotCrypto($query)
+    {
+        return $query->where('is_crypto', false);
     }
 
     public function ratesTo()

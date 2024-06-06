@@ -23,6 +23,7 @@ class UpdateCurrencyRequest extends FormRequest
     {
         return [
             'name' => 'required|max:5|unique:currencies,name,' . $this->route('currency')->id,
+            'is_crypto' => 'boolean',
         ];
     }
 }

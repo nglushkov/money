@@ -27,6 +27,7 @@ class UpdateBillRequest extends FormRequest
             'amount' => ['required', 'array'],
             'amount.*' => ['required', 'numeric'],
             'user_id' => ['nullable', 'exists:users,id'],
+            'is_crypto' => ['boolean'],
         ];
     }
 }

@@ -23,8 +23,7 @@ class StoreCurrencyRequest extends FormRequest
     {
         return [
             'name' => 'required|max:5|unique:currencies',
-            'active' => 'boolean',
-            'is_default' => 'boolean'
+            'is_crypto' => 'boolean',
         ];
     }
 }

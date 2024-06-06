@@ -38,6 +38,10 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="is_crypto" id="is_crypto" class="form-check-input"
+                               {{ old('is_crypto') ?? $bill->is_crypto ? 'checked' : '' }} value="1">&nbsp;
+                        <label for="is_crypto">Is Crypto</label>
                     <hr>
                     <h5>Начальный остаток:</h5>
                     @foreach($currencies as $currency)

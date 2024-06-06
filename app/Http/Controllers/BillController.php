@@ -23,15 +23,18 @@ class BillController extends Controller
      */
     public function index(Request $request)
     {
-        $bills = Bill::orderBy('name');
+        $bills = Bill::isNotCrypto()->orderBy('name');
+        $cryptoBills = Bill::isCrypto()->orderBy('name');
         if ($request->get('user_id')) {
             $bills->where('user_id', $request->user_id)->orWhere('user_id', null);
+            $cryptoBills->where('user_id', $request->user_id)->orWhere('user_id', null);
         }
 
         return view('bills.index', [
             'bills' => $bills->get(),
-            'currencies' => Currency::orderBy('name')->get(),
-            'bill'
+            'currencies' => Currency::isNotCrypto()->orderBy('name')->get(),
+            'cryptoCurrencies' => Currency::isCrypto()->orderBy('name')->get(),
+            'cryptoBills' => $cryptoBills->get(),
         ]);
     }
 
@@ -157,7 +160,7 @@ class BillController extends Controller
         $moves = $paginator->items();
         $defaultCurrency = Currency::getDefaultCurrency();
 
-        $currencies = Currency::orderBy('name')->get();
+        $currencies = Currency::orderBy('is_crypto')->orderBy('name')->get();
 
         return view('bills.show', [
             'bill' => $bill,
@@ -195,7 +198,9 @@ class BillController extends Controller
     public function update(UpdateBillRequest $request, Bill $bill)
     {
         DB::transaction(function () use ($request, $bill) {
-            $bill->update($request->validated());
+            $bill->fill($request->validated());
+            $bill->is_crypto = $request->has('is_crypto');
+            $bill->save();
             $bill->currenciesInitial()->detach();
 
             foreach ($request->input('amount') as $currencyId => $amount) {
