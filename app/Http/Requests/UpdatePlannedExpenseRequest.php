@@ -29,7 +29,7 @@ class UpdatePlannedExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['required', 'numeric', 'min:0.01'],
+            'amount' => ['required', 'numeric'],
             'day' => ['required', 'integer', 'min:1', 'max:31'],
             'month' => ['nullable', 'required_if:frequency,annually', 'integer', 'min:1', 'max:12'],
             'frequency' => ['required', 'in:monthly,annually'],

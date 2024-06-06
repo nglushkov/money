@@ -23,9 +23,9 @@ class StoreExchangeRequest extends FormRequest
     {
         return [
             'from_currency_id' => 'required|exists:currencies,id|different:to_currency_id',
-            'amount_from' => 'required|numeric|min:0.01',
+            'amount_from' => 'required|numeric',
             'to_currency_id' => 'required|exists:currencies,id|different:from_currency_id',
-            'amount_to' => 'required|numeric|min:0.01',
+            'amount_to' => 'required|numeric',
             'bill_id' => 'required|exists:bills,id',
             'date' => 'required|date|before_or_equal:today',
             'notes' => 'nullable|string',
