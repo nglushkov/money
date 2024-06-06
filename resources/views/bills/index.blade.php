@@ -63,8 +63,8 @@
                         </thead>
                         <tbody>
                             @foreach ($bill->getAmountsNotNull() as $currencyName => $amount)
-                                <tr>
-                                    <td>{{ $currencyName }}</td>
+                                <tr onclick="window.location.href = '{{ route('exchanges.index', ['currency_id' => $currencyName]) }}';" style="cursor: pointer;">
+                                    <td>{{ $currencyName }}</a></td>
                                     <td>{{ \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($amount) }}</td>
                                     <td></td>
                                     <td></td>

@@ -12,8 +12,8 @@
                         All
                     </a>
                     @foreach ($currencies as $currency)
-                        <a href="{{ route('exchanges.index', ['currency_id' => $currency->id]) }}"
-                            @class(['active' => $currency->id == request('currency_id'), 'btn' => true, 'btn-light' => true])
+                        <a href="{{ route('exchanges.index', ['currency_id' => $currency->name]) }}"
+                            @class(['active' => $currency->name == request('currency_id'), 'btn' => true, 'btn-light' => true])
                         >
                             {{ $currency->name }}
                         </a>
