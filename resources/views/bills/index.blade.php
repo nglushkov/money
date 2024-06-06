@@ -55,8 +55,10 @@
                             <tr>
                                 <th>Coin</th>
                                 <th>Amount</th>
-                                <th>Rate (USDT)</th>
-                                <th>Amount (USDT)</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Total invested</th>
+                                <th>Income</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,6 +66,8 @@
                                 <tr>
                                     <td>{{ $currencyName }}</td>
                                     <td>{{ \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($amount) }}</td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
