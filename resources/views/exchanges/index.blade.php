@@ -5,7 +5,19 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="bg-light p-3">
-                    <a href="{{ route('exchanges.create') }}" class="btn btn-success">Create</a>
+                    <a href="{{ route('exchanges.create') }}" class="btn btn-success">Create</a>&nbsp;
+                    <a href="{{ route('exchanges.index') }}"
+                        @class(['active' => !request('currency_id'), 'btn', 'btn-light'])
+                    >
+                        All
+                    </a>
+                    @foreach ($currencies as $currency)
+                        <a href="{{ route('exchanges.index', ['currency_id' => $currency->id]) }}"
+                            @class(['active' => $currency->id == request('currency_id'), 'btn' => true, 'btn-light' => true])
+                        >
+                            {{ $currency->name }}
+                        </a>
+                    @endforeach
                 </div>
                 <table class="table table-striped">
                     <thead>

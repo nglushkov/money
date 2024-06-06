@@ -17,10 +17,18 @@ class ExchangeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $exchanges = Exchange::with('from', 'to', 'bill')->orderBy('date', 'desc');
+        if ($request->filled('currency_id')) {
+            $exchanges = $exchanges->where('from_currency_id', $request->get('currency_id'))->orWhere('to_currency_id', $request->get('currency_id'));
+        }
+
+        $exchanges = $exchanges->latest()->paginate(20);
+
         return view('exchanges.index', [
-            'exchanges' => Exchange::with('from', 'to', 'bill')->orderBy('date', 'desc')->latest()->paginate(20)
+            'exchanges' => $exchanges,
+            'currencies' => Currency::orderby('is_crypto')->orderBy('name')->get(),
         ]);
     }
 
