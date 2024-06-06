@@ -23,8 +23,7 @@ class ExchangeController extends Controller
         if ($request->filled('currency_id')) {
             $exchanges = $exchanges->where('from_currency_id', $request->get('currency_id'))->orWhere('to_currency_id', $request->get('currency_id'));
         }
-
-        $exchanges = $exchanges->latest()->paginate(20);
+        $exchanges = $exchanges->paginate(50)->appends($request->all());
 
         return view('exchanges.index', [
             'exchanges' => $exchanges,
