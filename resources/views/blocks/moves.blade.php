@@ -16,7 +16,7 @@
                         @if($move->place)
                             <span class=""><a href="{{ route('places.show', $move->place) }}" class="text-body">{{ $move->place->name }}</a></span></span>
                         @endif
-                        <small class="text-secondary">by</small>&nbsp;<span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
+                        <small class="text-secondary">{{ $move->is_expense ? 'by' : 'to' }}</small>&nbsp;<span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
                     </td>
                     <td style="width: 20%">
                         <span class="text-body-secondary fw-light"><small>{{ $move->user->name }}</small></span>
