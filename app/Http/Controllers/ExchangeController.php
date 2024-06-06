@@ -56,9 +56,6 @@ class ExchangeController extends Controller
             }
 
             DB::transaction(function () use ($data) {
-                $placeId = $data['place_id'] ?? null;
-
-                $place = $placeId ? ExchangePlace::findOrFail($placeId) : null;
                 $placeName = $data['place_name'] ?? null;
 
                 if (!empty($placeName)) {
@@ -149,15 +146,12 @@ class ExchangeController extends Controller
             }
 
             DB::transaction(function () use ($data, $exchange) {
-                $placeId = $data['place_id'];
-
-                $place = $placeId ? ExchangePlace::findOrFail($placeId) : null;
                 $placeName = $data['place_name'] ?? null;
 
                 if (!empty($placeName)) {
                     $place = ExchangePlace::create(['name' => $placeName]);
+                    $data['place_id'] = $place->id;
                 }
-                $data['place_id'] = $place->id;
 
                 $exchange->fill($data);
                 $exchange->save();
