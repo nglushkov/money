@@ -33,7 +33,7 @@
                     </form>
                     <li class="list-group-item border-0">
                         <strong>• {{ $currencyName }}</strong>:
-                        <span @class(['text-success' => $amount > 0])>{{ App\Helpers\MoneyFormatter::get($amount) }}</span>
+                        <span @class(['text-success' => $amount > 0])>{{ App\Helpers\MoneyFormatter::getCrypto($amount) }}</span>
                         <button type="submit" class="btn btn-light btn-sm"
                                 onclick="event.preventDefault();correctBillAmount('{{ $currencyName }}', {{ $bill->id }})">
                             Correct

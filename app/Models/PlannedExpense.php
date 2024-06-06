@@ -97,7 +97,7 @@ class PlannedExpense extends Model
         return MoneyFormatter::getWithCurrencyName($this->amount, $this->currency->name);
     }
 
-    public function getAmountInDefaultCurrencyAttribute(): float
+    public function getAmountInDefaultCurrencyAttribute(): string
     {
         return $this->currency->convertToDefault($this->amount, Carbon::today());
     }

@@ -60,10 +60,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($bill->getCryptoAmounts() as $currencyName => $amount)
+                            @foreach ($bill->getAmountsNotNull() as $currencyName => $amount)
                                 <tr>
                                     <td>{{ $currencyName }}</td>
-                                    <td>{{ \App\Helpers\MoneyFormatter::getWithoutDecimals($amount) }}</td>
+                                    <td>{{ \App\Helpers\MoneyFormatter::getCrypto($amount) }}</td>
                                     <td></td>
                                     <td></td>
                                 </tr>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\MoneyFormatter;
+use App\Helpers\MoneyHelper;
 use App\Models\Enum\OperationType;
 use App\Models\Scopes\IsNotCorrectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,7 +39,7 @@ class Bill extends Model
         return $this->hasMany(Operation::class);
     }
 
-    public function getAmount(int $currencyId): float
+    public function getAmount(int $currencyId): string
     {
         $amount = $this->getAmountFromCache($currencyId);
         if ($amount !== null) {
@@ -64,23 +65,22 @@ class Bill extends Model
         $transfersFrom = $this->transfersFrom()
             ->where('currency_id', $currencyId)
             ->sum('amount');
-
-        $amount -= $transfersFrom;
+        $amount = MoneyHelper::subtract($amount, $transfersFrom);
 
         $transfersTo = $this->transfersTo()
             ->where('currency_id', $currencyId)
             ->sum('amount');
-        $amount += $transfersTo;
+        $amount = MoneyHelper::add($amount, $transfersTo);
 
         $exchangeFrom = $this->exchanges()
             ->where('from_currency_id', $currencyId)
             ->sum('amount_from');
-        $amount -= $exchangeFrom;
+        $amount = MoneyHelper::subtract($amount, $exchangeFrom);
 
         $exchangeTo = $this->exchanges()
             ->where('to_currency_id', $currencyId)
             ->sum('amount_to');
-        $amount += $exchangeTo;
+        $amount = MoneyHelper::add($amount, $exchangeTo);
 
         $this->setAmountInCache($currencyId, $amount);
 
@@ -92,13 +92,13 @@ class Bill extends Model
         return MoneyFormatter::getWithCurrencyName($this->getAmount($currencyId), Currency::find($currencyId)->name);
     }
 
-    private function setAmountInCache(int $currencyId, float $amount): void
+    private function setAmountInCache(int $currencyId, string $amount): void
     {
         $key = 'bill_amount_' . $this->id . '_currency_' . $currencyId;
         cache()->forever($key, $amount);
     }
 
-    private function getAmountFromCache(int $currencyId): ?float
+    private function getAmountFromCache(int $currencyId): ?string
     {
         $key = 'bill_amount_' . $this->id . '_currency_' . $currencyId;
         return cache()->get($key);
@@ -126,9 +126,6 @@ class Bill extends Model
         $amounts = [];
         foreach (Currency::isCrypto()->orderBy('name')->get() as $currency) {
             $amount = $this->getAmount($currency->id);
-            if ($amount === .0) {
-                continue;
-            }
             $amounts[$currency->name] = $amount;
         }
         return $amounts;
@@ -136,12 +133,17 @@ class Bill extends Model
 
     public function getAmountsNotNull(): array
     {
-        $amounts = $this->getAmounts();
+        if ($this->is_crypto) {
+            $amounts = $this->getCryptoAmounts();
+        } else {
+            $amounts = $this->getAmounts();
+        }
         foreach ($amounts as $currency => $amount) {
-            if ($amount === .0) {
+            if (floatval($amount) === .0) {
                 unset($amounts[$currency]);
             }
         }
+
         return $amounts;
     }
 
@@ -193,11 +195,11 @@ class Bill extends Model
     /**
      * @param Bill $bill
      * @param string $currencyName
-     * @param float $amount
+     * @param string $amount
      * @return void
      * @todo: Move to service
      */
-    public function correctAmount(Bill $bill, string $currencyName, float $amount)
+    public function correctAmount(Bill $bill, string $currencyName, string $amount)
     {
         $currency = Currency::where(['name' => $currencyName])->first();
         $billAmount = $bill->getAmount($currency->id);
