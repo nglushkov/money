@@ -28,7 +28,7 @@ class MoneyFormatter
         return number_format($amount, 0, '.', ' ');
     }
 
-    public static function getCrypto(string $amount): string
+    public static function getWithoutTrailingZeros(string $amount): string
     {
         return rtrim(rtrim($amount, '0'), '.');
     }

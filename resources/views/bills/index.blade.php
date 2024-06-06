@@ -63,7 +63,7 @@
                             @foreach ($bill->getAmountsNotNull() as $currencyName => $amount)
                                 <tr>
                                     <td>{{ $currencyName }}</td>
-                                    <td>{{ \App\Helpers\MoneyFormatter::getCrypto($amount) }}</td>
+                                    <td>{{ \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($amount) }}</td>
                                     <td></td>
                                     <td></td>
                                 </tr>

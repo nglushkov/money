@@ -28,7 +28,7 @@
                     <div class="form-group mb-2">
                         <label for="amount">Amount:</label>
                         <input type="text" name="amount" id="amount" class="form-control" required autofocus
-                               value="{{ old('amount', $operation->amount) }}">
+                               value="{{ old('amount', App\Helpers\MoneyFormatter::getWithoutTrailingZeros($operation->amount)) }}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="type">Type:</label>
