@@ -48,11 +48,17 @@ class Exchange extends Move
 
     public function getAmountFromFormattedAttribute(): string
     {
+        if ($this->from->is_crypto) {
+            return MoneyFormatter::getCryptoWithCurrencyName($this->amount_from, $this->from->name);
+        }
         return MoneyFormatter::getWithCurrencyName($this->amount_from, $this->from->name);
     }
 
     public function getAmountToFormattedAttribute(): string
     {
+        if ($this->to->is_crypto) {
+            return MoneyFormatter::getCryptoWithCurrencyName($this->amount_to, $this->to->name);
+        }
         return MoneyFormatter::getWithCurrencyName($this->amount_to, $this->to->name);
     }
 

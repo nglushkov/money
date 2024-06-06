@@ -42,11 +42,17 @@ class Transfer extends Move
 
     public function getAmountTextAttribute($value): string
     {
+        if ($this->currency->is_crypto) {
+            return MoneyFormatter::getCryptoWithCurrencyNameAndSign($this->amount, $this->currency->name, $this->type);
+        }
         return MoneyFormatter::getWithCurrencyNameAndSign($this->amount, $this->currency->name, $this->type);
     }
 
     public function getAmountTextWithCurrencyAttribute($value): string
     {
+        if ($this->currency->is_crypto) {
+            return MoneyFormatter::getCryptoWithCurrencyName($this->amount, $this->currency->name);
+        }
         return MoneyFormatter::getWithCurrencyName($this->amount, $this->currency->name);
     }
 

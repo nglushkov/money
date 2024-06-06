@@ -18,11 +18,6 @@ class Move extends Model
         'date' => 'datetime',
     ];
 
-    public function getAmountAsMoneyAttribute(): string
-    {
-        return MoneyFormatter::get($this->amount);
-    }
-
     public function getDateFormattedAttribute($value): string
     {
         return $this->date->format('d.m.Y');
