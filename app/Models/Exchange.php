@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\MoneyFormatter;
+use App\Helpers\MoneyHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -64,6 +65,11 @@ class Exchange extends Move
 
     public function getRateFormattedAttribute(): string
     {
+        if ($this->from->is_crypto && $this->to->is_crypto) {
+            return MoneyFormatter::getWithoutTrailingZeros(
+                MoneyHelper::divide($this->amount_to, $this->amount_from)
+            );
+        }
         return MoneyFormatter::get(bcdiv($this->amount_to, $this->amount_from, 6));
     }
 
