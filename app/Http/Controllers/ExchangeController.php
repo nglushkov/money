@@ -48,6 +48,7 @@ class ExchangeController extends Controller
 
             $billAmount = $bill->getAmount($fromCurrencyId);
             if ($billAmount < $data['amount_from']) {
+                // @todo: Refactor this
                 throw new \Exception(
                     'Not enough money in the bill: ' . $bill->getAmountWithCurrency($fromCurrencyId) . '<br>' .
                     '<a target="_blank" href="' . route('bills.show', $bill) . '">Go to the bill</a>'
@@ -55,15 +56,15 @@ class ExchangeController extends Controller
             }
 
             DB::transaction(function () use ($data) {
-                $placeId = $data['place_id'];
+                $placeId = $data['place_id'] ?? null;
 
                 $place = $placeId ? ExchangePlace::findOrFail($placeId) : null;
                 $placeName = $data['place_name'] ?? null;
 
                 if (!empty($placeName)) {
                     $place = ExchangePlace::create(['name' => $placeName]);
+                    $data['place_id'] = $place->id;
                 }
-                $data['place_id'] = $place->id;
 
                 $exchange = new Exchange($data);
 
