@@ -67,14 +67,17 @@ class Exchange extends Move
     {
         if ($this->from->is_crypto && $this->to->is_crypto) {
             return MoneyFormatter::getWithoutTrailingZeros(
-                MoneyHelper::divide($this->amount_to, $this->amount_from)
+                MoneyHelper::divide($this->amount_from, $this->amount_to, 6)
             );
         }
         return MoneyFormatter::get(bcdiv($this->amount_to, $this->amount_from, 6));
     }
 
-    public function getRateTextAttribute($value): string
+    public function getRateTextAttribute(): string
     {
+        if ($this->from->is_crypto && $this->to->is_crypto) {
+            return sprintf('1 %s = %s %s', $this->to->name, $this->rate_formatted, $this->from->name);
+        }
         return sprintf('1 %s = %s %s', $this->from->name, $this->rate_formatted, $this->to->name);
     }
 }
