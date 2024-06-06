@@ -23,7 +23,7 @@
                             <label for="amount_from">From:</label>
                         </div>
                         <div class="col-4">
-                            <input type="text" name="amount_from" id="amount_from" class="form-control" required value="{{ old('amount_from', $exchange->amount_from) }}">
+                            <input type="text" name="amount_from" id="amount_from" class="form-control" required value="{{ old('amount_from', \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($exchange->amount_from)) }}">
                         </div>
                         <div class="col-auto">
                             <select name="from_currency_id" id="from_currency_id" class="form-control" required>
@@ -38,7 +38,7 @@
                             <label for="amount_to">To:</label>
                         </div>
                         <div class="col-4">
-                            <input type="text" name="amount_to" id="amount_to" class="form-control" required value="{{ old('amount_to', $exchange->amount_to) }}">
+                            <input type="text" name="amount_to" id="amount_to" class="form-control" required value="{{ old('amount_to', \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($exchange->amount_to)) }}">
                         </div>
                         <div class="col-auto">
                             <select name="to_currency_id" id="to_currency_id" class="form-control" required>
@@ -86,7 +86,7 @@
                             <label for="date">Date:</label>
                         </div>
                         <div class="col-auto">
-                            <input type="date" name="date" id="date" class="form-control" value="{{ old('date', date('Y-m-d')) }}">
+                            <input type="date" name="date" id="date" class="form-control" value="{{ old('date', $exchange->date->format('Y-m-d')) }}">
                         </div>
                     </div>
                     <div class="row g-3 align-items-center mb-2">

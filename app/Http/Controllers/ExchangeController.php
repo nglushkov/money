@@ -9,6 +9,7 @@ use App\Models\Currency;
 use App\Models\Bill;
 use App\Models\ExchangePlace;
 use App\Models\Rate;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ExchangeController extends Controller
@@ -26,13 +27,14 @@ class ExchangeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         return view('exchanges.create', [
             'currencies' => Currency::orderBy('name')->get(),
             'bills' => Bill::orderBy('name')->get(),
             'places' => ExchangePlace::orderBy('name')->get(),
             'defaultCurrency' => Currency::getDefaultCurrency(),
+            'copyExchange' => Exchange::findOrNew($request->get('copy_id')),
         ]);
     }
 
