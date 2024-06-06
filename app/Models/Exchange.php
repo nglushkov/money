@@ -67,7 +67,7 @@ class Exchange extends Move
     {
         if ($this->from->is_crypto && $this->to->is_crypto) {
             return MoneyFormatter::getWithoutTrailingZeros(
-                MoneyHelper::divide($this->amount_from, $this->amount_to)
+                MoneyHelper::divide($this->amount_from, $this->amount_to, 8)
             );
         }
         return MoneyFormatter::get(bcdiv($this->amount_to, $this->amount_from, 6));
