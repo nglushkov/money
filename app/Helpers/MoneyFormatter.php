@@ -24,7 +24,7 @@ class MoneyFormatter
         return $type === OperationType::Expense->name ? '-' . $formattedAmount : '+' . $formattedAmount;
     }
 
-    public static function  getWithoutDecimals(string $amount): string
+    public static function getWithoutDecimals(string $amount): string
     {
         return number_format($amount, 0, '.', ' ');
     }

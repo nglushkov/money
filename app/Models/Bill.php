@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Dto\CurrencyAmountDto;
 use App\Helpers\MoneyFormatter;
 use App\Helpers\MoneyHelper;
 use App\Models\Enum\OperationType;
@@ -112,25 +113,33 @@ class Bill extends Model
         }
     }
 
+    /**
+     * @return CurrencyAmountDto[]
+     */
     public function getAmounts(): array
     {
         $amounts = [];
         foreach (Currency::isNotCrypto()->orderBy('name')->get() as $currency) {
-            $amounts[$currency->name] = $this->getAmount($currency->id);
+            $amounts[] = new CurrencyAmountDto($currency, $this->getAmount($currency->id));
         }
         return $amounts;
     }
 
+    /**
+     * @return CurrencyAmountDto[]
+     */
     public function getCryptoAmounts(): array
     {
         $amounts = [];
         foreach (Currency::isCrypto()->orderBy('name')->get() as $currency) {
-            $amount = $this->getAmount($currency->id);
-            $amounts[$currency->name] = $amount;
+            $amounts[] = new CurrencyAmountDto($currency, $this->getAmount($currency->id));
         }
         return $amounts;
     }
 
+    /**
+     * @return CurrencyAmountDto[]
+     */
     public function getAmountsNotNull(): array
     {
         if ($this->is_crypto) {
@@ -138,9 +147,9 @@ class Bill extends Model
         } else {
             $amounts = $this->getAmounts();
         }
-        foreach ($amounts as $currency => $amount) {
-            if (floatval($amount) === .0) {
-                unset($amounts[$currency]);
+        foreach ($amounts as $key => $amount) {
+            if (floatval($amount->getAmount()) === .0) {
+                unset($amounts[$key]);
             }
         }
 

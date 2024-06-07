@@ -5,10 +5,15 @@ namespace App\Models;
 use App\Enum\CacheKey;
 use App\Enum\CacheTag;
 use App\Events\CurrencyProcessed;
+use App\Helpers\MoneyHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $name
+ */
 class Currency extends Model
 {
     use HasFactory;
@@ -32,17 +37,23 @@ class Currency extends Model
         return $this->hasMany(Operation::class);
     }
 
-    public function getSum($bills)
+    public function getSum($bills): string
     {
         $sum = 0;
         foreach ($bills as $bill) {
-            $sum += $bill->getAmount($this->id);
+            $sum = MoneyHelper::add($sum, $bill->getAmount($this->id));
         }
         return $sum;
     }
+
     public function scopeDefault($query)
     {
-        return $query->where('is_default', true);
+        return $query->where('is_default', true)->isNotCrypto();
+    }
+
+    public function scopeDefaultCrypto($query)
+    {
+        return $query->where('is_default', true)->isCrypto();
     }
 
     public function scopeIsCrypto($query)
@@ -85,27 +96,27 @@ class Currency extends Model
         return $query->where('active', true);
     }
 
-    public static function getDefaultCurrency(): Currency
+    public static function getDefaultCurrency(bool $isCrypto = false): Currency
     {
-        $cacheKey = CacheKey::default_currency->name;
+        $cacheKey = $isCrypto ? CacheKey::default_crypto_currency->name : CacheKey::default_currency->name;
         if (cache()->has($cacheKey)) {
             return cache()->get($cacheKey);
         }
 
-        $currency = self::default()->first();
+        $currency = $isCrypto ? self::defaultCrypto()->first() : self::default()->first();
         cache()->forever($cacheKey, $currency);
 
         return $currency;
     }
 
-    public static function getDefaultCurrencyName(): string
+    public static function getDefaultCurrencyName(bool $isCrypto = false): string
     {
-        return self::getDefaultCurrency()->name;
+        return self::getDefaultCurrency($isCrypto)->name;
     }
 
-    public static function getDefaultCurrencyId(): int
+    public static function getDefaultCurrencyId(bool $isCrypto = false): int
     {
-        return self::getDefaultCurrency()->id;
+        return self::getDefaultCurrency($isCrypto)->id;
     }
 
     public function getCurrencyRate(Carbon $date): ?Rate
@@ -116,7 +127,7 @@ class Currency extends Model
             return $rate;
         }
 
-        $rate = $this->ratesTo()->where('from_currency_id', Currency::getDefaultCurrencyId())
+        $rate = $this->ratesTo()->where('from_currency_id', Currency::getDefaultCurrencyId($this->is_crypto))
             ->where('date', '<=', $date)
             ->orderBy('date', 'desc')
             ->first();
@@ -124,5 +135,39 @@ class Currency extends Model
         cache()->tags(CacheTag::currency_rates->name)->put($rateCacheKey, $rate ?? null);
 
         return $rate;
+    }
+
+    public function getCurrentRate(): ?Rate
+    {
+        return $this->getCurrencyRate(Carbon::now());
+    }
+
+    public function getCurrentInvertedRateAsString(): string
+    {
+        if ($this->id === self::getDefaultCurrencyId($this->is_crypto)) {
+            return '1';
+        }
+        $rate = $this->getCurrencyRate(Carbon::now());
+        if ($rate === null || $rate->rate === 0) {
+            return '';
+        }
+
+        return bcdiv('1', $rate->rate, MoneyHelper::SCALE_SHORT);
+    }
+
+    public function getAmountByInvertedRate(Bill $bill): string
+    {
+        $rate = $this->getCurrentInvertedRateAsString();
+        return MoneyHelper::multiply($bill->getAmount($this->id), $rate);
+    }
+
+    public function getTotalByInvertedRate(Bill $bill): string
+    {
+        $sum = 0;
+        foreach ($bill->getAmountsNotNull() as $amount) {
+            $rate = $amount->getCurrency()->getCurrentInvertedRateAsString();
+            $sum = MoneyHelper::add($sum, MoneyHelper::multiply($amount->getAmount(), $rate));
+        }
+        return $sum;
     }
 }

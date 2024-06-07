@@ -96,7 +96,7 @@
                         <tr>
                             <td>{{ $rate->date_formatted }}</td>
                             <td>
-                                1 {{ $currency->name . ' = ' . $rate->rate . ' ' . $rate->currencyTo->name }}
+                                1 {{ $currency->name . ' = ' . \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($rate->rate) . ' ' . $rate->currencyTo->name }}
                                 @if ($rate->exchange)
                                     &nbsp;<a href="{{ route('exchanges.show', ['exchange' => $rate->exchange]) }}">Exchange</a>
                                 @endif

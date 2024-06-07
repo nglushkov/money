@@ -6,6 +6,8 @@ class MoneyHelper
 {
     const SCALE = 18;
 
+    const SCALE_SHORT = 8;
+
     public static function multiply($amount, $multiplier, $scale = self::SCALE): string
     {
         return bcmul($amount, $multiplier, $scale);

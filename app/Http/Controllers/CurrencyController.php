@@ -43,8 +43,15 @@ class CurrencyController extends Controller
     public function show(Currency $currency)
     {
         $currencies = [];
-        if ($currency->is_default) {
-            $currencies = Currency::where('is_default', false)->orderBy('name')->get();
+        if ($currency->is_crypto && $currency->is_default) {
+            $currencies = Currency::where('is_default', false)
+                ->where('is_crypto', true)
+                ->orderBy('name')->get();
+        }
+        if (!$currency->is_crypto && $currency->is_default) {
+            $currencies = Currency::where('is_default', false)
+                ->where('is_crypto', false)
+                ->orderBy('name')->get();
         }
         $lastOperations = $currency->operations()->with([
             'bill',

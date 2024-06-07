@@ -128,6 +128,7 @@ class TelegramBotController extends Controller
     public function handleBalanceCommand(int $telegramUserId): void
     {
         $userId = $this->getUserIdByTelegramUserId($telegramUserId);
+        /** @var Bill[] $bills */
         $bills = Bill::userIdOrNull($userId)->orderBy('name')->get();
 
         $messageText = '';
@@ -139,11 +140,11 @@ class TelegramBotController extends Controller
             } else if (count($amounts) > 1) {
                 $messageText .= $billName . ": \n";
             }
-            foreach ($amounts as $currencyName => $amount) {
+            foreach ($amounts as $amount) {
                 if (count($amounts) === 1) {
-                    $messageText .= $billName . ': <b>' . MoneyFormatter::get($amount) . ' ' . $currencyName . '</b>';
+                    $messageText .= $billName . ': <b>' . MoneyFormatter::get($amount->getAmount()) . ' ' . $amount->getCurrency()->name . '</b>';
                 } else {
-                    $messageText .= MoneyFormatter::get($amount) . ' ' . $currencyName . "\n";
+                    $messageText .= MoneyFormatter::get($amount->getAmount()) . ' ' . $amount->getCurrency()->name . "\n";
                 }
             }
             $messageText .= "\n";

@@ -24,18 +24,18 @@
                 <li class="list-group-item"><strong>User:</strong> {{ $bill->owner_name }}</li>
                 <li class="list-group-item"><strong>Is Crypto:</strong> {{ $bill->is_crypto ? 'Yes' : 'No' }}</li>
                 <li class="list-group-item border-0"><h5>Currencies:</h5></li>
-                @foreach ($bill->getAmountsNotNull() as $currencyName => $amount)
-                    <form id="form-{{ $currencyName }}" action="{{ route('bills.correct', $bill) }}" method="post">
+                @foreach ($bill->getAmountsNotNull() as $amount)
+                    <form id="form-{{ $amount->getCurrency()->name }}" action="{{ route('bills.correct', $bill) }}" method="post">
                         @csrf
                         @method('PUT')
-                        <input type="hidden" name="currency_name" value="{{ $currencyName }}">
-                        <input type="hidden" id="amount-{{ $currencyName }}" name="amount" value="0">
+                        <input type="hidden" name="currency_name" value="{{ $amount->getCurrency()->name }}">
+                        <input type="hidden" id="amount-{{ $amount->getCurrency()->name }}" name="amount" value="0">
                     </form>
                     <li class="list-group-item border-0">
-                        <strong>• {{ $currencyName }}</strong>:
-                        <span @class(['text-success' => $amount > 0])>{{ App\Helpers\MoneyFormatter::getWithoutTrailingZeros($amount) }}</span>
+                        <strong>• {{ $amount->getCurrency()->name }}</strong>:
+                        <span @class(['text-success' => $amount->getAmount() > 0])>{{ App\Helpers\MoneyFormatter::getWithoutTrailingZeros($amount->getAmount()) }}</span>
                         <button type="submit" class="btn btn-light btn-sm"
-                                onclick="event.preventDefault();correctBillAmount('{{ $currencyName }}', {{ $bill->id }})">
+                                onclick="event.preventDefault();correctBillAmount('{{ $amount->getCurrency()->name }}', {{ $bill->id }})">
                             Correct
                         </button>
                     </li>
