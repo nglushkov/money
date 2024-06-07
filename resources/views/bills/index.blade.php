@@ -102,9 +102,11 @@
                                             $revenue = MoneyHelper::subtract($amount->getCurrency()->getAmountByInvertedRate($bill), $bill->getCryptoInvestedByCurrency($amount->getCurrency()));
                                         @endphp
                                         <td>
-                                            <span @class(['text-danger' => $revenue < 0, 'text-success' => $revenue > 0])>
-                                                {{ MoneyFormatter::getWithCurrencyName($revenue, App\Models\Currency::getDefaultCurrencyName(true)) }}
-                                            </span>
+                                            @if (!$amount->getCurrency()->is_default)
+                                                <span @class(['text-danger' => $revenue < 0, 'text-success' => $revenue > 0])>
+                                                    {{ MoneyFormatter::getWithCurrencyName($revenue, App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                                </span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
