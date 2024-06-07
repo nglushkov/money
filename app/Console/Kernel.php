@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('rates:get-usd-ars')->weekdays()->between('12:00', '18:00')->hourly();
         $schedule->command('rates:get')->weekdays()->between('06:00', '12:00')->hourly();
         $schedule->command('backup:run')->twiceDaily(3, 15);
+        $schedule->command('app:get-crypto-rates')->hourly();
     }
 
     /**
