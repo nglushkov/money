@@ -49,10 +49,24 @@
                     </tr>
                     </tfoot>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-light p-3 mb-3">
+                    <h3>
+                        Crypto Bills
+                        <a href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrency(true)) }}" class="btn btn-sm btn-success">Add rate</a>
+                    </h3>
+                </div>
                 @foreach ($cryptoBills as $bill)
                     <div class="card">
                         <div class="card-body">
-                            <h4><a href="{{ route('bills.show', $bill) }}">{{ $bill->name }}</a></h4>
+                            <h4>
+                                <a href="{{ route('bills.show', $bill) }}">{{ $bill->name }}</a>
+                            </h4>
                             <table class="table table-striped table-hover">
                                 <thead>
                                 <tr>
