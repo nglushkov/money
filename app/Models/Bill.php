@@ -252,4 +252,50 @@ class Bill extends Model
     {
         return $this->user_id === null;
     }
+
+    public function getCryptoInvestedByCurrency(Currency $currency): string
+    {
+        if (!$this->is_crypto) {
+            return '0';
+        }
+        $amountFrom = Exchange::where('bill_id', $this->id)
+            ->where('from_currency_id', Currency::getDefaultCurrencyId(true))
+            ->where('to_currency_id', $currency->id)
+            ->sum('amount_from');
+
+        $amountTo = Exchange::where('bill_id', $this->id)
+            ->where('to_currency_id', Currency::getDefaultCurrencyId(true))
+            ->where('from_currency_id', $currency->id)
+            ->sum('amount_to');
+
+        return MoneyHelper::subtract($amountFrom, $amountTo);
+    }
+
+    public function getCryptoTotalInvested(): string
+    {
+        if (!$this->is_crypto) {
+            return '0';
+        }
+        $amountFrom = Exchange::where('bill_id', $this->id)
+            ->where('from_currency_id', Currency::getDefaultCurrencyId(true))
+            ->whereHas('fromCurrency', function ($query) {
+                $query->isCrypto();
+            })
+            ->whereHas('toCurrency', function ($query) {
+                $query->isCrypto();
+            })
+            ->sum('amount_from');
+
+        $amountTo = Exchange::where('bill_id', $this->id)
+            ->where('to_currency_id', Currency::getDefaultCurrencyId(true))
+            ->whereHas('fromCurrency', function ($query) {
+                $query->isCrypto();
+            })
+            ->whereHas('toCurrency', function ($query) {
+                $query->isCrypto();
+            })
+            ->sum('amount_to');
+
+        return MoneyHelper::subtract($amountFrom, $amountTo);
+    }
 }

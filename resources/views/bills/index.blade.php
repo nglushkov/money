@@ -86,15 +86,16 @@
                                         <td>{{ MoneyFormatter::getWithoutTrailingZeros($amount->getAmount()) }}</td>
                                         <td>1 {{ $amount->getCurrency()->name }} = {{ MoneyFormatter::getWithoutTrailingZeros($amount->getCurrency()->getCurrentInvertedRateAsString()) }} {{ App\Models\Currency::getDefaultCurrencyName(true) }}</td>
                                         <td>{{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getAmountByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</td>
-                                        <td>todo</td>
-                                        <td>todo</td>                                    </tr>
+                                        <td>{{ MoneyFormatter::getWithCurrencyName($bill->getCryptoInvestedByCurrency($amount->getCurrency()), App\Models\Currency::getDefaultCurrencyName(true)) }}</td>
+                                        <td>{{ MoneyFormatter::getWithCurrencyName(MoneyHelper::subtract($bill->getCryptoInvestedByCurrency($amount->getCurrency()), $amount->getCurrency()->getAmountByInvertedRate($bill)), App\Models\Currency::getDefaultCurrencyName(true)) }}</td>
+                                    </tr>
                                 @endforeach
                                 </tbody>
                                 <tfoot>
                                 <tr>
                                     <th colspan="3"></th>
                                     <th>{{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getTotalByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
-                                    <th></th>
+                                    <th>{{ MoneyFormatter::getWithCurrencyName($bill->getCryptoTotalInvested(), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
                                     <th></th>
                                 </tr>
                                 </tfoot>

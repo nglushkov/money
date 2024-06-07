@@ -47,6 +47,16 @@ class Exchange extends Move
         return $this->belongsTo(ExchangePlace::class);
     }
 
+    public function fromCurrency()
+    {
+        return $this->belongsTo(Currency::class, 'from_currency_id');
+    }
+
+    public function toCurrency()
+    {
+        return $this->belongsTo(Currency::class, 'to_currency_id');
+    }
+
     public function getAmountFromFormattedAttribute(): string
     {
         if ($this->from->is_crypto) {
