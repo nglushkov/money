@@ -79,7 +79,7 @@
                                 <tfoot>
                                 <tr>
                                     <th colspan="3"></th>
-                                    <th>{{ MoneyFormatter::get($amount->getCurrency()->getTotalByInvertedRate($bill)) }}</th>
+                                    <th>{{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getTotalByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
                                     <th></th>
                                     <th></th>
                                 </tr>
