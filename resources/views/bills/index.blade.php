@@ -88,7 +88,14 @@
                                         <td>1 {{ $amount->getCurrency()->name }} = {{ MoneyFormatter::getWithoutTrailingZeros($amount->getCurrency()->getCurrentInvertedRateAsString()) }} {{ App\Models\Currency::getDefaultCurrencyName(true) }}</td>
                                         <td>{{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getAmountByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</td>
                                         <td>{{ MoneyFormatter::getWithCurrencyName($bill->getCryptoInvestedByCurrency($amount->getCurrency()), App\Models\Currency::getDefaultCurrencyName(true)) }}</td>
-                                        <td>{{ MoneyFormatter::getWithCurrencyName(MoneyHelper::subtract($amount->getCurrency()->getAmountByInvertedRate($bill), $bill->getCryptoInvestedByCurrency($amount->getCurrency())), App\Models\Currency::getDefaultCurrencyName(true)) }}</td>
+                                        @php
+                                            $income = MoneyHelper::subtract($amount->getCurrency()->getAmountByInvertedRate($bill), $bill->getCryptoInvestedByCurrency($amount->getCurrency()));
+                                        @endphp
+                                        <td>
+                                            <span @class(['text-danger' => $income < 0, 'text-success' => $income > 0])>
+                                                {{ MoneyFormatter::getWithCurrencyName($income > 0 , App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                            </span>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
