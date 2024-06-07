@@ -76,7 +76,7 @@
                                     <th>Rate</th>
                                     <th>Amount</th>
                                     <th>Total invested</th>
-                                    <th>Income</th>
+                                    <th>Revenue</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -85,15 +85,25 @@
                                         style="cursor: pointer;">
                                         <td>{{ $amount->getCurrency()->name }}</a></td>
                                         <td>{{ MoneyFormatter::getWithoutTrailingZeros($amount->getAmount()) }}</td>
-                                        <td>1 {{ $amount->getCurrency()->name }} = {{ MoneyFormatter::getWithoutTrailingZeros($amount->getCurrency()->getCurrentInvertedRateAsString()) }} {{ App\Models\Currency::getDefaultCurrencyName(true) }}</td>
-                                        <td>{{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getAmountByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</td>
-                                        <td>{{ MoneyFormatter::getWithCurrencyName($bill->getCryptoInvestedByCurrency($amount->getCurrency()), App\Models\Currency::getDefaultCurrencyName(true)) }}</td>
+                                        <td>
+                                            @if (!$amount->getCurrency()->is_default)
+                                                1 {{ $amount->getCurrency()->name }} = {{ MoneyFormatter::getWithoutTrailingZeros($amount->getCurrency()->getCurrentInvertedRateAsString()) }} {{ App\Models\Currency::getDefaultCurrencyName(true) }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getAmountByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                        </td>
+                                        <td>
+                                            @if (!$amount->getCurrency()->is_default)
+                                                {{ MoneyFormatter::getWithCurrencyName($bill->getCryptoInvestedByCurrency($amount->getCurrency()), App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                            @endif
+                                        </td>
                                         @php
-                                            $income = MoneyHelper::subtract($amount->getCurrency()->getAmountByInvertedRate($bill), $bill->getCryptoInvestedByCurrency($amount->getCurrency()));
+                                            $revenue = MoneyHelper::subtract($amount->getCurrency()->getAmountByInvertedRate($bill), $bill->getCryptoInvestedByCurrency($amount->getCurrency()));
                                         @endphp
                                         <td>
-                                            <span @class(['text-danger' => $income < 0, 'text-success' => $income > 0])>
-                                                {{ MoneyFormatter::getWithCurrencyName($income > 0 , App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                            <span @class(['text-danger' => $revenue < 0, 'text-success' => $revenue > 0])>
+                                                {{ MoneyFormatter::getWithCurrencyName($revenue, App\Models\Currency::getDefaultCurrencyName(true)) }}
                                             </span>
                                         </td>
                                     </tr>
