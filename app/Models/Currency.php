@@ -129,7 +129,7 @@ class Currency extends Model
 
         $rate = $this->ratesTo()->where('from_currency_id', Currency::getDefaultCurrencyId($this->is_crypto))
             ->where('date', '<=', $date)
-            ->orderBy('date', 'desc')
+            ->orderBy('id', 'desc')
             ->first();
 
         cache()->tags(CacheTag::currency_rates->name)->put($rateCacheKey, $rate ?? null);
@@ -152,7 +152,7 @@ class Currency extends Model
             return '';
         }
 
-        return bcdiv('1', $rate->rate, MoneyHelper::SCALE_SHORT);
+        return MoneyHelper::divide('1', $rate->rate, MoneyHelper::SCALE_SHORT);
     }
 
     public function getAmountByInvertedRate(Bill $bill): string
