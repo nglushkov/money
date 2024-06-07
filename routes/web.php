@@ -63,6 +63,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/total-by-categories', [ReportController::class, 'getSumByCategories'])->name('reports.total-by-categories');
 
     Route::resource('settings/users', UserController::class);
+
+    Route::get('/rates/refresh-crypto', [RateController::class, 'refreshCrypto'])->name('rates.refresh-crypto');
 });
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');

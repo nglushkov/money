@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRateRequest;
 use App\Http\Requests\UpdateRateRequest;
 use App\Models\Rate;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class RateController extends Controller
 {
@@ -31,7 +31,7 @@ class RateController extends Controller
     public function store(StoreRateRequest $request)
     {
         $rate = new Rate($request->validated());
-        
+
         $rateClone = Rate::where('from_currency_id', $rate->from_currency_id)
             ->where('to_currency_id', $rate->to_currency_id)
             ->where('date', $rate->date)
@@ -40,7 +40,7 @@ class RateController extends Controller
         if ($rateClone) {
             return redirect()->back()->withErrors(['error' => 'Rate already exists in this date.']);
         }
-        
+
         Rate::create($request->validated());
 
         return redirect()->back();
@@ -76,6 +76,13 @@ class RateController extends Controller
     public function destroy(Rate $rate)
     {
         $rate->delete();
+        return redirect()->back();
+    }
+
+    public function refreshCrypto()
+    {
+        //@todo: Move to Service
+        Artisan::call('app:get-crypto-rates');
         return redirect()->back();
     }
 }
