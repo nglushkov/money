@@ -22,7 +22,8 @@ class ExchangeController extends Controller
         $exchanges = Exchange::with('from', 'to', 'bill')->orderBy('date', 'desc');
         if ($request->filled('currency_id')) {
             $exchanges = $exchanges->where('from_currency_id', $request->get('currency_id'))
-                ->orWhere('to_currency_id', $request->get('currency_id'));
+                ->orWhere('to_currency_id', $request->get('currency_id'))
+                ->orderBy('id', 'desc');
         }
         $exchanges = $exchanges->paginate(50)->appends($request->all());
 
