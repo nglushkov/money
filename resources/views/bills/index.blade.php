@@ -59,10 +59,9 @@
                     <h3>
                         Crypto Bills
                         <a href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrency(true)) }}" class="btn btn-sm btn-success">Add rate</a>
-                        <a href="{{ route('exchanges.create', ['is_crypto' => 1]) }}" class="btn btn-sm btn-success">Add exchange</a>
-                        <a href="{{ route('rates.refresh-crypto') }}" class="btn btn-sm btn-success">Refresh rates</a>&nbsp;
+                        <a href="{{ route('exchanges.create', ['is_crypto' => 1]) }}" class="btn btn-sm btn-success">Add exchange</a>&nbsp;
                     </h3>
-                    <small class="text-muted">Rates last updated at: {{ $cryptoCurrencyRatesUpdatedAt }}</small>
+                    <small class="text-muted">Rates last updated at: {{ $cryptoCurrencyRatesUpdatedAt }}&nbsp;<a href="{{ route('rates.refresh-crypto') }}" class="text-muted">Refresh</a></small>
                 </div>
                 @foreach ($cryptoBills as $bill)
                     <div class="card">
