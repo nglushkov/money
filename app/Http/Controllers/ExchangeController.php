@@ -37,11 +37,19 @@ class ExchangeController extends Controller
      */
     public function create(Request $request)
     {
+        if ($request->has('is_crypto')) {
+            $currencies = Currency::where('is_crypto', true)->orderBy('name')->get();
+            $bills = Bill::isCrypto()->orderBy('name')->get();
+        } else {
+            $currencies = Currency::orderBy('name')->get();
+            $bills = Bill::orderBy('name')->get();
+        }
+
         return view('exchanges.create', [
-            'currencies' => Currency::orderBy('name')->get(),
-            'bills' => Bill::orderBy('name')->get(),
+            'currencies' => $currencies,
+            'bills' => $bills,
             'places' => ExchangePlace::orderBy('name')->get(),
-            'defaultCurrency' => Currency::getDefaultCurrency(),
+            'defaultCurrency' => Currency::getDefaultCurrency($request->has('is_crypto')),
             'copyExchange' => Exchange::findOrNew($request->get('copy_id')),
         ]);
     }
@@ -102,7 +110,7 @@ class ExchangeController extends Controller
                 }
             });
         } catch (\Exception $e) {
-            return redirect()->route('exchanges.create')
+            return redirect()->route('exchanges.create', $request->query())
                 ->withErrors([$e->getMessage()])
                 ->withInput($request->all());
         }

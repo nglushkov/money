@@ -6,7 +6,7 @@
         <div class="card p-3">
             <h5 class="card-title mb-2">Create Exchange</h5>
             <div class="card-body">
-                <form action="{{ route('exchanges.store') }}" method="POST">
+                <form action="{{ route('exchanges.store', request()->query()) }}" method="POST">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -59,6 +59,7 @@
                             </select>
                         </div>
                     </div>
+                    @if (!Request::has('is_crypto'))
                     <div class="row g-3 align-items-center mb-2">
                         <div class="col-2">
                             <label for="place_id">Place:</label>
@@ -80,6 +81,7 @@
                             <input type="text" name="place_name" id="notes" class="form-control" value="{{ old('place_name') }}">
                         </div>
                     </div>
+                    @endif
                     <div class="row g-3 align-items-center mb-2">
                         <div class="col-2">
                             <label for="date">Date:</label>
