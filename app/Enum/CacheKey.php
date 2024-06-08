@@ -8,4 +8,5 @@ enum CacheKey
     case default_currency;
     case default_crypto_currency;
     case currency_rate;
+    case crypto_currency_rate_update_time;
 }

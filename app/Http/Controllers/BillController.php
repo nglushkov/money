@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\CacheKey;
 use App\Http\Requests\StoreBillRequest;
 use App\Http\Requests\UpdateBillRequest;
 use App\Models\Bill;
@@ -23,6 +24,11 @@ class BillController extends Controller
      */
     public function index(Request $request)
     {
+        $cryptoCurrencyRatesUpdatedAt = '';
+        if (cache()->has(CacheKey::crypto_currency_rate_update_time->name)) {
+            $cryptoCurrencyRatesUpdatedAt = cache()->get(CacheKey::crypto_currency_rate_update_time->name)->format('d.m.Y H:i:s');
+        }
+
         $bills = Bill::isNotCrypto()->orderBy('name');
         $cryptoBills = Bill::isCrypto()->orderBy('name');
         if ($request->get('user_id')) {
@@ -35,6 +41,7 @@ class BillController extends Controller
             'currencies' => Currency::isNotCrypto()->orderBy('name')->get(),
             'cryptoCurrencies' => Currency::isCrypto()->orderBy('name')->get(),
             'cryptoBills' => $cryptoBills->get(),
+            'cryptoCurrencyRatesUpdatedAt' => $cryptoCurrencyRatesUpdatedAt,
         ]);
     }
 

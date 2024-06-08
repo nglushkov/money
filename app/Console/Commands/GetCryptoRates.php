@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enum\CacheKey;
 use App\Models\Currency;
 use App\Models\Rate;
 use Illuminate\Console\Command;
@@ -28,7 +29,6 @@ class GetCryptoRates extends Command
      */
     public function handle()
     {
-        // Замените 'your-api-key' на ваш ключ API CoinMarketCap
         $apiKey = env('COINMARKETCAP_API_KEY');
 
         $symbolsStrings = Currency::where('is_crypto', true)
@@ -55,6 +55,7 @@ class GetCryptoRates extends Command
                 ]);
                 $rate->save();
                 logger()->info('Fetched rate for ' . $crypto['symbol'] . ' at ' . $rate->rate);
+                cache()->set(CacheKey::crypto_currency_rate_update_time->name, now());
             }
         } else {
             $this->error('Failed to fetch cryptocurrency rates.');
