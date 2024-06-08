@@ -52,6 +52,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('planned-expenses', PlannedExpenseController::class);
     Route::put('planned-expenses/{id}/dismiss', [PlannedExpenseController::class, 'dismiss'])
         ->name('planned-expenses.dismiss')->whereNumber('id');
+    Route::put('planned-expenses/dismiss-all', [PlannedExpenseController::class, 'dismissAll'])
+        ->name('planned-expenses.dismiss-all');
+    Route::post('planned-expenses/dismiss-all', [PlannedExpenseController::class, 'dismissAll'])
+        ->name('planned-expenses.dismiss-all');
 
     Route::resource('rates', RateController::class)->except(['show']);
     Route::get('/rates/external/', [ExternalRateController::class, 'index'])->name('external-rates.index');

@@ -60,6 +60,12 @@ class PlannedExpenseController extends Controller
         return back();
     }
 
+    public function dismissAll(PlannedExpenseService $plannedExpenseService)
+    {
+        $plannedExpenseService->setDismissedAll();
+        return back();
+    }
+
     /**
      * Show the form for creating a new resource.
      */

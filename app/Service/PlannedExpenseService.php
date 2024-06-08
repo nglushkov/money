@@ -28,6 +28,14 @@ class PlannedExpenseService
         $this->cacheService->set($this->getDismissedCacheKey($plannedExpense), true, Time::secondsIn10Days->value);
     }
 
+    public function setDismissedAll(): void
+    {
+        $plannedExpenses = PlannedExpense::all();
+        foreach ($plannedExpenses as $plannedExpense) {
+            $this->setDismissed($plannedExpense);
+        }
+    }
+
     /**
      * Get dismissed status for planned expense.
      *

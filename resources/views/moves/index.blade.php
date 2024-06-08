@@ -3,7 +3,7 @@
 @section('title', 'Moves')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <div class="row">
@@ -13,6 +13,9 @@
                         <a href="{{ route('transfers.create') }}" class="btn btn-success">New Transfer</a>
                         <a href="{{ route('exchanges.create') }}" class="btn btn-success">New Exchange</a>&nbsp;
                         <div class="btn-group" role="group">
+                            <a href="{{ route('home') }}" @class(['btn', 'btn-sm', 'btn-secondary', 'active' => !request('date')])>
+                                All
+                            </a>
                             <a href="{{ route('home', ['date' => \Carbon\Carbon::today()->format('Y-m-d')]) }}" @class(['btn', 'btn-sm', 'btn-secondary', 'active' => request('date') == \Carbon\Carbon::today()->format('Y-m-d')])>
                                 Today
                             </a>
@@ -20,6 +23,14 @@
                                 Yesterday
                             </a>
                         </div>
+                        @if (count($plannedExpenses) > 0)
+                            <button type="button" class="btn btn-sm btn-light" id="planned-expense-dismiss-all"
+                                    onclick="document.getElementById('planned-expense-dismiss-all-form').submit();">Dismiss all
+                            </button>
+                            <form action="{{ route('planned-expenses.dismiss-all') }}" method="post" id="planned-expense-dismiss-all-form">
+                                @csrf
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -30,25 +41,28 @@
                 </ul>
             </div>
             @endif
-            @if($plannedExpenses->count() > 0)
-                @foreach($plannedExpenses as $plannedExpense)
-                    <div class="alert alert-info alert-dismissible mt-3" role="alert">
-                            <p class="m-0">У вас есть <a href="{{ route('planned-expenses.show', $plannedExpense) }}" class="alert-link">
-                                    запланированные расходы</a> на {{ $plannedExpense->next_payment_date_formatted }} ({{ $plannedExpense->next_payment_date_humans }})
-                                    на {{ $plannedExpense->amount_formatted }} в категории {{ $plannedExpense->category->name }} ({{ $plannedExpense->place->name }})
-                            </p>
-
-                            <button type="button" class="btn-close" id="planned-expense-dismiss"
-                            onclick="document.getElementById('planned-expense-dismiss-{{ $plannedExpense->id }}').submit();"></button>
-
-                            <form action="{{ route('planned-expenses.dismiss', $plannedExpense) }}" method="post" id="planned-expense-dismiss-{{ $plannedExpense->id }}">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="dismiss" value="{{ $plannedExpense->id }}">
-                            </form>
-                    </div>
-                @endforeach
-            @endif
+            <table class="table">
+                <tbody>
+                    @foreach($plannedExpenses as $plannedExpense)
+                        <tr>
+                            <td><a href="{{ route('planned-expenses.show', $plannedExpense) }}">Planned Expense</a></td>
+                            <td>{{ $plannedExpense->next_payment_date_formatted }} ({{ $plannedExpense->next_payment_date_humans }})</td>
+                            <td>{{ $plannedExpense->amount_formatted }}</td>
+                            <td>{{ $plannedExpense->category->name }}</td>
+                            <td>{{ $plannedExpense->place->name }}</td>
+                            <td>
+                                <button type="button" class="btn-close" id="planned-expense-dismiss"
+                                onclick="document.getElementById('planned-expense-dismiss-{{ $plannedExpense->id }}').submit();"></button>
+                                <form action="{{ route('planned-expenses.dismiss', $plannedExpense) }}" method="post" id="planned-expense-dismiss-{{ $plannedExpense->id }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="dismiss" value="{{ $plannedExpense->id }}">
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
             @if (count($moves) == 0)
                 <div class="alert alert-info mt-3">
                     No moves found
