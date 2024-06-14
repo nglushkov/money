@@ -117,7 +117,7 @@ class ExchangeController extends Controller
                 ->withInput($request->all());
         }
 
-        return redirect()->route('home');
+        return redirect()->route('exchanges.index');
     }
 
     /**
