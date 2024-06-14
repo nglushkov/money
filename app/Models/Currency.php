@@ -157,8 +157,14 @@ class Currency extends Model
 
     public function getTotalCryptoInvested(Bill $bill): string
     {
-        return CryptoBill::where('bill_id', $bill->id)
-            ->sum('total_invested_amount') ?? '0';
+        $total = '0';
+        foreach ($bill->getAmountsNotNull() as $amount) {
+            $currencyTotal = CryptoBill::where('bill_id', $bill->id)
+                ->where('currency_id', $amount->getCurrency()->id)
+                ->sum('total_invested_amount') ?? '0';
+            $total = MoneyHelper::add($total, $currencyTotal);
+        }
+        return $total;
     }
 
     public function getAmountByInvertedRate(Bill $bill): string
