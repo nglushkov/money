@@ -35,7 +35,9 @@
                                 <tbody>
                                 @foreach ($bill->getAmountsNotNull() as $amount)
                                     <tr>
-                                        <td>{{ $amount->getCurrency()->name }}</a></td>
+                                        <td>
+                                            <a href="{{ route('exchanges.index', ['currency_id' => $amount->getCurrency()->id]) }}">{{ $amount->getCurrency()->name }}</a>
+                                        </td>
                                         <td>{{ MoneyFormatter::getWithoutTrailingZeros($amount->getAmount()) }}</td>
                                         <td>
                                             @if (!$amount->getCurrency()->is_default)
