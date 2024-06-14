@@ -73,7 +73,6 @@
         function correctBillAmount(currencyName) {
             let amount = prompt('Enter actual amount for ' + currencyName, '0');
             if (amount !== null) {
-                console.log(amount);
                 document.getElementById('amount-' + currencyName).value = amount;
                 document.getElementById('form-' + currencyName).submit();
             }

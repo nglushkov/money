@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rates/refresh-crypto', [RateController::class, 'refreshCrypto'])->name('rates.refresh-crypto');
 
     Route::get('/crypto/index', [CryptoController::class, 'index'])->name('crypto.index');
+    Route::put('/crypto/{bill}/set-total-invested-amount', [CryptoController::class, 'setTotalInvestedAmount'])->name('crypto.set-total-invested-amount');
 });
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');

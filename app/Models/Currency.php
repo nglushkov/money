@@ -155,6 +155,12 @@ class Currency extends Model
         return MoneyHelper::divide('1', $rate->rate, MoneyHelper::SCALE_SHORT);
     }
 
+    public function getTotalCryptoInvested(Bill $bill): string
+    {
+        return CryptoBill::where('bill_id', $bill->id)
+            ->sum('total_invested_amount') ?? '0';
+    }
+
     public function getAmountByInvertedRate(Bill $bill): string
     {
         $rate = $this->getCurrentInvertedRateAsString();
@@ -172,5 +178,12 @@ class Currency extends Model
             $sum = MoneyHelper::add($sum, MoneyHelper::multiply($amount->getAmount(), $rate));
         }
         return $sum;
+    }
+
+    public function getTotalRevenue(Bill $bill): string
+    {
+        $total = $this->getTotalByInvertedRate($bill);
+        $invested = $this->getTotalCryptoInvested($bill);
+        return MoneyHelper::subtract($total, $invested);
     }
 }

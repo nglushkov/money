@@ -10,6 +10,7 @@ use App\Models\Scopes\IsNotCorrectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 
 class Bill extends Model
@@ -38,6 +39,11 @@ class Bill extends Model
     public function operations(): HasMany
     {
         return $this->hasMany(Operation::class);
+    }
+
+    public function cryptoBill()
+    {
+        return $this->hasOne(CryptoBill::class);
     }
 
     public function getAmount(int $currencyId): string
@@ -255,47 +261,9 @@ class Bill extends Model
 
     public function getCryptoInvestedByCurrency(Currency $currency): string
     {
-        if (!$this->is_crypto) {
-            return '0';
-        }
-        $amountFrom = Exchange::where('bill_id', $this->id)
-            ->where('from_currency_id', Currency::getDefaultCurrencyId(true))
-            ->where('to_currency_id', $currency->id)
-            ->sum('amount_from');
-
-        $amountTo = Exchange::where('bill_id', $this->id)
-            ->where('to_currency_id', Currency::getDefaultCurrencyId(true))
-            ->where('from_currency_id', $currency->id)
-            ->sum('amount_to');
-
-        return MoneyHelper::subtract($amountFrom, $amountTo);
-    }
-
-    public function getCryptoTotalInvested(): string
-    {
-        if (!$this->is_crypto) {
-            return '0';
-        }
-        $amountFrom = Exchange::where('bill_id', $this->id)
-            ->where('from_currency_id', Currency::getDefaultCurrencyId(true))
-            ->whereHas('fromCurrency', function ($query) {
-                $query->isCrypto();
-            })
-            ->whereHas('toCurrency', function ($query) {
-                $query->isCrypto();
-            })
-            ->sum('amount_from');
-
-        $amountTo = Exchange::where('bill_id', $this->id)
-            ->where('to_currency_id', Currency::getDefaultCurrencyId(true))
-            ->whereHas('fromCurrency', function ($query) {
-                $query->isCrypto();
-            })
-            ->whereHas('toCurrency', function ($query) {
-                $query->isCrypto();
-            })
-            ->sum('amount_to');
-
-        return MoneyHelper::subtract($amountFrom, $amountTo);
+        return DB::table('crypto_bills')
+            ->where('bill_id', $this->id)
+            ->where('currency_id', $currency->id)
+            ->value('total_invested_amount') ?? '0';
     }
 }
