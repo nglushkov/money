@@ -83,6 +83,9 @@ class Operation extends Move
 
     public function getAmountTextAttribute(): string
     {
+        if ($this->currency->is_crypto) {
+            return MoneyFormatter::getCryptoWithCurrencyNameAndSign($this->amount, $this->currency->name, $this->type);
+        }
         return MoneyFormatter::getWithCurrencyNameAndSign($this->amount, $this->currency->name, $this->type);
     }
 

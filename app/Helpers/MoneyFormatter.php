@@ -17,11 +17,11 @@ class MoneyFormatter
         return self::get($amount) . ' ' . $currencyName;
     }
 
-    public static function getWithCurrencyNameAndSign(string $amount, string $currencyName, $type): string
+    public static function getWithCurrencyNameAndSign(string $amount, string $currencyName, $operationType): string
     {
         $formattedAmount = self::getWithCurrencyName($amount, $currencyName);
 
-        return $type === OperationType::Expense->name ? '-' . $formattedAmount : '+' . $formattedAmount;
+        return $operationType === OperationType::Expense->name ? '-' . $formattedAmount : '+' . $formattedAmount;
     }
 
     public static function getWithoutDecimals(string $amount): string

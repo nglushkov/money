@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\RateProcessed;
+use App\Helpers\MoneyFormatter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -50,6 +51,12 @@ class Rate extends Model
 
     public function getRateHumanReadableAttribute()
     {
-        return sprintf('1 %s = %s %s (%s)', $this->currencyFrom->name, $this->rate, $this->currencyTo->name, $this->date_formatted);
+        return sprintf(
+            '1 %s = %s %s (%s)',
+            $this->currencyFrom->name,
+            MoneyFormatter::getWithoutTrailingZeros($this->rate),
+            $this->currencyTo->name,
+            $this->date_formatted
+        );
     }
 }
