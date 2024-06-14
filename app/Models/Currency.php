@@ -165,6 +165,9 @@ class Currency extends Model
     {
         $sum = 0;
         foreach ($bill->getAmountsNotNull() as $amount) {
+            if ($amount->getCurrency()->is_default) {
+                continue;
+            }
             $rate = $amount->getCurrency()->getCurrentInvertedRateAsString();
             $sum = MoneyHelper::add($sum, MoneyHelper::multiply($amount->getAmount(), $rate));
         }

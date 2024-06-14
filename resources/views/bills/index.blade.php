@@ -92,7 +92,9 @@
                                             @endif
                                         </td>
                                         <td>
-                                            {{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getAmountByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                            @if (!$amount->getCurrency()->is_default)
+                                                {{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getAmountByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                            @endif
                                         </td>
                                         <td>
                                             @if (!$amount->getCurrency()->is_default)
