@@ -18,10 +18,10 @@
                         <a class="nav-link active" href="{{ route('bills.index') }}">💳 Bills</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('categories.index') }}">📒 Categories</a>
+                        <a class="nav-link active" href="{{ route('crypto.index') }}">💹 Crypto</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('places.index') }}">🏢 Places</a>
+                    <li>
+                        <a class="nav-link active" href="{{ route('exchanges.index') }}">🔁 Exchanges</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
@@ -31,10 +31,11 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('planned-expenses.index') }}">📅 Planned Expenses</a></li>
                             <li><a class="dropdown-item" href="{{ route('transfers.index') }}">🔁 Transfers</a></li>
-                            <li><a class="dropdown-item" href="{{ route('exchanges.index') }}">🔁 Exchanges</a></li>
+                            <li><a class="dropdown-item" href="{{ route('currencies.index') }}">💱 Currencies</a></li>
+                            <li><a class="dropdown-item" href="{{ route('categories.index') }}">📒 Categories</a></li>
+                            <li><a class="dropdown-item" href="{{ route('places.index') }}">🏢 Places</a></li>
                             <li><a class="dropdown-item" href="{{ route('external-rates.index') }}">💹 External Rates</a></li>
                             <li><a class="dropdown-item" href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrencyId()) }}">⛩️ Default Currency</a></li>
-                            <li><a class="dropdown-item" href="{{ route('currencies.index') }}">💱 Currencies</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

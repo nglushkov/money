@@ -1,0 +1,84 @@
+@php use App\Helpers\MoneyFormatter;use App\Helpers\MoneyHelper; @endphp
+@extends('layouts.app')
+
+@section('title', 'Bills')
+
+@section('content')
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-light p-3 mb-3">
+                    <h3>
+                        Crypto Bills
+                        <a href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrency(true)) }}" class="btn btn-sm btn-success">Add rate</a>
+                        <a href="{{ route('exchanges.create', ['is_crypto' => 1]) }}" class="btn btn-sm btn-success">Add exchange</a>&nbsp;
+                    </h3>
+                    <small class="text-muted">Rates last updated at: {{ $ratesUpdatedAt }}&nbsp;<a href="{{ route('rates.refresh-crypto') }}" class="text-muted">Refresh</a></small>
+                </div>
+                @foreach ($bills as $bill)
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>
+                                <a href="{{ route('bills.show', $bill) }}">{{ $bill->name }}</a>
+                            </h4>
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Coin</th>
+                                    <th>Amount</th>
+                                    <th>Rate</th>
+                                    <th>Amount</th>
+                                    <th>Total invested</th>
+                                    <th>Revenue</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach ($bill->getAmountsNotNull() as $amount)
+                                    <tr onclick="window.location.href = '{{ route('exchanges.index', ['currency_id' => $amount->getCurrency()->id]) }}';"
+                                        style="cursor: pointer;">
+                                        <td>{{ $amount->getCurrency()->name }}</a></td>
+                                        <td>{{ MoneyFormatter::getWithoutTrailingZeros($amount->getAmount()) }}</td>
+                                        <td>
+                                            @if (!$amount->getCurrency()->is_default)
+                                                1 {{ $amount->getCurrency()->name }} = {{ MoneyFormatter::getWithoutTrailingZeros($amount->getCurrency()->getCurrentInvertedRateAsString()) }} {{ App\Models\Currency::getDefaultCurrencyName(true) }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (!$amount->getCurrency()->is_default)
+                                                {{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getAmountByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (!$amount->getCurrency()->is_default)
+                                                {{ MoneyFormatter::getWithCurrencyName($bill->getCryptoInvestedByCurrency($amount->getCurrency()), App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                            @endif
+                                        </td>
+                                        @php
+                                            $revenue = MoneyHelper::subtract($amount->getCurrency()->getAmountByInvertedRate($bill), $bill->getCryptoInvestedByCurrency($amount->getCurrency()));
+                                        @endphp
+                                        <td>
+                                            @if (!$amount->getCurrency()->is_default)
+                                                <span @class(['text-danger' => $revenue < 0, 'text-success' => $revenue > 0])>
+                                                    {{ MoneyFormatter::getWithCurrencyName($revenue, App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                                </span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th colspan="3"></th>
+                                    <th>{{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getTotalByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
+                                    <th>{{ MoneyFormatter::getWithCurrencyName($bill->getCryptoTotalInvested(), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
+                                    <th></th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>&nbsp;
+                @endforeach
+            </div>
+        </div>
+    </div>
+@endsection

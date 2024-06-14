@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\CryptoController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CurrencyController;
@@ -69,6 +70,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('settings/users', UserController::class);
 
     Route::get('/rates/refresh-crypto', [RateController::class, 'refreshCrypto'])->name('rates.refresh-crypto');
+
+    Route::get('/crypto/index', [CryptoController::class, 'index'])->name('crypto.index');
 });
 
 Route::get('/login', [LoginController::class, 'login'])->name('login');

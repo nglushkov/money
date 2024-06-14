@@ -24,18 +24,9 @@ class BillController extends Controller
      */
     public function index(Request $request)
     {
-        $cryptoCurrencyRatesUpdatedAt = '';
-        if (cache()->has(CacheKey::crypto_currency_rate_update_time->name)) {
-            $cryptoCurrencyRatesUpdatedAt = cache()->get(CacheKey::crypto_currency_rate_update_time->name)->format('d.m.Y H:i:s');
-        }
-
         $bills = Bill::isNotCrypto();
-        $cryptoBills = Bill::isCrypto();
         if ($request->get('user_id')) {
             $bills->where(function ($query) use ($request) {
-                $query->where('user_id', $request->user_id)->orWhere('user_id', null);
-            });
-            $cryptoBills->where(function ($query) use ($request) {
                 $query->where('user_id', $request->user_id)->orWhere('user_id', null);
             });
         }
@@ -43,9 +34,6 @@ class BillController extends Controller
         return view('bills.index', [
             'bills' => $bills->orderBy('name')->get(),
             'currencies' => Currency::isNotCrypto()->orderBy('name')->get(),
-            'cryptoCurrencies' => Currency::isCrypto()->orderBy('name')->get(),
-            'cryptoBills' => $cryptoBills->orderBy('name')->get(),
-            'cryptoCurrencyRatesUpdatedAt' => $cryptoCurrencyRatesUpdatedAt,
         ]);
     }
 
