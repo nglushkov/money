@@ -58,7 +58,11 @@ class MoveController extends Controller
         });
 
         $paginator = $this->paginate($moves, 100);
-        $moves = $paginator->items();
+        $moves = $paginator->getCollection();
+
+        $moves = $moves->groupBy(function($move) {
+            return $move->date->format('Y-m-d');
+        });
         $defaultCurrency = Currency::getDefaultCurrency();
 
         $plannedExpenses = $this->plannedExpenseService->getPlannedExpensesToBeReminded();

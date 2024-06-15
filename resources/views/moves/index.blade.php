@@ -91,11 +91,14 @@
                     No moves found
                 </div>
             @else
-            <div class="card mb-3">
-                <ul class="list-group list-group-flush">
-                    @include('blocks.moves', ['moves' => $moves])
-                </ul>
-            </div>
+            @foreach($moves as $date => $moveGroup)
+                <span class="fw-light badge bg-secondary text-wrap">{{ $date }}</span>
+                <div class="card mb-3">
+                    <ul class="list-group list-group-flush">
+                        @include('blocks.moves', ['moves' => $moveGroup])
+                    </ul>
+                </div>
+            @endforeach
             @endif
             {{ $paginator->links() }}
         </div>
