@@ -13,7 +13,7 @@
                             <a href="{{ route('operations.create') }}" class="btn btn-success">New Operation</a>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    New...
+                                    Create
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{ route('transfers.create') }}" class="dropdown-item">Transfer</a></li>
@@ -21,16 +21,30 @@
                                 </ul>
                             </div>
                         </div>
+
                         <div class="btn-group" role="group">
-                            <a href="{{ route('home') }}" @class(['btn', 'btn-sm', 'btn-secondary', 'active' => !request('date')])>
-                                All
-                            </a>
-                            <a href="{{ route('home', ['date' => \Carbon\Carbon::today()->format('Y-m-d')]) }}" @class(['btn', 'btn-sm', 'btn-secondary', 'active' => request('date') == \Carbon\Carbon::today()->format('Y-m-d')])>
-                                Today
-                            </a>
-                            <a href="{{ route('home', ['date' => \Carbon\Carbon::yesterday()->format('Y-m-d')]) }}" @class(['btn', 'btn-sm', 'btn-secondary', 'active' => request('date') == \Carbon\Carbon::yesterday()->format('Y-m-d')])>
-                                Yesterday
-                            </a>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Show
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ route('home') }}" class="dropdown-item">
+                                            All
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('home', ['date' => \Carbon\Carbon::today()->format('Y-m-d')]) }}" class="dropdown-item">
+                                            Today
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('home', ['date' => \Carbon\Carbon::yesterday()->format('Y-m-d')]) }}" class="dropdown-item">
+                                            Yesterday
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         @if (count($plannedExpenses) > 0)
                             <button type="button" class="btn btn-sm btn-light" id="planned-expense-dismiss-all"
