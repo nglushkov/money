@@ -9,9 +9,18 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="bg-light p-3">
-                        <a href="{{ route('operations.create') }}" class="btn btn-success">New Operation</a>
-                        <a href="{{ route('transfers.create') }}" class="btn btn-success">New Transfer</a>
-                        <a href="{{ route('exchanges.create') }}" class="btn btn-success">New Exchange</a>&nbsp;
+                        <div class="btn-group" role="group">
+                            <a href="{{ route('operations.create') }}" class="btn btn-success">New Operation</a>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    New...
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ route('transfers.create') }}" class="dropdown-item">Transfer</a></li>
+                                    <li><a href="{{ route('exchanges.create') }}" class="dropdown-item">Exchange</a></li>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="btn-group" role="group">
                             <a href="{{ route('home') }}" @class(['btn', 'btn-sm', 'btn-secondary', 'active' => !request('date')])>
                                 All
