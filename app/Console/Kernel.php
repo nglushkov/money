@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('rates:get')->weekdays()->between('06:00', '12:00')->hourly();
         $schedule->command('backup:run')->twiceDaily(3, 15);
         $schedule->command('app:get-crypto-rates')->hourly();
+        $schedule->command('app:notify-planned-expense')->dailyAt('10:00');
     }
 
     /**
