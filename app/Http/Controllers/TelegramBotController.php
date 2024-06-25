@@ -7,6 +7,7 @@ use App\Models\Bill;
 use App\Models\Currency;
 use App\Service\OperationService;
 use App\Service\ReportService;
+use App\Service\TelegramBotService;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
@@ -20,11 +21,14 @@ class TelegramBotController extends Controller
 
     private OperationService $operationService;
 
-    public function __construct(ReportService $reportService, OperationService $operationService)
+    private TelegramBotService $telegramBotService;
+
+    public function __construct(ReportService $reportService, OperationService $operationService, TelegramBotService $telegramBotService)
     {
         $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
         $this->reportService = $reportService;
         $this->operationService = $operationService;
+        $this->telegramBotService = $telegramBotService;
     }
 
     public function handleWebhook()
@@ -40,7 +44,7 @@ class TelegramBotController extends Controller
             'user_id' => $userId,
         ]);
 
-        if (!in_array($userId, $this->getUserIds())) {
+        if (!in_array($userId, $this->telegramBotService->getUserIds())) {
             $this->telegram->sendMessage([
                 'chat_id' => $userId,
                 'text' => 'You are not allowed to use this bot',
@@ -70,10 +74,11 @@ class TelegramBotController extends Controller
      * @param int $telegramUserId
      * @return void
      * @throws TelegramSDKException
+     * @throws \Exception
      */
     private function createExpense(string $text, int $telegramUserId)
     {
-        $userId = $this->getUserIdByTelegramUserId($telegramUserId);
+        $userId = $this->telegramBotService->getUserIdByTelegramUserId($telegramUserId);
 
         try {
             $this->operationService->createDraft($text, $userId);
@@ -125,9 +130,13 @@ class TelegramBotController extends Controller
         ]);
     }
 
+    /**
+     * @throws TelegramSDKException
+     * @throws \Exception
+     */
     public function handleBalanceCommand(int $telegramUserId): void
     {
-        $userId = $this->getUserIdByTelegramUserId($telegramUserId);
+        $userId = $this->telegramBotService->getUserIdByTelegramUserId($telegramUserId);
         /** @var Bill[] $bills */
         $bills = Bill::userIdOrNull($userId)->orderBy('name')->get();
 
@@ -170,14 +179,5 @@ class TelegramBotController extends Controller
         }
 
         return $userIds;
-    }
-
-    private function getUserIdByTelegramUserId($telegramUserId): int
-    {
-        $userId = array_search($telegramUserId, $this->getUserIds());
-        if ($userId === false) {
-            return 1;
-        }
-        return $userId;
     }
 }

@@ -70,6 +70,14 @@ class PlannedExpenseService
         });
     }
 
+    public function getPlannedExpensesForToday(): Collection
+    {
+        $plannedExpenses = PlannedExpense::all();
+        return $plannedExpenses->filter(function ($plannedExpense) {
+            return $plannedExpense->next_payment_date->isToday();
+        });
+    }
+
     /**
      * Check if planned expense can be reminded.
      *
