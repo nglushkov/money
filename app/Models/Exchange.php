@@ -76,11 +76,16 @@ class Exchange extends Move
     public function getRateFormattedAttribute(): string
     {
         if ($this->from->is_crypto && $this->to->is_crypto) {
+            if ($this->to->is_default) {
+                return MoneyFormatter::getWithoutTrailingZeros(
+                    MoneyHelper::divide($this->amount_to, $this->amount_from, 8)
+                );
+            }
             return MoneyFormatter::getWithoutTrailingZeros(
                 MoneyHelper::divide($this->amount_from, $this->amount_to, 8)
             );
         }
-        return MoneyFormatter::get(bcdiv($this->amount_to, $this->amount_from, 6));
+        return MoneyFormatter::get(MoneyHelper::divide($this->amount_to, $this->amount_from, 6));
     }
 
     public function getRateTextAttribute(): string
