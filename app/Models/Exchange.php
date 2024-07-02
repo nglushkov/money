@@ -91,6 +91,9 @@ class Exchange extends Move
     public function getRateTextAttribute(): string
     {
         if ($this->from->is_crypto && $this->to->is_crypto) {
+            if ($this->to->is_default) {
+                return sprintf('1 %s = %s %s', $this->from->name, $this->rate_formatted, $this->to->name);
+            }
             return sprintf('1 %s = %s %s', $this->to->name, $this->rate_formatted, $this->from->name);
         }
         return sprintf('1 %s = %s %s', $this->from->name, $this->rate_formatted, $this->to->name);
