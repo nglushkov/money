@@ -222,7 +222,7 @@ class Bill extends Model
         $fields = [
             'bill_id' => $bill->id,
             'currency_id' => $currency->id,
-            'amount' => $amount > $billAmount ? $amount - $billAmount : $billAmount - $amount,
+            'amount' => $amount > $billAmount ? MoneyHelper::subtract($amount, $billAmount) : MoneyHelper::subtract($billAmount, $amount),
             'type' => $amount > $billAmount ? OperationType::Income->name : OperationType::Expense->name,
             'date' => now(),
             'notes' => 'Correction',
