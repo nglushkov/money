@@ -63,9 +63,9 @@ class Bill extends Model
 
         foreach ($operations as $operation) {
             if ($operation->type === OperationType::Expense->name) {
-                $amount -= $operation->amount;
+                $amount = MoneyHelper::subtract($amount, $operation->amount);
             } else {
-                $amount += $operation->amount;
+                $amount = MoneyHelper::add($amount, $operation->amount);
             }
         }
 
