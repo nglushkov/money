@@ -17,7 +17,7 @@
                     <small class="text-muted">Rates last updated at: {{ $ratesUpdatedAt }}&nbsp;<a href="{{ route('rates.refresh-crypto') }}" class="text-muted">Refresh</a></small>
                     <div class="mt-2"></div>
                     @foreach($bills as $bill)
-                        <a href="#bill-{{ $bill->id }}" class="">{{ $bill->name }}</a>
+                        <a href="#bill-{{ $bill->id }}" class="">{{ $bill->name_with_user }}</a>
                     @endforeach
                 </div>
                 @foreach ($bills as $bill)
