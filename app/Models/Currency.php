@@ -185,7 +185,14 @@ class Currency extends Model
 
     public function getTotalRevenue(Bill $bill): string
     {
-        $total = $this->getTotalByInvertedRate($bill);
+        $total = 0;
+        foreach ($bill->getAmountsNotNull() as $amount) {
+            if ($amount->getCurrency()->is_default) {
+                continue;
+            }
+            $rate = $amount->getCurrency()->getCurrentInvertedRateAsString();
+            $total = MoneyHelper::add($total, MoneyHelper::multiply($amount->getAmount(), $rate));
+        }
         $invested = $this->getTotalCryptoInvested($bill);
         return MoneyHelper::subtract($total, $invested);
     }
