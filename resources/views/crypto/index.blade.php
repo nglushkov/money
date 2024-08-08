@@ -1,7 +1,7 @@
 @php use App\Helpers\MoneyFormatter;use App\Helpers\MoneyHelper; @endphp
 @extends('layouts.app')
 
-@section('title', 'Bills')
+@section('title', 'Crypto Bills')
 
 @section('content')
     <div class="container-fluid">
