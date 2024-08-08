@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class UpdateBillRequest extends FormRequest
 {
@@ -22,7 +24,14 @@ class UpdateBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:bills,name,' . $this->route('bill')->id . ',id,user_id,' . auth()->id()],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('bills')->ignore($this->route('bill')->id)->where(function ($query) {
+                    $query->where(DB::raw('COALESCE(user_id, 0)'), $this->input('user_id') ?? 0);
+                }),
+            ],
             'notes' => ['nullable', 'string', 'max:255'],
             'amount' => ['required', 'array'],
             'amount.*' => ['required', 'numeric'],
