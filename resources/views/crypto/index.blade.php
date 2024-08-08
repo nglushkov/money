@@ -24,7 +24,7 @@
                     <div class="card" id="bill-{{ $bill->id }}">
                         <div class="card-body">
                             <h4>
-                                <a href="{{ route('bills.show', $bill) }}">{{ $bill->name }}</a>
+                                <a href="{{ route('bills.show', $bill) }}">{{ $bill->name_with_user }}</a>
                             </h4>
                             <table class="table table-striped table-hover">
                                 <thead>
