@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('operations/{operation}/attachment', [OperationController::class, 'getAttachment'])->name('operations.get-attachment');
     Route::delete('operations/{operation}/attachment', [OperationController::class, 'deleteAttachment'])->name('operations.delete-attachment');
     Route::post('operations/create-draft', [OperationController::class, 'createDraft'])->name('operations.create-draft');
+    Route::get('operations/{operation}/copy', [OperationController::class, 'copy'])->name('operations.copy');
 
     Route::resource('places', PlaceController::class);
     Route::resource('bills', BillController::class);

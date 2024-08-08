@@ -1,4 +1,7 @@
 <a href="{{ route($routePart . '.create', $model) }}" class="card-link text-success">Create New</a>
+@if($model instanceof App\Models\Interfaces\Copyable)
+    <a href="{{ route($routePart . '.copy', $model) }}" class="card-link text-success">Copy</a>
+@endif
 <a href="{{ route($routePart . '.edit', $model) }}" class="card-link">Edit</a>
 @if ($model instanceof App\Models\Exchange)
     <a href="{{ route($routePart . '.create', ['copy_id' => $model]) }}" class="card-link">Copy</a>

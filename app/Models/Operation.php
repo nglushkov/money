@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helpers\MoneyFormatter;
 use App\Models\Enum\OperationType;
+use App\Models\Interfaces\Copyable;
 use App\Models\Scopes\IsNotCorrectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Attributes\ScopedBy;
  * @property Currency currency
  */
 #[ScopedBy([IsNotCorrectionScope::class])]
-class Operation extends Move
+class Operation extends Move implements Copyable
 {
     use HasFactory;
 

@@ -277,4 +277,14 @@ class OperationController extends Controller
             ->take(5)
             ->get();
     }
+
+    public function copy(Operation $operation)
+    {
+        $newOperation = $operation->replicate();
+        $newOperation->date = now();
+        $newOperation->is_draft = true;
+        $newOperation->save();
+
+        return redirect()->route('operations.edit', $newOperation);
+    }
 }
