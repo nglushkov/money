@@ -36,7 +36,7 @@
                         @foreach($exchanges as $exchange)
                             <tr onclick="window.location.href = '{{ route('exchanges.show', $exchange->id) }}';" style="cursor: pointer;">
                                 <td>{{ $exchange->date_formatted }}</td>
-                                <td>{{ $exchange->bill->name }}</td>
+                                <td>{{ $exchange->bill->name_with_user }}</td>
                                 <td>{{ $exchange->amount_from_formatted }} → {{ $exchange->amount_to_formatted }}</td>
                                 <td>{{ $exchange->rate_text }}</td>
                                 <td>{{ $exchange->place->name ?? '' }}</td>
