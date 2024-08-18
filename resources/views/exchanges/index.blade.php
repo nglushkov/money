@@ -28,8 +28,6 @@
                             <th>Bill</th>
                             <th>Exchange</th>
                             <th>Rate</th>
-                            <th>Place</th>
-                            <th>Notes</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,8 +37,6 @@
                                 <td>{{ $exchange->bill->name_with_user }}</td>
                                 <td>{{ $exchange->amount_from_formatted }} → {{ $exchange->amount_to_formatted }}</td>
                                 <td>{{ $exchange->rate_text }}</td>
-                                <td>{{ $exchange->place->name ?? '' }}</td>
-                                <td>{{ $exchange->notes ? Str::limit($exchange->notes, 20) : '' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
