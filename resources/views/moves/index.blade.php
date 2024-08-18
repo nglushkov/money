@@ -29,18 +29,18 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('home') }}" class="dropdown-item">
-                                            All
+                                        <a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Operation->name]) }}" class="dropdown-item">
+                                            Operations
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('home', ['date' => \Carbon\Carbon::today()->format('Y-m-d')]) }}" class="dropdown-item">
-                                            Today
+                                        <a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Transfer->name]) }}" class="dropdown-item">
+                                            Transfers
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('home', ['date' => \Carbon\Carbon::yesterday()->format('Y-m-d')]) }}" class="dropdown-item">
-                                            Yesterday
+                                        <a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Exchange->name]) }}" class="dropdown-item">
+                                            Exchanges
                                         </a>
                                     </li>
                                 </ul>

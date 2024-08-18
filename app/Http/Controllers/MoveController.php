@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Currency;
-use App\Models\PlannedExpense;
+use App\Models\Enum\MoveType;
 use App\Service\PlannedExpenseService;
 use Illuminate\Http\Request;
 use App\Models\Operation;
@@ -44,16 +44,23 @@ class MoveController extends Controller
             'user',
             'place'
         ])->latest();
-        if ($request->has('date')) {
-            $operations->where('date', $request->date);
-            $transfers->where('date', $request->date);
-            $exchanges->where('date', $request->date);
-        }
         $operations = $operations->get();
         $transfers = $transfers->get();
         $exchanges = $exchanges->get();
 
-        $moves = $operations->concat($transfers)->concat($exchanges)->sortByDesc(function ($move) {
+        $moveType = $request->get('type');
+
+        if ($moveType === MoveType::Operation->name) {
+            $moves = $operations;
+        } else if ($moveType === MoveType::Transfer->name) {
+            $moves = $transfers;
+        } else if ($moveType === MoveType::Exchange->name) {
+            $moves = $exchanges;
+        } else {
+            $moves = $operations->concat($transfers)->concat($exchanges);
+        }
+
+        $moves = $moves->sortByDesc(function ($move) {
             return $move->date->format('U') . $move->created_at->format('U');
         });
 
