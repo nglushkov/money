@@ -16,7 +16,7 @@
                         @if($move->place)
                             <span class=""><a href="{{ route('places.show', $move->place) }}" class="text-body">{{ $move->place->name }}</a></span>
                         @endif
-                        <small class="text-secondary">{{ $move->is_expense ? 'by' : 'to' }}</small>&nbsp;<span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a></span>
+                        <small class="text-secondary">{{ $move->is_expense ? 'by' : 'to' }}</small>&nbsp;<span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name_with_user }}</a></span>
                     </td>
                     <td style="width: 20%">
                         <span class="text-body-secondary fw-light"><small>{{ $move->user->name }}</small></span>
@@ -57,9 +57,9 @@
                         <span>➡️ {{ $move->amount_text_with_currency }}</span>
                     </td>
                     <td style="width: 50%">
-                        <span><a href="{{ route('bills.show', $move->from) }}" class="text-body">{{ $move->from->name }}</a></span>&nbsp;
+                        <span><a href="{{ route('bills.show', $move->from) }}" class="text-body">{{ $move->from->name_with_user }}</a></span>&nbsp;
                         <small class="text-secondary">→</small>&nbsp;
-                        <span><a href="{{ route('bills.show', $move->to) }}" class="text-body">{{ $move->to->name }}</a></span>
+                        <span><a href="{{ route('bills.show', $move->to) }}" class="text-body">{{ $move->to->name_with_user }}</a></span>
                     </td>
                     <td style="width: 20%">
                         <span class="text-body-secondary fw-light"><small>{{ $move->user->name }}</small></span>
@@ -97,7 +97,7 @@
                     </td>
                     <td>
                         <span>
-                            <a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name }}</a>&nbsp;
+                            <a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name_with_user }}</a>&nbsp;
                             <small class="text-body-secondary">{{ $move->place ? $move->place->name : '' }}</small>
                         </span>
                     </td>
