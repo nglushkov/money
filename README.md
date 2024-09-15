@@ -8,6 +8,7 @@
 1. PHP 8.2 for Composer
 2. Tool sail – [Laravel doc](https://laravel.com/docs/10.x/sail)
 3. Docker
+4. Linux or MacOs (Windows is not supported)
 
 ### Development environment, quick start
 Run the following commands:
