@@ -190,7 +190,10 @@ class ExchangeController extends Controller
      */
     public function destroy(Exchange $exchange)
     {
-        $exchange->delete();
+        DB::transaction(function () use ($exchange) {
+            Rate::find($exchange->id)->delete();
+            $exchange->delete();
+        });
         return redirect()->route('home');
     }
 }
