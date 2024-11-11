@@ -47,6 +47,11 @@ class Exchange extends Move
         return $this->belongsTo(ExchangePlace::class);
     }
 
+    public function rate()
+    {
+        return $this->hasMany(Rate::class, 'exchange_id');
+    }
+
     public function fromCurrency()
     {
         return $this->belongsTo(Currency::class, 'from_currency_id');
