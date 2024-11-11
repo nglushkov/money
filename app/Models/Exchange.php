@@ -47,7 +47,7 @@ class Exchange extends Move
         return $this->belongsTo(ExchangePlace::class);
     }
 
-    public function rate()
+    public function rates()
     {
         return $this->hasMany(Rate::class, 'exchange_id');
     }
