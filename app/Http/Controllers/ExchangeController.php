@@ -191,7 +191,7 @@ class ExchangeController extends Controller
     public function destroy(Exchange $exchange)
     {
         DB::transaction(function () use ($exchange) {
-            foreach ($exchange->rates() as $rate) {
+            foreach ($exchange->rates as $rate) {
                 $rate->delete();
             }
             $exchange->delete();
