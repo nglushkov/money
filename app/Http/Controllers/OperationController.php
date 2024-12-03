@@ -98,7 +98,7 @@ class OperationController extends Controller
             'categories' => Category::orderBy('name', 'asc')->get(),
             'users' => User::orderBy('name', 'asc')->get(),
             'places' => Place::orderBy('name', 'asc')->get(),
-            'currencies' => Currency::orderBy('active', 'desc')->orderBy('name', 'asc')->get(),
+            'currencies' => Currency::orderBy('active', 'desc')->orderBy('is_crypto')->orderBy('name', 'asc')->get(),
             'topCategories' => $this->getTopCategories(),
             'topPlaces' => $this->getTopPlaces(),
             'topBills' => $this->getTopBills(),
