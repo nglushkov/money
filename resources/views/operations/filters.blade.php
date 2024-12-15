@@ -2,13 +2,14 @@
 
 <form action="{{ route('operations.index') }}" method="GET">
     <a href="{{ route('operations.create') }}" class="btn btn-success">Create</a>
-    <a class="btn btn-light" data-bs-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false"
-       aria-controls="collapseFilter">
+    <a class="btn btn-light"
+       href="{{ route('operations.index', array_merge(request()->all(), ['show_filter' => 1])) }}"
+       role="button">
         Show filters
     </a>
     <a href="{{ route('operations.index', ['user_id' => Auth::id()]) }}" class="btn btn-light">Show My Operations</a>
     <a href="{{ route('operations.index') }}" class="btn btn-light float-end">Clear</a>
-    <div class="collapse" id="collapseFilter">
+    <div class="collapse {{ request('show_filter') == '1' ? 'show' : '' }}" id="collapseFilter">
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
@@ -16,7 +17,7 @@
                     <select name="bill_id" id="bill_id" class="form-control">
                         <option value="">All</option>
                         @foreach ($bills as $bill)
-                            <option value="{{ $bill->id }}" @selected(request('bill_id') == $bill->id)>{{ $bill->name }}
+                            <option value="{{ $bill->id }}" @selected(request('bill_id') == $bill->id)>{{ $bill->name_with_user }}
                             </option>
                         @endforeach
                     </select>
@@ -113,12 +114,13 @@
                     <select name="currency_id" id="currency_id" class="form-control">
                         <option value="">All</option>
                         @foreach ($currencies as $currency)
-                            <option value="{{ $currency->id }}" @if(request('currency')==$currency->id) selected @endif>{{
+                            <option value="{{ $currency->id }}" @if(request('currency_id')==$currency->id) selected @endif>{{
                             $currency->name }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
+            <input type="hidden" name="show_filter" value="1">
             <div class="col-md-3 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary align-bottom">Filter</button>
             </div>

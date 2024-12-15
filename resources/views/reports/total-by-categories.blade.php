@@ -77,7 +77,21 @@
                                             </a>
                                         @endif
 
-                                        <a class="text-body" href="{{ route('categories.show', $item['categoryId']) }}">{{ $item['categoryName'] }}</a>
+                                            <a class="text-body"
+                                               href="{{ route('operations.index', [
+                                                   'category_id' => $item['categoryId'],
+                                                   'show_filter' => 1,
+                                                   'bill_id' => request('bill_id', ''),
+                                                   'date_from' => request('year') && request('month')
+                                                       ? Carbon\Carbon::create(request('year'), request('month'), 1)->startOfMonth()->format('Y-m-d')
+                                                       : now()->startOfMonth()->format('Y-m-d'),
+                                                   'date_to' => request('year') && request('month')
+                                                       ? Carbon\Carbon::create(request('year'), request('month'), 1)->endOfMonth()->format('Y-m-d')
+                                                       : now()->endOfMonth()->format('Y-m-d'),
+                                               ]) }}">
+                                                {{ $item['categoryName'] }}
+                                            </a>
+
                                     </td>
                                     <td>{{ $item['total'] }}</td>
                                 </tr>
