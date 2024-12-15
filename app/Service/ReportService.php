@@ -34,17 +34,17 @@ class ReportService
     }
 
     // todo: Move
-    public function getOperations(string $month, string $year, array $filterCategoryIds = []): Collection
+    public function getOperations(string $month, string $year, array $filterCategoryIds = [], $billId = null): Collection
     {
         $operations = Operation::whereMonth('date', $month)
             ->whereYear('date', $year)
             ->isExpense()
             ->isNotDraft()
+            ->when($billId, function ($query) use ($billId) {
+                return $query->whereBillId($billId);
+            })
+            ->whereNotIn('category_id', $filterCategoryIds)
             ->with(['category', 'currency']);
-
-        if (!empty($filterCategoryIds)) {
-            $operations->whereNotIn('category_id', $filterCategoryIds);
-        }
 
         return $operations->get();
     }

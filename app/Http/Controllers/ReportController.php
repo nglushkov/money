@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\MoneyFormatter;
+use App\Models\Bill;
 use App\Models\Currency;
 use App\Models\Operation;
 use App\Service\ReportService;
@@ -32,7 +33,8 @@ class ReportController extends Controller
         $defaultCurrencyName = Currency::getDefaultCurrencyName();
 
         $filterCategoryIds = $request->input('filter_category_ids', []);
-        $operations = $this->reportService->getOperations($month, $year, $filterCategoryIds);
+        $billId = $request->input('bill_id');
+        $operations = $this->reportService->getOperations($month, $year, $filterCategoryIds, $billId);
 
         // Получение общей суммы операций в валюте по умолчанию
         $total = $operations->map(function ($operation) {
@@ -60,7 +62,7 @@ class ReportController extends Controller
 
         // Получение суммы операций по категориям в валюте по умолчанию
         $totalByCategories = $this->reportService->getTotalByCategories(
-            $this->reportService->getOperations($month, $year),
+            $this->reportService->getOperations($month, $year, [], $billId),
             $defaultCurrencyName
         );
 
@@ -91,6 +93,7 @@ class ReportController extends Controller
             'totalByCategories' => $totalByCategories,
             'filterCategoryIds' => $filterCategoryIds,
             'categoryIds' => $categoryIds,
+            'bills' => Bill::orderBy('name', 'asc')->get(),
         ]);
     }
 }

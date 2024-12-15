@@ -34,9 +34,22 @@
                     </div>
 
                     <div class="col-5">
+                        <div class="form-group mb-2">
+                            <select class="form-select" id="billFilterSelect" onchange="redirectToBill(this)">
+                                <option value="">Select Bill</option>
+                                @foreach($bills as $bill)
+                                    <option value="{{ $bill->id }}" {{ request('bill_id') == $bill->id ? 'selected' : '' }}>
+                                        {{ $bill->name_with_user }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <a href="{{ route('reports.total-by-categories', ['year' => date('Y'), 'month' => date('n')]) }}"
                             @class(['btn' => true, 'btn-light' => true])
-                        >Current</a>
+                        >Current Month</a>
+                        <a href="{{ route('reports.total-by-categories', request()->except(['bill_id', 'filter_category_ids'])) }}"
+                            @class(['btn' => true, 'btn-light' => true])
+                        >Reset</a>
                         <a class="btn btn-light " href="{{ route('reports.total-by-categories', array_merge(request()->all(), ['filter_category_ids' => $categoryIds])) }}">
                            Filter All
                         </a>
@@ -84,4 +97,21 @@
         </div>
 
     </div>
+
+    <script>
+        function redirectToBill(selectElement) {
+            const billId = selectElement.value;
+            let url = new URL(window.location.href);
+
+            if (billId) {
+                url.searchParams.set('bill_id', billId);
+            } else {
+                url.searchParams.delete('bill_id');
+            }
+
+            window.location.href = url.toString();
+        }
+    </script>
+
+
 @endsection
