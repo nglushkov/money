@@ -10,7 +10,7 @@
 
                         <div class="col-md-4">
                             <div class="text-end pe-4">
-                                <h5>Top 10 usable categories</h5>
+                                <h5>Top usable categories</h5>
                                 <a href="{{ route('categories.create') }}" class="btn btn-outline-primary btn-sm">Create new category</a>
                                 <ul class="list-group">
                                     @foreach($topCategories as $category)
@@ -20,7 +20,7 @@
                                     @endforeach
                                 </ul>
                                 <div class="mb-3"></div>
-                                <h5>Top 5 usable bills</h5>
+                                <h5>Top</h5>
                                 <ul class="list-group">
                                     @foreach($topBills as $bill)
                                         <li class="list-group">
@@ -35,7 +35,7 @@
 
                         <div class="col-md-4">
                             <div class="ps-3">
-                                <h5>Top 15 usable places</h5>
+                                <h5>Top usable places</h5>
                                 <a href="{{ route('places.create') }}" class="btn btn-outline-primary btn-sm">Create new place</a>
                                 <ul class="list-group">
                                     @foreach($topPlaces as $place)

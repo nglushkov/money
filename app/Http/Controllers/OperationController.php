@@ -274,7 +274,7 @@ class OperationController extends Controller
             ->leftJoin('operations', 'bills.id', '=', 'operations.bill_id')
             ->groupBy('bills.id')
             ->orderBy('count', 'desc')
-            ->take(5)
+            ->take(10)
             ->get();
     }
 
