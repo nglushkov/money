@@ -38,7 +38,9 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                @php $lastAmount = null; @endphp
                                 @foreach ($bill->getAmountsNotNull() as $amount)
+                                    @php $lastAmount = $amount; @endphp
                                     <tr>
                                         <td>
                                             <a href="{{ route('exchanges.index', ['currency_id' => $amount->getCurrency()->id]) }}">{{ $amount->getCurrency()->name }}</a>
@@ -83,9 +85,9 @@
                                 <tfoot>
                                 <tr>
                                     <th colspan="3"></th>
-                                    <th>{{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getTotalByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
-                                    <th>{{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getTotalCryptoInvested($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
-                                    <th>{{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getTotalRevenue($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
+                                    <th>{{ MoneyFormatter::getWithCurrencyName($lastAmount->getCurrency()->getTotalByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
+                                    <th>{{ MoneyFormatter::getWithCurrencyName($lastAmount->getCurrency()->getTotalCryptoInvested($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
+                                    <th>{{ MoneyFormatter::getWithCurrencyName($lastAmount->getCurrency()->getTotalRevenue($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
                                 </tr>
                                 </tfoot>
                             </table>
