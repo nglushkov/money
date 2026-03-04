@@ -1,4 +1,9 @@
-@php use App\Helpers\MoneyFormatter;use App\Helpers\MoneyHelper; @endphp
+@php
+    use App\Helpers\MoneyFormatter;
+    use App\Helpers\MoneyHelper;
+    $defaultCurrencyName = App\Models\Currency::getDefaultCurrencyName(true);
+@endphp
+
 @extends('layouts.app')
 
 @section('title', 'Crypto Bills')
@@ -14,12 +19,16 @@
                         <a href="{{ route('currencies.show', \App\Models\Currency::getDefaultCurrency(true)) }}" class="btn btn-sm btn-success">Add rate</a>
                         <a href="{{ route('exchanges.create', ['is_crypto' => 1]) }}" class="btn btn-sm btn-success">Add exchange</a>&nbsp;
                     </h3>
-                    <small class="text-muted">Rates last updated at: {{ $ratesUpdatedAt }}&nbsp;<a href="{{ route('rates.refresh-crypto') }}" class="text-muted">Refresh</a></small>
+                    <small class="text-muted">
+                        Rates last updated at: {{ $ratesUpdatedAt }}&nbsp;
+                        <a href="{{ route('rates.refresh-crypto') }}" class="text-muted">Refresh</a>
+                    </small>
                     <div class="mt-2"></div>
                     @foreach($bills as $bill)
-                        <a href="#bill-{{ $bill->id }}" class="">{{ $bill->name_with_user }}</a>
+                        <a href="#bill-{{ $bill->id }}">{{ $bill->name_with_user }}</a>
                     @endforeach
                 </div>
+
                 @foreach ($bills as $bill)
                     <div class="card" id="bill-{{ $bill->id }}">
                         <div class="card-body">
@@ -43,53 +52,62 @@
                                     @php $lastAmount = $amount; @endphp
                                     <tr>
                                         <td>
-                                            <a href="{{ route('exchanges.index', ['currency_id' => $amount->getCurrency()->id]) }}">{{ $amount->getCurrency()->name }}</a>
+                                            <a href="{{ route('exchanges.index', ['currency_id' => $amount->getCurrency()->id]) }}">
+                                                {{ $amount->getCurrency()->name }}
+                                            </a>
                                         </td>
                                         <td>{{ MoneyFormatter::getWithoutTrailingZeros($amount->getAmount()) }}</td>
                                         <td>
                                             @if (!$amount->getCurrency()->is_default)
-                                                1 {{ $amount->getCurrency()->name }} = {{ MoneyFormatter::getWithoutTrailingZeros($amount->getCurrency()->getCurrentInvertedRateAsString()) }} {{ App\Models\Currency::getDefaultCurrencyName(true) }}
+                                                1 {{ $amount->getCurrency()->name }} =
+                                                {{ MoneyFormatter::getWithoutTrailingZeros($amount->getCurrency()->getCurrentInvertedRateAsString()) }}
+                                                {{ $defaultCurrencyName }}
                                             @endif
                                         </td>
                                         <td>
-                                            {{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getAmountByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}
+                                            {{ MoneyFormatter::getWithCurrencyName($amount->getCurrency()->getAmountByInvertedRate($bill), $defaultCurrencyName) }}
                                         </td>
                                         <td>
                                             @if (!$amount->getCurrency()->is_default)
-                                            <form id="form-{{ $bill->id }}-{{ $amount->getCurrency()->id }}" action="{{ route('crypto.set-total-invested-amount', $bill) }}" method="post">
-                                                @csrf
-                                                @method('PUT')
-                                                {{ MoneyFormatter::getWithCurrencyName($bill->getCryptoInvestedByCurrency($amount->getCurrency()), App\Models\Currency::getDefaultCurrencyName(true)) }}
-                                                <input type="hidden" id="amount-{{ $bill->id }}-{{ $amount->getCurrency()->id }}" name="amount">
-                                                <input type="hidden" name="currency_id" value="{{ $amount->getCurrency()->id }}">
-                                                <button type="submit" class="btn btn-light btn-sm"
-                                                        onclick="event.preventDefault();setInvestedAmount({{ $amount->getCurrency()->id }}, {{ $bill->id }})">
-                                                    Set
-                                                </button>
-                                            </form>
+                                                <form id="form-{{ $bill->id }}-{{ $amount->getCurrency()->id }}" action="{{ route('crypto.set-total-invested-amount', $bill) }}" method="post">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    {{ MoneyFormatter::getWithCurrencyName($bill->getCryptoInvestedByCurrency($amount->getCurrency()), $defaultCurrencyName) }}
+                                                    <input type="hidden" id="amount-{{ $bill->id }}-{{ $amount->getCurrency()->id }}" name="amount">
+                                                    <input type="hidden" name="currency_id" value="{{ $amount->getCurrency()->id }}">
+                                                    <button type="submit" class="btn btn-light btn-sm"
+                                                            onclick="event.preventDefault();setInvestedAmount({{ $amount->getCurrency()->id }}, {{ $bill->id }})">
+                                                        Set
+                                                    </button>
+                                                </form>
                                             @endif
                                         </td>
                                         @php
-                                            $revenue = MoneyHelper::subtract($amount->getCurrency()->getAmountByInvertedRate($bill), $bill->getCryptoInvestedByCurrency($amount->getCurrency()));
+                                            $revenue = MoneyHelper::subtract(
+                                                $amount->getCurrency()->getAmountByInvertedRate($bill),
+                                                $bill->getCryptoInvestedByCurrency($amount->getCurrency())
+                                            );
                                         @endphp
                                         <td>
                                             @if (!$amount->getCurrency()->is_default)
                                                 <span @class(['text-danger' => $revenue < 0, 'text-success' => $revenue > 0])>
-                                                    {{ MoneyFormatter::getWithCurrencyName($revenue, App\Models\Currency::getDefaultCurrencyName(true)) }}
-                                                </span>
+                                                {{ MoneyFormatter::getWithCurrencyName($revenue, $defaultCurrencyName) }}
+                                            </span>
                                             @endif
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th colspan="3"></th>
-                                    <th>{{ MoneyFormatter::getWithCurrencyName($lastAmount->getCurrency()->getTotalByInvertedRate($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
-                                    <th>{{ MoneyFormatter::getWithCurrencyName($lastAmount->getCurrency()->getTotalCryptoInvested($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
-                                    <th>{{ MoneyFormatter::getWithCurrencyName($lastAmount->getCurrency()->getTotalRevenue($bill), App\Models\Currency::getDefaultCurrencyName(true)) }}</th>
-                                </tr>
-                                </tfoot>
+                                @if($lastAmount)
+                                    <tfoot>
+                                    <tr>
+                                        <th colspan="3"></th>
+                                        <th>{{ MoneyFormatter::getWithCurrencyName($lastAmount->getCurrency()->getTotalByInvertedRate($bill), $defaultCurrencyName) }}</th>
+                                        <th>{{ MoneyFormatter::getWithCurrencyName($lastAmount->getCurrency()->getTotalCryptoInvested($bill), $defaultCurrencyName) }}</th>
+                                        <th>{{ MoneyFormatter::getWithCurrencyName($lastAmount->getCurrency()->getTotalRevenue($bill), $defaultCurrencyName) }}</th>
+                                    </tr>
+                                    </tfoot>
+                                @endif
                             </table>
                         </div>
                     </div>&nbsp;
@@ -101,7 +119,7 @@
     <script>
         function setInvestedAmount(currencyId, billId) {
             const amount = parseFloat(prompt('Enter the amount invested', '0'));
-            if (amount !== null) {
+            if (!isNaN(amount)) {
                 document.getElementById('amount-' + billId + '-' + currencyId).value = amount;
                 document.getElementById('form-' + billId + '-' + currencyId).submit();
             } else {
