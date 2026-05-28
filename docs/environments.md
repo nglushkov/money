@@ -1,8 +1,75 @@
 # Environments
 
+## Production
+
+Сервер: `money.nglushkov.com` — Ubuntu 22.04, **без Docker**.
+
+| Компонент | Детали |
+|-----------|--------|
+| PHP | 8.3 (php8.3-fpm) |
+| Web-сервер | nginx → PHP-FPM через unix socket |
+| БД | MySQL 8.0 (локальный) |
+| Кеш | Memcached (локальный) |
+| Путь на сервере | `/home/nglushkov/sites/money` (симлинк `/var/www/money`) |
+| Git remote | `git@github.com:nglushkov/money.git` |
+
+### Доступ
+
+```bash
+ssh nglushkov@212.227.241.35
+```
+
+### Деплой обновления
+
+```bash
+ssh nglushkov@212.227.241.35
+cd ~/sites/money
+git pull
+php artisan migrate --force
+php artisan config:clear
+php artisan cache:clear
+```
+
+Nginx и PHP-FPM перезапускать не нужно — PHP-FPM подхватывает изменения файлов на лету.
+
+### Первый деплой новой фичи с миграциями и сидерами
+
+```bash
+git pull
+php artisan migrate --force
+php artisan db:seed --class=SomeNewSeeder
+php artisan config:clear
+```
+
+### Планировщик
+
+Cron запускает планировщик каждую минуту:
+
+```
+* * * * * cd /var/www/money && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Добавить/изменить команды можно в `app/Console/Kernel.php` — они подхватятся автоматически после `git pull`.
+
+### Бэкап
+
+Два механизма:
+- `backup:run` (spatie/laravel-backup) — дважды в сутки, кладёт архив в `storage/app/backup/`
+- rclone — ежедневно в 03:00 копирует бэкапы на OneDrive: `rclone copy ~/sites/money/storage/app/backup one-drive:/Backup/Money/database`
+
+### Rollback
+
+```bash
+# Восстановить из бэкапа
+php artisan backup:restore --reset
+php artisan cache:clear
+```
+
+---
+
 ## Local (only environment in repo)
 
-This project has a single environment: **local development via Laravel Sail**. There is no staging or production configuration in the repository. The app is intended to be run locally.
+**Local development via Laravel Sail** (Docker).
 
 ### How it is deployed
 
@@ -77,6 +144,7 @@ Managed by `app/Console/Kernel.php`. In Sail, the scheduler must be running (`sa
 | `rates:get-usd-ars` | Weekdays 12:00–18:00, hourly | Fetch USD/ARS blue rate |
 | `app:get-crypto-rates` | Hourly | Fetch crypto rates from CoinMarketCap |
 | `app:notify-planned-expense` | Daily at 10:00 | Send Telegram reminders for due planned expenses |
+| `app:mp-sync` | Daily at 06:00 | Sync Mercado Pago transactions as Operations |
 | `backup:run` | Twice daily (03:00, 15:00) | Create DB + file backup via spatie/laravel-backup |
 
 ### Deploy / rollback
