@@ -56,9 +56,12 @@ class MercadoPagoSync extends Command
                 continue;
             }
 
-            $type = $payment['operation_type'] === 'money_transfer'
-                ? OperationType::Income->name
-                : OperationType::Expense->name;
+            if ($payment['operation_type'] === 'money_transfer') {
+                $skipped++;
+                continue;
+            }
+
+            $type = OperationType::Expense->name;
 
             $description = $payment['description'] ?? $payment['payment_method_id'] ?? '';
             $categoryId  = $this->mappingService->getCategoryId($description);

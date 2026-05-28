@@ -116,9 +116,9 @@ class MercadoPagoSyncTest extends TestCase
 
         $this->artisan('app:mp-sync --days=1')->assertExitCode(0);
 
-        $this->assertCount(2, Operation::where('external_source', 'mercadopago')->get());
+        $this->assertCount(1, Operation::where('external_source', 'mercadopago')->get());
         $this->assertDatabaseHas('operations', ['external_id' => 'pay_1', 'type' => 'Expense']);
-        $this->assertDatabaseHas('operations', ['external_id' => 'pay_2', 'type' => 'Income']);
+        $this->assertDatabaseMissing('operations', ['external_id' => 'pay_2']);
         $this->assertDatabaseMissing('operations', ['external_id' => 'pay_3']);
     }
 
