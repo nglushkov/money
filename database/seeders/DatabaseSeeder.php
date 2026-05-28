@@ -22,6 +22,10 @@ class DatabaseSeeder extends Seeder
                 PlaceSeeder::class,
             ]);
         }
+
+        $seeders = array_merge($seeders, [
+            MercadoPagoMappingSeeder::class,
+        ]);
         $this->call($seeders);
     }
 }

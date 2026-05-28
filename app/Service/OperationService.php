@@ -9,6 +9,7 @@ use App\Models\Enum\OperationType;
 use App\Models\Operation;
 use App\Models\Place;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class OperationService
 {
@@ -62,5 +63,32 @@ class OperationService
         ]);
         $operation->user_id = $userId;
         $operation->save();
+    }
+
+    public function createFromExternal(array $data): ?Operation
+    {
+        if (Operation::where('external_id', $data['external_id'])->exists()) {
+            return null;
+        }
+
+        $operation = new Operation([
+            'amount'          => $data['amount'],
+            'type'            => $data['type'],
+            'bill_id'         => $data['bill_id'],
+            'currency_id'     => $data['currency_id'],
+            'category_id'     => $data['category_id'],
+            'place_id'        => $data['place_id'] ?? null,
+            'date'            => $data['date'],
+            'notes'           => $data['notes'] ?? null,
+            'is_draft'        => false,
+            'external_id'     => $data['external_id'],
+            'external_source' => $data['external_source'],
+        ]);
+        $operation->user_id = $data['user_id'];
+        $operation->save();
+
+        Log::info('MP operation created', ['external_id' => $data['external_id'], 'amount' => $data['amount']]);
+
+        return $operation;
     }
 }

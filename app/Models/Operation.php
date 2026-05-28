@@ -29,6 +29,8 @@ class Operation extends Move implements Copyable
         'date',
         'is_correction',
         'is_draft',
+        'external_id',
+        'external_source',
     ];
 
     protected $casts = [

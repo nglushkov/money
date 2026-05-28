@@ -73,6 +73,10 @@ class OperationController extends Controller
             $operations->where('amount', '<=', $request->amount_to);
         }
 
+        if ($request->get('external_source')) {
+            $operations->where('external_source', $request->external_source);
+        }
+
         return view('operations.index', [
             'operations' => $operations->isNotDraft()->with(['bill', 'category', 'user', 'place', 'currency'])->paginate(50),
             'bills' => Bill::orderBy('name', 'asc')->get(),

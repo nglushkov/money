@@ -8,6 +8,8 @@
         Show filters
     </a>
     <a href="{{ route('operations.index', ['user_id' => Auth::id()]) }}" class="btn btn-light">Show My Operations</a>
+    <a href="{{ route('operations.index', array_merge(request()->except('external_source'), request('external_source') === 'mercadopago' ? [] : ['external_source' => 'mercadopago'])) }}"
+       class="btn btn-light {{ request('external_source') === 'mercadopago' ? 'active' : '' }}">MP</a>
     <a href="{{ route('operations.index') }}" class="btn btn-light float-end">Clear</a>
     <div class="collapse {{ request('show_filter') == '1' ? 'show' : '' }}" id="collapseFilter">
         <div class="row">
