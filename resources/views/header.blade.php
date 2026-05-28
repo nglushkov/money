@@ -60,6 +60,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ route('users.index') }}">🧑‍💻 Users</a></li>
+                            <li><a class="dropdown-item" href="{{ route('mercadopago-mappings.index') }}">🏦 MP Mappings</a></li>
                         </ul>
                     </li>
                     @if (Auth::check())

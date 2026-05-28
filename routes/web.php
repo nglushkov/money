@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\MercadoPagoMappingController;
 use App\Http\Controllers\CryptoController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\CategoryController;
@@ -69,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/total-by-categories', [ReportController::class, 'getSumByCategories'])->name('reports.total-by-categories');
 
     Route::resource('settings/users', UserController::class);
+    Route::resource('mercadopago-mappings', MercadoPagoMappingController::class)->except(['show']);
 
     Route::get('/rates/refresh-crypto', [RateController::class, 'refreshCrypto'])->name('rates.refresh-crypto');
 
