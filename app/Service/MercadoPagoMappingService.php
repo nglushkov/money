@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Models\MercadoPagoMapping;
-use App\Models\Place;
 
 class MercadoPagoMappingService
 {
@@ -16,13 +15,7 @@ class MercadoPagoMappingService
 
     public function getPlaceId(string $description): ?int
     {
-        $mapping = $this->resolve($description);
-
-        if (!$mapping->place_name) {
-            return null;
-        }
-
-        return Place::firstOrCreate(['name' => $mapping->place_name])->id;
+        return $this->resolve($description)->place_id;
     }
 
     private function resolve(string $description): MercadoPagoMapping

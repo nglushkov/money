@@ -24,7 +24,7 @@
                         <tr>
                             <td><code>{{ $mapping->keyword }}</code></td>
                             <td>{{ $mapping->category?->name }}</td>
-                            <td>{{ $mapping->place_name }}</td>
+                            <td>{{ $mapping->place?->name }}</td>
                             <td>{{ $mapping->is_default ? '✓' : '' }}</td>
                             <td>
                                 <a href="{{ route('mercadopago-mappings.edit', $mapping) }}" class="btn btn-sm btn-light">Edit</a>

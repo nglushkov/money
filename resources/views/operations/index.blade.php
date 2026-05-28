@@ -46,7 +46,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if(!$operation->is_correction)
+                                @if(!$operation->is_correction && $operation->place)
                                     <a class="text-body" href="{{ route('places.show', $operation->place) }}">{{ Str::limit($operation->place->name, 15, '...') }}</a>
                                 @endif
                             </td>

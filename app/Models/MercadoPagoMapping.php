@@ -10,7 +10,7 @@ class MercadoPagoMapping extends Model
     protected $fillable = [
         'keyword',
         'category_id',
-        'place_name',
+        'place_id',
         'is_default',
     ];
 
@@ -21,5 +21,10 @@ class MercadoPagoMapping extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function place(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Place::class);
     }
 }

@@ -34,9 +34,16 @@
                         </select>
                     </div>
                     <div class="form-group mb-2">
-                        <label for="place_name">Place name</label>
-                        <input type="text" name="place_name" id="place_name" class="form-control"
-                            value="{{ old('place_name', $mapping->place_name) }}">
+                        <label for="place_id">Place</label>
+                        <select name="place_id" id="place_id" class="form-control">
+                            <option value="">— none —</option>
+                            @foreach($places as $place)
+                                <option value="{{ $place->id }}"
+                                    @selected(old('place_id', $mapping->place_id) == $place->id)>
+                                    {{ $place->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-check mb-3">
                         <input type="checkbox" name="is_default" id="is_default" class="form-check-input"

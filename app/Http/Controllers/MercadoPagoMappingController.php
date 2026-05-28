@@ -4,22 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\MercadoPagoMapping;
+use App\Models\Place;
 use Illuminate\Http\Request;
 
 class MercadoPagoMappingController extends Controller
 {
     public function index()
     {
-        $mappings = MercadoPagoMapping::with('category')->orderBy('is_default')->orderBy('keyword')->get();
+        $mappings = MercadoPagoMapping::with(['category', 'place'])->orderBy('is_default')->orderBy('keyword')->get();
 
         return view('mercadopago-mappings.index', compact('mappings'));
     }
 
     public function create()
     {
-        $categories = Category::orderBy('name')->get();
-
-        return view('mercadopago-mappings.create', compact('categories'));
+        return view('mercadopago-mappings.create', [
+            'categories' => Category::orderBy('name')->get(),
+            'places'     => Place::orderBy('name')->get(),
+        ]);
     }
 
     public function store(Request $request)
@@ -27,7 +29,7 @@ class MercadoPagoMappingController extends Controller
         $data = $request->validate([
             'keyword'     => 'required|string|unique:mercado_pago_mappings,keyword',
             'category_id' => 'required|exists:categories,id',
-            'place_name'  => 'nullable|string|max:255',
+            'place_id'    => 'nullable|exists:places,id',
             'is_default'  => 'boolean',
         ]);
 
@@ -40,11 +42,10 @@ class MercadoPagoMappingController extends Controller
 
     public function edit(MercadoPagoMapping $mercadopagoMapping)
     {
-        $categories = Category::orderBy('name')->get();
-
         return view('mercadopago-mappings.edit', [
             'mapping'    => $mercadopagoMapping,
-            'categories' => $categories,
+            'categories' => Category::orderBy('name')->get(),
+            'places'     => Place::orderBy('name')->get(),
         ]);
     }
 
@@ -53,7 +54,7 @@ class MercadoPagoMappingController extends Controller
         $data = $request->validate([
             'keyword'     => 'required|string|unique:mercado_pago_mappings,keyword,' . $mercadopagoMapping->id,
             'category_id' => 'required|exists:categories,id',
-            'place_name'  => 'nullable|string|max:255',
+            'place_id'    => 'nullable|exists:places,id',
             'is_default'  => 'boolean',
         ]);
 

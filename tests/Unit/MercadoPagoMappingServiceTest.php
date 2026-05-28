@@ -16,6 +16,7 @@ class MercadoPagoMappingServiceTest extends TestCase
     private MercadoPagoMappingService $service;
     private Category $category;
     private Category $defaultCategory;
+    private Place $place;
 
     protected function setUp(): void
     {
@@ -23,18 +24,19 @@ class MercadoPagoMappingServiceTest extends TestCase
 
         $this->category        = Category::factory()->create();
         $this->defaultCategory = Category::factory()->create();
+        $this->place           = Place::factory()->create(['name' => 'Netflix']);
 
         MercadoPagoMapping::create([
             'keyword'     => 'netflix',
             'category_id' => $this->category->id,
-            'place_name'  => 'Netflix',
+            'place_id'    => $this->place->id,
             'is_default'  => false,
         ]);
 
         MercadoPagoMapping::create([
             'keyword'     => '__default__',
             'category_id' => $this->defaultCategory->id,
-            'place_name'  => null,
+            'place_id'    => null,
             'is_default'  => true,
         ]);
 
@@ -56,24 +58,9 @@ class MercadoPagoMappingServiceTest extends TestCase
         $this->assertEquals($this->defaultCategory->id, $this->service->getCategoryId('some unknown merchant'));
     }
 
-    public function test_creates_place_if_not_exists(): void
+    public function test_returns_place_id_for_matching_keyword(): void
     {
-        $this->assertDatabaseMissing('places', ['name' => 'Netflix']);
-
-        $placeId = $this->service->getPlaceId('Netflix.com');
-
-        $this->assertNotNull($placeId);
-        $this->assertDatabaseHas('places', ['name' => 'Netflix']);
-    }
-
-    public function test_reuses_existing_place(): void
-    {
-        $place = Place::factory()->create(['name' => 'Netflix']);
-
-        $placeId = $this->service->getPlaceId('Netflix.com');
-
-        $this->assertEquals($place->id, $placeId);
-        $this->assertCount(1, Place::where('name', 'Netflix')->get());
+        $this->assertEquals($this->place->id, $this->service->getPlaceId('Netflix.com'));
     }
 
     public function test_returns_null_place_for_default_mapping(): void
