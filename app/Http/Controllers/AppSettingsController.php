@@ -11,7 +11,7 @@ class AppSettingsController extends Controller
     public function index()
     {
         return view('settings.app', [
-            'bills'             => Bill::orderBy('name')->get(),
+            'bills'             => Bill::with('user')->orderBy('name')->get(),
             'reviewThreshold'   => AppSetting::get('mp_review_threshold', 300000),
             'p2pBybitBillId'    => (int) AppSetting::get('p2p_bybit_bill_id'),
         ]);

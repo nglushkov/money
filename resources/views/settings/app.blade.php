@@ -39,7 +39,7 @@
                             @foreach($bills as $bill)
                                 <option value="{{ $bill->id }}"
                                     @selected(old('p2p_bybit_bill_id', $p2pBybitBillId) == $bill->id)>
-                                    {{ $bill->name }}
+                                    {{ $bill->name }}{{ $bill->user ? ' (' . $bill->user->name . ')' : '' }}
                                 </option>
                             @endforeach
                         </select>
