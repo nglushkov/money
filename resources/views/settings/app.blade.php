@@ -33,9 +33,16 @@
                     <h6 class="text-muted mb-3 mt-4">P2P</h6>
 
                     <div class="form-group mb-4">
-                        <label for="p2p_bybit_bill_name">Default P2P bill (bill name)</label>
-                        <input type="text" name="p2p_bybit_bill_name" id="p2p_bybit_bill_name"
-                            class="form-control" value="{{ old('p2p_bybit_bill_name', $p2pBybitBillName) }}" required>
+                        <label for="p2p_bybit_bill_id">Default P2P bill</label>
+                        <select name="p2p_bybit_bill_id" id="p2p_bybit_bill_id" class="form-control" required>
+                            <option value="">— select —</option>
+                            @foreach($bills as $bill)
+                                <option value="{{ $bill->id }}"
+                                    @selected(old('p2p_bybit_bill_id', $p2pBybitBillId) == $bill->id)>
+                                    {{ $bill->name }}
+                                </option>
+                            @endforeach
+                        </select>
                         <small class="text-muted">Bill where USDT → ARS exchange is created</small>
                     </div>
 

@@ -38,7 +38,7 @@ class P2PServiceTest extends TestCase
         $this->usdt      = Currency::factory()->create(['name' => 'USDT', 'is_crypto' => true]);
         $this->ars       = Currency::where('name', 'ARS')->firstOrFail();
 
-        AppSetting::set('p2p_bybit_bill_name', 'Bybit');
+        AppSetting::set('p2p_bybit_bill_id', $this->bybitBill->id);
 
         $this->service = new P2PService();
     }

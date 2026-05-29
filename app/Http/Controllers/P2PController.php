@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AppSetting;
+use App\Models\Bill;
 use App\Models\Operation;
 use App\Service\P2PService;
 use Illuminate\Http\Request;
@@ -17,9 +18,13 @@ class P2PController extends Controller
             ? Operation::findOrFail($request->integer('from_operation'))
             : null;
 
+        $bybitBill = ($id = (int) AppSetting::get('p2p_bybit_bill_id'))
+            ? Bill::find($id)
+            : null;
+
         return view('p2p.create', [
-            'operation'     => $operation,
-            'bybitBillName' => AppSetting::get('p2p_bybit_bill_name', 'Bybit'),
+            'operation' => $operation,
+            'bybitBill' => $bybitBill,
         ]);
     }
 

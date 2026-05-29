@@ -7,7 +7,7 @@
     <div class="col-md-5">
         <div class="card p-3">
             <h5 class="card-title mb-1">P2P Exchange</h5>
-            <p class="text-muted small mb-3">Creates Exchange (USDT → ARS) in <strong>{{ $bybitBillName }}</strong> and Transfer to Mercado Pago</p>
+            <p class="text-muted small mb-3">Creates Exchange (USDT → ARS) in <strong>{{ $bybitBill?->name ?? '— bill not set in settings —' }}</strong> and Transfer to Mercado Pago</p>
 
             @if($errors->any())
                 <div class="alert alert-danger">

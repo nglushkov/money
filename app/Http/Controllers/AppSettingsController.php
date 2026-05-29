@@ -11,9 +11,9 @@ class AppSettingsController extends Controller
     public function index()
     {
         return view('settings.app', [
-            'bills'              => Bill::orderBy('name')->get(),
-            'reviewThreshold'    => AppSetting::get('mp_review_threshold', 300000),
-            'p2pBybitBillName'   => AppSetting::get('p2p_bybit_bill_name', 'Bybit'),
+            'bills'             => Bill::orderBy('name')->get(),
+            'reviewThreshold'   => AppSetting::get('mp_review_threshold', 300000),
+            'p2pBybitBillId'    => (int) AppSetting::get('p2p_bybit_bill_id'),
         ]);
     }
 
@@ -21,7 +21,7 @@ class AppSettingsController extends Controller
     {
         $data = $request->validate([
             'mp_review_threshold' => 'required|numeric|min:0',
-            'p2p_bybit_bill_name' => 'required|string|max:255',
+            'p2p_bybit_bill_id'   => 'required|integer|exists:bills,id',
         ]);
 
         foreach ($data as $key => $value) {

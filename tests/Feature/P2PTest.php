@@ -35,7 +35,7 @@ class P2PTest extends TestCase
         $this->usdtCurrency = Currency::factory()->create(['name' => 'USDT', 'is_crypto' => true]);
         $this->arsCurrency  = Currency::where('name', 'ARS')->firstOrFail();
 
-        AppSetting::set('p2p_bybit_bill_name', 'Bybit');
+        AppSetting::set('p2p_bybit_bill_id', $this->bybitBill->id);
         AppSetting::set('mp_review_threshold', 300000);
     }
 
