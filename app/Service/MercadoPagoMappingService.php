@@ -23,6 +23,7 @@ class MercadoPagoMappingService
         $description = strtolower($description);
 
         $mapping = MercadoPagoMapping::where('is_default', false)
+            ->orderByRaw('LENGTH(keyword) DESC')
             ->get()
             ->first(fn($m) => str_contains($description, $m->keyword));
 
