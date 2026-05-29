@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AppSetting;
 use App\Models\Bill;
 use App\Models\Operation;
+use App\Models\User;
 use App\Service\P2PService;
 use Illuminate\Http\Request;
 
@@ -25,16 +26,18 @@ class P2PController extends Controller
         return view('p2p.create', [
             'operation' => $operation,
             'bybitBill' => $bybitBill,
+            'bills'     => Bill::with('user')->orderBy('name')->get(),
         ]);
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'date'             => 'required|date',
-            'usdt_amount'      => 'required|numeric|min:0.01',
-            'ars_amount'       => 'required|numeric|min:0.01',
-            'from_operation_id'=> 'nullable|integer|exists:operations,id',
+            'date'              => 'required|date',
+            'usdt_amount'       => 'required|numeric|min:0.01',
+            'ars_amount'        => 'required|numeric|min:0.01',
+            'bybit_bill_id'     => 'required|integer|exists:bills,id',
+            'from_operation_id' => 'nullable|integer|exists:operations,id',
         ]);
 
         $sourceOperation = isset($data['from_operation_id'])

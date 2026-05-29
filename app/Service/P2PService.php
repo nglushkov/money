@@ -14,7 +14,7 @@ class P2PService
 {
     public function create(array $data, ?Operation $sourceOperation = null): void
     {
-        $bybitBill = Bill::findOrFail((int) AppSetting::get('p2p_bybit_bill_id'));
+        $bybitBill = Bill::findOrFail($data['bybit_bill_id'] ?? (int) AppSetting::get('p2p_bybit_bill_id'));
         $mpBill        = $sourceOperation
             ? $sourceOperation->bill
             : Bill::where('name', 'Mercado Pago')->firstOrFail();

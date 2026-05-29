@@ -9,6 +9,10 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="bg-light p-3">
+                        @if(session('success'))
+                            <div class="alert alert-success py-1 mb-2">{{ session('success') }}</div>
+                        @endif
+
                         <div class="btn-group" role="group">
                             <a href="{{ route('operations.create') }}" class="btn btn-success">New Operation</a>
                             <div class="btn-group" role="group">
@@ -28,24 +32,20 @@
                                     Show
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Operation->name]) }}" class="dropdown-item">
-                                            Operations
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Transfer->name]) }}" class="dropdown-item">
-                                            Transfers
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Exchange->name]) }}" class="dropdown-item">
-                                            Exchanges
-                                        </a>
-                                    </li>
+                                    <li><a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Operation->name]) }}" class="dropdown-item">Operations</a></li>
+                                    <li><a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Transfer->name]) }}" class="dropdown-item">Transfers</a></li>
+                                    <li><a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Exchange->name]) }}" class="dropdown-item">Exchanges</a></li>
                                 </ul>
                             </div>
                         </div>
+
+                        <a href="{{ route('home', ['mp' => 1]) }}" class="btn {{ $mpOnly ? 'btn-primary' : 'btn-outline-primary' }}">MP</a>
+
+                        <form action="{{ route('mp-sync') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-secondary">Sync MP</button>
+                        </form>
+
                         @if (count($plannedExpenses) > 0)
                             <button type="button" class="btn btn-sm btn-light" id="planned-expense-dismiss-all"
                                     onclick="document.getElementById('planned-expense-dismiss-all-form').submit();">Dismiss all

@@ -45,7 +45,7 @@ class P2PServiceTest extends TestCase
 
     public function test_creates_exchange_on_bybit_bill(): void
     {
-        $this->service->create(['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000]);
+        $this->service->create(['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000, 'bybit_bill_id' => $this->bybitBill->id]);
 
         $exchange = Exchange::first();
         $this->assertNotNull($exchange);
@@ -58,7 +58,7 @@ class P2PServiceTest extends TestCase
 
     public function test_creates_transfer_from_bybit_to_mp(): void
     {
-        $this->service->create(['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000]);
+        $this->service->create(['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000, 'bybit_bill_id' => $this->bybitBill->id]);
 
         $transfer = Transfer::first();
         $this->assertNotNull($transfer);
@@ -79,7 +79,7 @@ class P2PServiceTest extends TestCase
         ]);
 
         $this->service->create(
-            ['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000],
+            ['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000, 'bybit_bill_id' => $this->bybitBill->id],
             $operation
         );
 
@@ -88,7 +88,7 @@ class P2PServiceTest extends TestCase
 
     public function test_creates_without_source_operation(): void
     {
-        $this->service->create(['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000]);
+        $this->service->create(['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000, 'bybit_bill_id' => $this->bybitBill->id]);
 
         $this->assertCount(1, Exchange::all());
         $this->assertCount(1, Transfer::all());

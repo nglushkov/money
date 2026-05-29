@@ -24,62 +24,55 @@ class MoveController extends Controller
 
     public function index(Request $request)
     {
-        $operations = Operation::with([
-            'bill',
-            'category',
-            'currency',
-            'place',
-            'user'
-        ])->latest();
-        $transfers = Transfer::with([
-            'from',
-            'to',
-            'currency',
-            'user',
-        ])->latest();
-        $exchanges = Exchange::with([
-            'from',
-            'to',
-            'bill',
-            'user',
-            'place'
-        ])->latest();
-        $operations = $operations->get();
-        $transfers = $transfers->get();
-        $exchanges = $exchanges->get();
-
+        $mpOnly   = $request->boolean('mp');
         $moveType = $request->get('type');
 
-        if ($moveType === MoveType::Operation->name) {
+        $operationsQuery = Operation::with(['bill', 'category', 'currency', 'place', 'user'])->latest();
+        if ($mpOnly) {
+            $operationsQuery->where('external_source', 'mercadopago');
+        }
+        $operations = $operationsQuery->get();
+
+        if ($mpOnly) {
             $moves = $operations;
-        } else if ($moveType === MoveType::Transfer->name) {
-            $moves = $transfers;
-        } else if ($moveType === MoveType::Exchange->name) {
-            $moves = $exchanges;
         } else {
-            $moves = $operations->concat($transfers)->concat($exchanges);
+            $transfers = Transfer::with(['from', 'to', 'currency', 'user'])->latest()->get();
+            $exchanges = Exchange::with(['from', 'to', 'bill', 'user', 'place'])->latest()->get();
+
+            if ($moveType === MoveType::Operation->name) {
+                $moves = $operations;
+            } elseif ($moveType === MoveType::Transfer->name) {
+                $moves = $transfers;
+            } elseif ($moveType === MoveType::Exchange->name) {
+                $moves = $exchanges;
+            } else {
+                $moves = $operations->concat($transfers)->concat($exchanges);
+            }
         }
 
-        $moves = $moves->sortByDesc(function ($move) {
-            return $move->date->format('U') . $move->created_at->format('U');
-        });
+        $moves = $moves->sortByDesc(fn($m) => $m->date->format('U') . $m->created_at->format('U'));
 
         $paginator = $this->paginate($moves, 100);
-        $moves = $paginator->getCollection();
-
-        $moves = $moves->groupBy(function($move) {
-            return $move->date->format('Y-m-d');
-        });
-        $defaultCurrency = Currency::getDefaultCurrency();
-
-        $plannedExpenses = $this->plannedExpenseService->getPlannedExpensesToBeReminded();
+        $moves     = $paginator->getCollection()->groupBy(fn($m) => $m->date->format('Y-m-d'));
 
         return view('moves.index', [
-            'moves' => $moves,
-            'paginator' => $paginator,
-            'defaultCurrency' => $defaultCurrency,
-            'plannedExpenses' => $plannedExpenses,
+            'moves'           => $moves,
+            'paginator'       => $paginator,
+            'mpOnly'          => $mpOnly,
+            'defaultCurrency' => Currency::getDefaultCurrency(),
+            'plannedExpenses' => $this->plannedExpenseService->getPlannedExpensesToBeReminded(),
         ]);
+    }
+
+    public function runMpSync()
+    {
+        try {
+            \Artisan::call('app:mp-sync');
+            $output = \Artisan::output();
+            return redirect()->route('home', ['mp' => 1])->with('success', trim($output) ?: 'Sync completed');
+        } catch (\Throwable $e) {
+            return redirect()->route('home')->with('error', $e->getMessage());
+        }
     }
 
     public function paginate($items, $perPage = 15, $page = null, $options = [])

@@ -34,7 +34,7 @@
                         </small>
                         <small class="text-body-secondary">{{ $move->notes ? Str::limit($move->notes, 40) : '' }}</small>
                     </td>
-                    <td>
+                    <td onclick="event.stopPropagation()">
                         @if($move->is_draft)
                             <form action="{{ route('operations.destroy', $move) }}" method="post">
                                 <span class="badge bg-warning">Draft</span>
@@ -43,6 +43,30 @@
                                 <input type="hidden" name="back_route" value="{{ route('home') }}">
                                 <button type="submit" class="btn btn-light btn-sm">Delete</button>
                             </form>
+                        @elseif($move->mp_review_status === 'pending')
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-bs-toggle="dropdown">
+                                    Review
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="{{ route('p2p.create', ['from_operation' => $move->id]) }}">Create P2P</a></li>
+                                    <li>
+                                        <form action="{{ route('operations.keep', $move->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item">Keep as operation</button>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('operations.destroy', $move) }}" method="POST"
+                                            onsubmit="return confirm('Delete this operation?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="back_route" value="{{ url()->current() }}">
+                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
                         @endif
                     </td>
                 </tr>

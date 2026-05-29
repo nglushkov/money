@@ -59,9 +59,10 @@ class P2PTest extends TestCase
     public function test_store_creates_exchange_and_transfer(): void
     {
         $this->actingAs($this->user)->post(route('p2p.store'), [
-            'date'       => '2026-05-10',
-            'usdt_amount'=> 250,
-            'ars_amount' => 368000,
+            'date'          => '2026-05-10',
+            'usdt_amount'   => 250,
+            'ars_amount'    => 368000,
+            'bybit_bill_id' => $this->bybitBill->id,
         ])->assertRedirect(route('home'));
 
         $this->assertDatabaseHas('exchanges', [
@@ -88,6 +89,7 @@ class P2PTest extends TestCase
             'date'              => '2026-05-10',
             'usdt_amount'       => 250,
             'ars_amount'        => 368000,
+            'bybit_bill_id'     => $this->bybitBill->id,
             'from_operation_id' => $operation->id,
         ])->assertRedirect(route('home'));
 
@@ -100,7 +102,7 @@ class P2PTest extends TestCase
     {
         $this->actingAs($this->user)
             ->post(route('p2p.store'), [])
-            ->assertSessionHasErrors(['date', 'usdt_amount', 'ars_amount']);
+            ->assertSessionHasErrors(['date', 'usdt_amount', 'ars_amount', 'bybit_bill_id']);
     }
 
     private function makeMpOperation(float $amount): Operation

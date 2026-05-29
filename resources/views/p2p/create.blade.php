@@ -7,7 +7,7 @@
     <div class="col-md-5">
         <div class="card p-3">
             <h5 class="card-title mb-1">P2P Exchange</h5>
-            <p class="text-muted small mb-3">Creates Exchange (USDT → ARS) in <strong>{{ $bybitBill?->name ?? '— bill not set in settings —' }}</strong> and Transfer to Mercado Pago</p>
+            <p class="text-muted small mb-3">Creates Exchange (USDT → ARS) and Transfer to Mercado Pago</p>
 
             @if($errors->any())
                 <div class="alert alert-danger">
@@ -25,6 +25,18 @@
                             Source operation #{{ $operation->id }} will be deleted after P2P is created
                         </div>
                     @endif
+
+                    <div class="form-group mb-3">
+                        <label for="bybit_bill_id">P2P bill (USDT → ARS)</label>
+                        <select name="bybit_bill_id" id="bybit_bill_id" class="form-control" required>
+                            @foreach($bills as $bill)
+                                <option value="{{ $bill->id }}"
+                                    @selected(old('bybit_bill_id', $bybitBill?->id) == $bill->id)>
+                                    {{ $bill->name }}{{ $bill->user ? ' (' . $bill->user->name . ')' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <div class="form-group mb-3">
                         <label for="date">Date</label>

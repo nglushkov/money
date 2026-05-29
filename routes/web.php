@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rates/external/', [ExternalRateController::class, 'index'])->name('external-rates.index');
 
     Route::get('/', [MoveController::class, 'index'])->name('home');
+    Route::post('/mp-sync', [MoveController::class, 'runMpSync'])->name('mp-sync');
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
