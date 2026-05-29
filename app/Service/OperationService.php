@@ -72,7 +72,7 @@ class OperationService
             return null;
         }
 
-        $threshold = (float) AppSetting::get('mp_review_threshold', 300000);
+        $threshold = (float) AppSetting::get('mp_review_threshold', 300000, $data['user_id']);
         $reviewStatus = ($data['external_source'] === 'mercadopago' && (float) $data['amount'] >= $threshold)
             ? 'pending'
             : null;

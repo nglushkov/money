@@ -159,7 +159,7 @@ class MercadoPagoSyncTest extends TestCase
 
     public function test_sync_sets_review_status_pending_for_large_amount(): void
     {
-        \App\Models\AppSetting::set('mp_review_threshold', 300000);
+        \App\Models\AppSetting::set('mp_review_threshold', 300000, $this->user->id);
 
         Http::fake([
             'api.mercadopago.com/v1/payments/search*' => Http::response([

@@ -29,8 +29,8 @@ class AppSettingsTest extends TestCase
     public function test_settings_page_shows_current_values(): void
     {
         $bill = Bill::factory()->create(['name' => 'MyBroker', 'user_id' => $this->user->id]);
-        AppSetting::set('mp_review_threshold', 500000);
-        AppSetting::set('p2p_bybit_bill_id', $bill->id);
+        AppSetting::set('mp_review_threshold', 500000, $this->user->id);
+        AppSetting::set('p2p_bybit_bill_id', $bill->id, $this->user->id);
 
         $response = $this->actingAs($this->user)->get(route('settings.app'));
         $response->assertSee('500000');
@@ -46,8 +46,8 @@ class AppSettingsTest extends TestCase
             'p2p_bybit_bill_id'   => $bill->id,
         ])->assertRedirect(route('settings.app'));
 
-        $this->assertEquals('400000', AppSetting::get('mp_review_threshold'));
-        $this->assertEquals($bill->id, AppSetting::get('p2p_bybit_bill_id'));
+        $this->assertEquals('400000', AppSetting::get('mp_review_threshold', null, $this->user->id));
+        $this->assertEquals($bill->id, AppSetting::get('p2p_bybit_bill_id', null, $this->user->id));
     }
 
     public function test_update_validates_required_fields(): void

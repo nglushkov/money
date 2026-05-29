@@ -3,22 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class AppSetting extends Model
 {
-    protected $primaryKey = 'key';
-    protected $keyType    = 'string';
+    protected $primaryKey = null;
     public    $incrementing = false;
 
-    protected $fillable = ['key', 'value'];
+    protected $fillable = ['key', 'user_id', 'value'];
 
-    public static function get(string $key, mixed $default = null): mixed
+    public static function get(string $key, mixed $default = null, ?int $userId = null): mixed
     {
-        return static::where('key', $key)->value('value') ?? $default;
+        $userId ??= Auth::id();
+        return static::where('user_id', $userId)->where('key', $key)->value('value') ?? $default;
     }
 
-    public static function set(string $key, mixed $value): void
+    public static function set(string $key, mixed $value, ?int $userId = null): void
     {
-        static::updateOrCreate(['key' => $key], ['value' => $value]);
+        $userId ??= Auth::id();
+        static::updateOrCreate(['user_id' => $userId, 'key' => $key], ['value' => $value]);
     }
 }
