@@ -66,7 +66,7 @@ class MercadoPagoSync extends Command
             $description = $payment['description'] ?? $payment['payment_method_id'] ?? '';
             $categoryId  = $this->mappingService->getCategoryId($description);
             $placeId     = $this->mappingService->getPlaceId($description);
-            $date        = Carbon::parse($payment['date_approved'] ?? $payment['date_created']);
+            $date        = Carbon::parse($payment['date_approved'] ?? $payment['date_created'])->setTimezone(config('app.timezone'));
 
             $operation = $this->operationService->createFromExternal([
                 'external_id'     => (string) $payment['id'],
