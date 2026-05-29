@@ -21,24 +21,23 @@ ssh nglushkov@212.227.241.35
 
 ### Деплой обновления
 
+На сервере есть скрипт `~/deploy-money.sh`:
+
 ```bash
 ssh nglushkov@212.227.241.35
-cd ~/sites/money
-git pull
-php artisan migrate --force
-php artisan config:clear
-php artisan cache:clear
+bash ~/deploy-money.sh
 ```
 
-Nginx и PHP-FPM перезапускать не нужно — PHP-FPM подхватывает изменения файлов на лету.
+Скрипт делает: `artisan down` → `git pull` → `composer install` → `bot-set-webhook` → `migrate --force` → `artisan up` → `cache:clear` → `app:get-crypto-rates`.
 
-### Первый деплой новой фичи с миграциями и сидерами
+Nginx и PHP-FPM перезапускать не нужно.
+
+### Первый деплой новой фичи с сидерами
+
+Если фича требует сидер — после `deploy-money.sh` запустить вручную:
 
 ```bash
-git pull
-php artisan migrate --force
 php artisan db:seed --class=SomeNewSeeder
-php artisan config:clear
 ```
 
 ### Планировщик

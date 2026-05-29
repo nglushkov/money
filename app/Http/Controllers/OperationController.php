@@ -197,7 +197,7 @@ class OperationController extends Controller
             }
         });
 
-        return Session::has('index_url') ? redirect(Session::get('index_url')) : back();
+        return Session::has('index_url') ? redirect(Session::get('index_url')) : redirect()->route('operations.show', $operation);
     }
 
     /**
@@ -219,6 +219,12 @@ class OperationController extends Controller
             return redirect($request->back_route);
         }
         return redirect()->route('operations.index');
+    }
+
+    public function keepAsReviewed(int $id)
+    {
+        Operation::whereKey($id)->update(['mp_review_status' => 'kept']);
+        return redirect()->back();
     }
 
     public function getAttachment(Operation $operation)

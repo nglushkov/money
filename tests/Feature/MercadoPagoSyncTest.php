@@ -157,6 +157,26 @@ class MercadoPagoSyncTest extends TestCase
         $this->assertCount(1, Operation::where('external_id', 'pay_idem')->get());
     }
 
+    public function test_sync_sets_review_status_pending_for_large_amount(): void
+    {
+        \App\Models\AppSetting::set('mp_review_threshold', 300000);
+
+        Http::fake([
+            'api.mercadopago.com/v1/payments/search*' => Http::response([
+                'results' => [
+                    $this->makePayment('pay_big', 'approved', 'regular_payment', 350000),
+                    $this->makePayment('pay_small', 'approved', 'regular_payment', 100),
+                ],
+                'paging' => ['total' => 2, 'limit' => 100, 'offset' => 0],
+            ]),
+        ]);
+
+        $this->artisan('app:mp-sync --days=1')->assertExitCode(0);
+
+        $this->assertDatabaseHas('operations', ['external_id' => 'pay_big', 'mp_review_status' => 'pending']);
+        $this->assertDatabaseHas('operations', ['external_id' => 'pay_small', 'mp_review_status' => null]);
+    }
+
     private function makePayment(string $id, string $status, string $operationType, float $amount, string $description = 'Test payment'): array
     {
         return [

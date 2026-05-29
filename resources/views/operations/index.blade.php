@@ -18,6 +18,7 @@
                         <th>Category</th>
                         <th>Place</th>
                         <th>Bill</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,7 +51,29 @@
                                     <a class="text-body" href="{{ route('places.show', $operation->place) }}">{{ Str::limit($operation->place->name, 15, '...') }}</a>
                                 @endif
                             </td>
-                            <td><a class="text-body" href="{{ route('bills.show', $operation->bill) }}">{{ Str::limit($operation->bill->name, 15, '...') }}</td>
+                            <td><a class="text-body" href="{{ route('bills.show', $operation->bill) }}">{{ Str::limit($operation->bill->name, 15, '...') }}</a></td>
+                            <td onclick="event.stopPropagation()">
+                                @if($operation->mp_review_status === 'pending')
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-bs-toggle="dropdown">
+                                            Review
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('p2p.create', ['from_operation' => $operation->id]) }}">
+                                                    Create P2P
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <form action="{{ route('operations.keep', $operation->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item">Keep as operation</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

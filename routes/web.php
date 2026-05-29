@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\MercadoPagoMappingController;
 use App\Http\Controllers\CryptoController;
+use App\Http\Controllers\P2PController;
 use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CurrencyController;
@@ -71,6 +73,13 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('settings/users', UserController::class);
     Route::resource('mercadopago-mappings', MercadoPagoMappingController::class)->except(['show']);
+
+    Route::get('/settings/app', [AppSettingsController::class, 'index'])->name('settings.app');
+    Route::put('/settings/app', [AppSettingsController::class, 'update'])->name('settings.app.update');
+
+    Route::get('/p2p/create', [P2PController::class, 'create'])->name('p2p.create');
+    Route::post('/p2p', [P2PController::class, 'store'])->name('p2p.store');
+    Route::post('/operations/{id}/keep', [OperationController::class, 'keepAsReviewed'])->name('operations.keep')->whereNumber('id');
 
     Route::get('/rates/refresh-crypto', [RateController::class, 'refreshCrypto'])->name('rates.refresh-crypto');
 

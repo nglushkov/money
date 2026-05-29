@@ -126,6 +126,25 @@ VALUES ('keyword', CAT_ID, PLACE_ID, 0, NOW(), NOW())
 ON DUPLICATE KEY UPDATE category_id=VALUES(category_id), place_id=VALUES(place_id), updated_at=NOW();
 ```
 
+## Разработка новой фичи — обязательный порядок
+
+1. Реализовать фичу
+2. **Написать тесты** (Unit для сервисов, Feature для HTTP)
+3. **Прогнать все тесты** (`./vendor/bin/sail artisan test`) — все должны быть зелёными
+4. Если тест падал до фичи (pre-existing) — починить его тоже, не оставлять
+5. Только после зелёных тестов — коммит и деплой
+
+```bash
+# Прогнать все тесты
+./vendor/bin/sail artisan test
+
+# Только новые тесты
+./vendor/bin/sail artisan test tests/Feature/P2PTest.php
+
+# Проверить что тест падал до изменений
+git stash && ./vendor/bin/sail artisan test tests/Feature/XTest.php && git stash pop
+```
+
 ## Важно
 
 - **Удалять на проде только после явного согласования пользователя**

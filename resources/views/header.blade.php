@@ -53,12 +53,16 @@
                             <li><a class="dropdown-item" href="{{ route('reports.total-by-categories') }}">📊 Total by Categories</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ route('p2p.create') }}">P2P</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Settings
                         </a>
                         <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('settings.app') }}">⚙️ General</a></li>
                             <li><a class="dropdown-item" href="{{ route('users.index') }}">🧑‍💻 Users</a></li>
                             <li><a class="dropdown-item" href="{{ route('mercadopago-mappings.index') }}">🏦 MP Mappings</a></li>
                         </ul>

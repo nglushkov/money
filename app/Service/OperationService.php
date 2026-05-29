@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Models\AppSetting;
 use App\Models\Bill;
 use App\Models\Category;
 use App\Models\Currency;
@@ -71,18 +72,24 @@ class OperationService
             return null;
         }
 
+        $threshold = (float) AppSetting::get('mp_review_threshold', 300000);
+        $reviewStatus = ($data['external_source'] === 'mercadopago' && (float) $data['amount'] >= $threshold)
+            ? 'pending'
+            : null;
+
         $operation = new Operation([
-            'amount'          => $data['amount'],
-            'type'            => $data['type'],
-            'bill_id'         => $data['bill_id'],
-            'currency_id'     => $data['currency_id'],
-            'category_id'     => $data['category_id'],
-            'place_id'        => $data['place_id'] ?? null,
-            'date'            => $data['date'],
-            'notes'           => $data['notes'] ?? null,
-            'is_draft'        => false,
-            'external_id'     => $data['external_id'],
-            'external_source' => $data['external_source'],
+            'amount'            => $data['amount'],
+            'type'              => $data['type'],
+            'bill_id'           => $data['bill_id'],
+            'currency_id'       => $data['currency_id'],
+            'category_id'       => $data['category_id'],
+            'place_id'          => $data['place_id'] ?? null,
+            'date'              => $data['date'],
+            'notes'             => $data['notes'] ?? null,
+            'is_draft'          => false,
+            'external_id'       => $data['external_id'],
+            'external_source'   => $data['external_source'],
+            'mp_review_status'  => $reviewStatus,
         ]);
         $operation->user_id = $data['user_id'];
         $operation->save();
