@@ -29,16 +29,24 @@ class UpdateOperationRequest extends FormRequest
      */
     public function rules(): array
     {
+        $split = $this->boolean('split_mode');
+
         return [
-            'amount' => 'required|numeric',
-            'type' => 'required|in:' . implode(',', OperationType::names()),
-            'bill_id' => 'required|exists:bills,id',
-            'category_id' => 'required|exists:categories,id',
-            'currency_id' => 'required|exists:currencies,id',
-            'place_id' => 'required|exists:places,id',
-            'notes' => 'nullable|string',
-            'date' => 'required|date|before_or_equal:today',
-            'attachment' => 'nullable|file|mimes:jpeg,png,pdf,zip|max:8192',
+            'amount'               => 'required|numeric',
+            'type'                 => 'required|in:' . implode(',', OperationType::names()),
+            'bill_id'              => 'required|exists:bills,id',
+            'currency_id'          => 'required|exists:currencies,id',
+            'place_id'             => 'required|exists:places,id',
+            'notes'                => 'nullable|string',
+            'date'                 => 'required|date|before_or_equal:today',
+            'attachment'           => 'nullable|file|mimes:jpeg,png,pdf,zip|max:8192',
+            'split_mode'           => 'nullable|boolean',
+
+            'category_id'          => $split ? 'nullable' : 'required|exists:categories,id',
+
+            'splits'               => $split ? 'required|array|min:1' : 'nullable',
+            'splits.*.category_id' => $split ? 'required|exists:categories,id' : 'nullable',
+            'splits.*.amount'      => $split ? 'required|numeric|min:0.01' : 'nullable',
         ];
     }
 }

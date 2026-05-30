@@ -191,27 +191,50 @@ class OperationController extends Controller
      */
     public function update(UpdateOperationRequest $request, Operation $operation)
     {
-        DB::transaction(function () use ($request, $operation) {
-            $operation->fill($request->validated());
-            $operation->date = $request->date;
-            $operation->is_draft = false;
-            $operation->save();
+        $splitMode = $request->boolean('split_mode');
 
-            if ($request->has('attachment')) {
-                $originalName = $request->file('attachment')->getClientOriginalName();
-                $encryptedFileName = $this->getAttachmentFileNameEncrypted($operation->id, $originalName);
+        DB::transaction(function () use ($request, $operation, $splitMode) {
+            if ($splitMode) {
+                $common = $request->safe()->except(['splits', 'split_mode', 'category_id', 'amount']);
+                $userId = $operation->user_id;
 
                 if ($operation->attachment) {
-                    Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $encryptedFileName);
+                    Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $this->getAttachmentFileNameEncrypted($operation->id, $operation->attachment));
                 }
-                $request->file('attachment')->storeAs(StorageFilePath::OperationAttachments->value, $encryptedFileName);
+                $operation->delete();
 
-                $operation->attachment = $originalName;
+                foreach ($request->validated()['splits'] as $split) {
+                    $newOp = new Operation();
+                    $newOp->fill(array_merge($common, [
+                        'category_id' => $split['category_id'],
+                        'amount'      => $split['amount'],
+                        'is_draft'    => false,
+                    ]));
+                    $newOp->user_id = $userId;
+                    $newOp->save();
+                }
+            } else {
+                $operation->fill($request->validated());
+                $operation->date = $request->date;
+                $operation->is_draft = false;
                 $operation->save();
+
+                if ($request->hasFile('attachment')) {
+                    $originalName = $request->file('attachment')->getClientOriginalName();
+                    $encryptedFileName = $this->getAttachmentFileNameEncrypted($operation->id, $originalName);
+
+                    if ($operation->attachment) {
+                        Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $encryptedFileName);
+                    }
+                    $request->file('attachment')->storeAs(StorageFilePath::OperationAttachments->value, $encryptedFileName);
+
+                    $operation->attachment = $originalName;
+                    $operation->save();
+                }
             }
         });
 
-        return Session::has('index_url') ? redirect(Session::get('index_url')) : redirect()->route('operations.show', $operation);
+        return Session::has('index_url') ? redirect(Session::get('index_url')) : redirect()->route('home');
     }
 
     /**
