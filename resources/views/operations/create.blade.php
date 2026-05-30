@@ -79,8 +79,7 @@
                     <div class="split-cat">
                         <select data-split-select
                                 :name="'splits[' + i + '][category_id]'"
-                                :dusk="'split-cat-' + i"
-                                x-init="$nextTick(() => { if (!$el.tomselect) new TomSelect($el, { allowEmptyOption: true }) })">
+                                :dusk="'split-cat-' + i">
                             <option value="">Category</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -212,6 +211,15 @@ document.addEventListener('alpine:init', () => {
         rows: [{ id: 0, amount: '' }],
         nextId: 1,
 
+        init() {
+            this.$nextTick(() => this._initSelects());
+        },
+        _initSelects() {
+            document.querySelectorAll('[data-split-select]').forEach(el => {
+                if (!el.tomselect) new TomSelect(el, { allowEmptyOption: true });
+            });
+        },
+
         get splitTotal() {
             return this.rows.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
         },
@@ -223,6 +231,7 @@ document.addEventListener('alpine:init', () => {
         },
         addRow() {
             this.rows.push({ id: this.nextId++, amount: '' });
+            this.$nextTick(() => this._initSelects());
         },
         removeRow(i) {
             if (this.rows.length > 1) this.rows.splice(i, 1);

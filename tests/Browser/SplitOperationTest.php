@@ -20,8 +20,8 @@ class SplitOperationTest extends DuskTestCase
     private Bill $bill;
     private Currency $currency;
     private Place $place;
-    private Category $cat1;
-    private Category $cat2;
+    public Category $cat1;
+    public Category $cat2;
 
     protected function setUp(): void
     {
@@ -105,6 +105,50 @@ class SplitOperationTest extends DuskTestCase
                 ->click('[dusk="split-del-1"]')
                 ->waitUntilMissing('[dusk="split-row-1"]')
                 ->assertMissing('[dusk="split-del-0"]');
+        });
+    }
+
+    public function test_split_submits_and_creates_three_operations(): void
+    {
+        $cat3 = Category::factory()->create(['name' => 'Transport']);
+
+        $this->browse(function (Browser $browser) use ($cat3) {
+            $countBefore = Operation::count();
+
+            $browser->loginAs($this->user)
+                ->visit(route('operations.create'))
+                ->type('#amount', '6000')
+                ->click('[dusk="split-toggle"]')
+                ->waitFor('[dusk="split-section"]')
+
+                // Row 0
+                ->tap(fn($b) => $this->selectTS($b, 'splits[0][category_id]', $this->cat1->id))
+                ->type('[dusk="split-amt-0"]', '2000')
+
+                // Row 1
+                ->click('[dusk="split-add-row"]')
+                ->waitFor('[dusk="split-row-1"]')
+                ->tap(fn($b) => $this->selectTS($b, 'splits[1][category_id]', $this->cat2->id))
+                ->type('[dusk="split-amt-1"]', '1500')
+
+                // Row 2
+                ->click('[dusk="split-add-row"]')
+                ->waitFor('[dusk="split-row-2"]')
+                ->tap(fn($b) => $this->selectTS($b, 'splits[2][category_id]', $cat3->id))
+                ->type('[dusk="split-amt-2"]', '2500')
+
+                // Common fields
+                ->tap(fn($b) => $this->selectTS($b, 'bill_id', $this->bill->id))
+                ->tap(fn($b) => $this->selectTS($b, 'currency_id', $this->currency->id))
+                ->tap(fn($b) => $this->selectTS($b, 'place_id', $this->place->id))
+
+                ->click('[dusk="submit"]')
+                ->assertRouteIs('home');
+
+            $this->assertEquals($countBefore + 3, Operation::count());
+            $this->assertDatabaseHas('operations', ['category_id' => $this->cat1->id, 'amount' => '2000.00']);
+            $this->assertDatabaseHas('operations', ['category_id' => $this->cat2->id, 'amount' => '1500.00']);
+            $this->assertDatabaseHas('operations', ['category_id' => $cat3->id,       'amount' => '2500.00']);
         });
     }
 
