@@ -16,7 +16,6 @@ class MercadoPagoMappingSeeder extends Seeder
         $transport = Category::firstOrCreate(['name' => 'Общественный транспорт']);
         $produkty  = Category::firstOrCreate(['name' => 'Продукты']);
         $internet  = Category::firstOrCreate(['name' => 'Интернет']);
-        $uslugi    = Category::firstOrCreate(['name' => 'Услуги']);
 
         $netflix   = Place::firstOrCreate(['name' => 'Netflix']);
         $spotify   = Place::firstOrCreate(['name' => 'Spotify']);
@@ -30,17 +29,16 @@ class MercadoPagoMappingSeeder extends Seeder
         $iplan     = Place::firstOrCreate(['name' => 'Iplan']);
 
         $mappings = [
-            ['keyword' => 'netflix',     'category_id' => $podpiski->id,  'place_id' => $netflix->id],
-            ['keyword' => 'spotify',     'category_id' => $podpiski->id,  'place_id' => $spotify->id],
-            ['keyword' => 'apple',       'category_id' => $podpiski->id,  'place_id' => $apple->id],
-            ['keyword' => 'microsoft',   'category_id' => $podpiski->id,  'place_id' => $microsoft->id],
-            ['keyword' => 'google',      'category_id' => $podpiski->id,  'place_id' => $google->id],
-            ['keyword' => 'uber',        'category_id' => $taxi->id,      'place_id' => $uber->id],
-            ['keyword' => 'didi',        'category_id' => $taxi->id,      'place_id' => $didi->id],
-            ['keyword' => 'subte',       'category_id' => $transport->id, 'place_id' => $subte->id],
-            ['keyword' => 'jumbo',       'category_id' => $produkty->id,  'place_id' => $jumbo->id],
-            ['keyword' => 'iplan',       'category_id' => $internet->id,  'place_id' => $iplan->id],
-            ['keyword' => '__default__', 'category_id' => $uslugi->id,    'place_id' => null, 'is_default' => true],
+            ['keyword' => 'netflix',   'category_id' => $podpiski->id,  'place_id' => $netflix->id],
+            ['keyword' => 'spotify',   'category_id' => $podpiski->id,  'place_id' => $spotify->id],
+            ['keyword' => 'apple',     'category_id' => $podpiski->id,  'place_id' => $apple->id],
+            ['keyword' => 'microsoft', 'category_id' => $podpiski->id,  'place_id' => $microsoft->id],
+            ['keyword' => 'google',    'category_id' => $podpiski->id,  'place_id' => $google->id],
+            ['keyword' => 'uber',      'category_id' => $taxi->id,      'place_id' => $uber->id],
+            ['keyword' => 'didi',      'category_id' => $taxi->id,      'place_id' => $didi->id],
+            ['keyword' => 'subte',     'category_id' => $transport->id, 'place_id' => $subte->id],
+            ['keyword' => 'jumbo',     'category_id' => $produkty->id,  'place_id' => $jumbo->id],
+            ['keyword' => 'iplan',     'category_id' => $internet->id,  'place_id' => $iplan->id],
         ];
 
         foreach ($mappings as $mapping) {

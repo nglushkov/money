@@ -51,8 +51,7 @@ class MercadoPagoSyncTest extends TestCase
 
     public function test_create_from_external_persists_operation(): void
     {
-        $service    = app(OperationService::class);
-        $categoryId = MercadoPagoMapping::where('is_default', true)->first()->category_id;
+        $service = app(OperationService::class);
 
         $operation = $service->createFromExternal([
             'external_id'     => 'mp_123',
@@ -61,7 +60,7 @@ class MercadoPagoSyncTest extends TestCase
             'type'            => 'Expense',
             'bill_id'         => $this->bill->id,
             'currency_id'     => $this->currency->id,
-            'category_id'     => $categoryId,
+            'category_id'     => null,
             'place_id'        => null,
             'date'            => now(),
             'notes'           => 'Netflix',
@@ -78,8 +77,7 @@ class MercadoPagoSyncTest extends TestCase
 
     public function test_create_from_external_skips_duplicate(): void
     {
-        $service    = app(OperationService::class);
-        $categoryId = MercadoPagoMapping::where('is_default', true)->first()->category_id;
+        $service = app(OperationService::class);
         $data = [
             'external_id'     => 'mp_dup',
             'external_source' => 'mercadopago',
@@ -87,7 +85,7 @@ class MercadoPagoSyncTest extends TestCase
             'type'            => 'Expense',
             'bill_id'         => $this->bill->id,
             'currency_id'     => $this->currency->id,
-            'category_id'     => $categoryId,
+            'category_id'     => null,
             'place_id'        => null,
             'date'            => now(),
             'notes'           => null,

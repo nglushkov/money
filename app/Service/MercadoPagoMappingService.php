@@ -6,32 +6,38 @@ use App\Models\MercadoPagoMapping;
 
 class MercadoPagoMappingService
 {
-    private ?MercadoPagoMapping $default = null;
+    private ?array $mappings = null;
 
     public function getCategoryId(string $description): ?int
     {
-        return $this->resolve($description)->category_id;
+        return $this->resolve($description)?->category_id;
     }
 
     public function getPlaceId(string $description): ?int
     {
-        return $this->resolve($description)->place_id;
+        return $this->resolve($description)?->place_id;
     }
 
-    private function resolve(string $description): MercadoPagoMapping
+    public function hasMatch(string $description): bool
+    {
+        return $this->resolve($description) !== null;
+    }
+
+    private function resolve(string $description): ?MercadoPagoMapping
     {
         $description = strtolower($description);
 
-        $mapping = MercadoPagoMapping::where('is_default', false)
+        $this->mappings ??= MercadoPagoMapping::where('is_default', false)
             ->orderByRaw('LENGTH(keyword) DESC')
             ->get()
-            ->first(fn($m) => str_contains($description, $m->keyword));
+            ->all();
 
-        return $mapping ?? $this->getDefault();
-    }
+        foreach ($this->mappings as $mapping) {
+            if (str_contains($description, $mapping->keyword)) {
+                return $mapping;
+            }
+        }
 
-    private function getDefault(): MercadoPagoMapping
-    {
-        return $this->default ??= MercadoPagoMapping::where('is_default', true)->firstOrFail();
+        return null;
     }
 }

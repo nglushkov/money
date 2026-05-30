@@ -64,22 +64,24 @@ class MercadoPagoSync extends Command
             $type = OperationType::Expense->name;
 
             $description = $payment['description'] ?? $payment['payment_method_id'] ?? '';
-            $categoryId  = $this->mappingService->getCategoryId($description);
-            $placeId     = $this->mappingService->getPlaceId($description);
+            $hasMatch    = $this->mappingService->hasMatch($description);
+            $categoryId  = $hasMatch ? $this->mappingService->getCategoryId($description) : null;
+            $placeId     = $hasMatch ? $this->mappingService->getPlaceId($description) : null;
             $date        = Carbon::parse($payment['date_approved'] ?? $payment['date_created'])->setTimezone(config('app.timezone'));
 
             $operation = $this->operationService->createFromExternal([
-                'external_id'     => (string) $payment['id'],
-                'external_source' => 'mercadopago',
-                'amount'          => $payment['transaction_amount'],
-                'type'            => $type,
-                'bill_id'         => $bill->id,
-                'currency_id'     => $currencyId,
-                'category_id'     => $categoryId,
-                'place_id'        => $placeId,
-                'date'            => $date,
-                'notes'           => $description ?: null,
-                'user_id'         => $userId,
+                'external_id'      => (string) $payment['id'],
+                'external_source'  => 'mercadopago',
+                'amount'           => $payment['transaction_amount'],
+                'type'             => $type,
+                'bill_id'          => $bill->id,
+                'currency_id'      => $currencyId,
+                'category_id'      => $categoryId,
+                'place_id'         => $placeId,
+                'force_draft'      => !$hasMatch,
+                'date'             => $date,
+                'notes'            => $description ?: null,
+                'user_id'          => $userId,
             ]);
 
             $operation ? $created++ : $skipped++;
