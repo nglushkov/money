@@ -38,7 +38,7 @@ class ExchangerTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->loginAs($this->user)
                 ->visit(route('exchanger.create'))
-                ->assertSee('Обменник')
+                ->assertSeeIn('h5', 'Exchanger')
                 ->assertPresent('[dusk="row-from-amount-0"]')
                 ->assertPresent('[dusk="row-amount-0"]')
                 ->assertPresent('[dusk="add-row"]')
@@ -93,7 +93,7 @@ class ExchangerTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($place) {
             $browser->loginAs($this->user)
                 ->visit(route('exchanger.create'))
-                ->select('place_id', $place->id)
+                ->tap(fn($b) => $this->selectTS($b, 'place_id', $place->id))
                 ->type('[dusk="row-from-amount-0"]', '100')
                 ->type('[dusk="row-amount-0"]', '90000')
                 ->select('[dusk="row-currency-0"]', $this->ars->id)

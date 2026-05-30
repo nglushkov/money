@@ -14,6 +14,16 @@ abstract class DuskTestCase extends BaseTestCase
     use CreatesApplication;
 
     /**
+     * Select a value in a Tom Select-enhanced dropdown by the select's name attribute.
+     */
+    protected function selectTS(\Laravel\Dusk\Browser $browser, string $name, string|int $value): void
+    {
+        $browser->script(
+            "document.querySelector('select[name=\"{$name}\"]').tomselect.setValue('{$value}')"
+        );
+    }
+
+    /**
      * Prepare for Dusk test execution.
      */
     #[BeforeClass]
