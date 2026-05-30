@@ -13,8 +13,8 @@
                     type="text"
                     x-model="q"
                     placeholder="Search places..."
-                    class="form-control form-control-sm"
-                    style="padding-left:2rem;min-width:200px;"
+                    class="form-control form-control-sm search-input"
+                    style="min-width:200px;"
                     autocomplete="off"
                 >
             </div>

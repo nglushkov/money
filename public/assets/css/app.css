@@ -258,6 +258,9 @@ a { text-decoration: none; }
   box-shadow: 0 0 0 3px rgba(22,163,74,.12) !important;
   outline: none;
 }
+.search-input {
+  padding-left: 2rem !important;
+}
 .input-amount {
   font-size: 1.625rem !important;
   font-weight: 700 !important;
