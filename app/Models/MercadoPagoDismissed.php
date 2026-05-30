@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class MercadoPagoDismissed extends Model
 {
+    protected $table = 'mercadopago_dismissed';
+
     public $timestamps = false;
 
     protected $fillable = ['external_id', 'user_id'];
