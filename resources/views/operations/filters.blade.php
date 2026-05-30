@@ -91,7 +91,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="notes">Notes</label>
-                    <input type="text" name="notes" id="notes" class="form-control" value="{{ request('notes') }}">
+                    <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" value="{{ request('notes') }}">
                 </div>
             </div>
         </div>
@@ -99,14 +99,14 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="amount_from">Amount from</label>
-                    <input type="number" name="amount_from" id="amount_from" class="form-control"
+                    <input type="number" autocomplete="off" name="amount_from" id="amount_from" class="form-control"
                            value="{{ request('amount_from') }}">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="amount_to">Amount to</label>
-                    <input type="number" name="amount_to" id="amount_to" class="form-control"
+                    <input type="number" autocomplete="off" name="amount_to" id="amount_to" class="form-control"
                            value="{{ request('amount_to') }}">
                 </div>
             </div>

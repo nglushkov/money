@@ -21,12 +21,12 @@
                     @csrf
                     <div class="form-group mb-2">
                         <label for="name">Name</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}"
+                        <input type="text" autocomplete="off" name="name" id="name" class="form-control" value="{{ old('name') }}"
                             required>
                     </div>
                     <div class="form-group mb-2">
                         <label for="notes">Notes</label>
-                        <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
+                        <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="user_id">User</label>
@@ -46,7 +46,7 @@
                     @foreach($currencies as $currency)
                     <div class="form-group mb-2">
                         <label for="amount_{{ $currency->id }}">{{ $currency->name }}</label>
-                        <input type="text" name="amount[{{ $currency->id }}]" id="amount_{{ $currency->id }}"
+                        <input type="text" autocomplete="off" name="amount[{{ $currency->id }}]" id="amount_{{ $currency->id }}"
                             class="form-control" value="{{ old('amount.' . $currency->id, 0) }}" required>
                     </div>
                     @endforeach

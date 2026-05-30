@@ -38,7 +38,7 @@
 
                     <div class="form-group mb-3">
                         <label for="rate">1 {{ $currency->name }} =</label>
-                        <input type="text" name="rate" id="rate" class="form-control" value="{{ old('rate') }}" required>
+                        <input type="text" autocomplete="off" name="rate" id="rate" class="form-control" value="{{ old('rate') }}" required>
                     </div>
 
                     <div class="form-group mb-3">

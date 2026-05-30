@@ -18,7 +18,7 @@
                     @method('PUT')
                     <div class="form-group mb-2">
                         <label for="keyword">Keyword</label>
-                        <input type="text" name="keyword" id="keyword" class="form-control"
+                        <input type="text" autocomplete="off" name="keyword" id="keyword" class="form-control"
                             value="{{ old('keyword', $mapping->keyword) }}" required>
                     </div>
                     <div class="form-group mb-2">

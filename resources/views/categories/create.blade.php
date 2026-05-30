@@ -21,12 +21,12 @@
                     @csrf
                     <div class="form-group mb-2">
                         <label for="name">Name</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" autofocus
+                        <input type="text" autocomplete="off" name="name" id="name" class="form-control" value="{{ old('name') }}" autofocus
                             required>
                     </div>
                     <div class="form-group mb-2">
                         <label for="notes">Notes</label>
-                        <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
+                        <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
                     </div>
                     <hr>
                     <button type="submit" class="btn btn-primary">Create</button>

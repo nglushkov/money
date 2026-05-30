@@ -21,19 +21,19 @@
                     @csrf
                     <div class="form-group mb-2">
                         <label for="amount">Amount:</label>
-                        <input type="text" class="form-control" id="amount" name="amount" value="{{ old('amount') }}">
+                        <input type="text" autocomplete="off" class="form-control" id="amount" name="amount" value="{{ old('amount') }}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="day">Day Number:</label>
-                        <input type="number" class="form-control" id="day" name="day" value="{{ old('day') }}">
+                        <input type="number" autocomplete="off" class="form-control" id="day" name="day" value="{{ old('day') }}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="month">Month Number:</label>
-                        <input type="number" class="form-control" id="month" name="month" value="{{ old('month') }}">
+                        <input type="number" autocomplete="off" class="form-control" id="month" name="month" value="{{ old('month') }}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="reminder_days">Reminder Days:</label>
-                        <input type="number" class="form-control" id="reminder_days" name="reminder_days" value="{{ old('reminder_days') }}">
+                        <input type="number" autocomplete="off" class="form-control" id="reminder_days" name="reminder_days" value="{{ old('reminder_days') }}">
                     </div>
                     <div class="form-group mb-2">
                         <label for="frequency">Frequency:</label>

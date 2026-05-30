@@ -49,7 +49,7 @@
                 <i class="bi bi-scissors me-1"></i>Split
             </button>
         </div>
-        <input type="text" name="amount" id="amount" class="form-control input-amount"
+        <input type="text" autocomplete="off" name="amount" id="amount" class="form-control input-amount"
                required autofocus x-model="totalAmount" placeholder="0.00">
     </div>
 
@@ -87,7 +87,7 @@
                         </select>
                     </div>
                     <div class="split-amt">
-                        <input type="number" step="0.01" min="0"
+                        <input type="number" autocomplete="off" step="0.01" min="0"
                                :name="'splits[' + i + '][amount]'"
                                :dusk="'split-amt-' + i"
                                x-model="row.amount"
@@ -175,7 +175,7 @@
     {{-- Notes --}}
     <div class="mb-3">
         <label class="form-label" for="notes">Notes</label>
-        <input type="text" name="notes" id="notes" class="form-control" placeholder="Optional"
+        <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" placeholder="Optional"
                value="{{ old('notes', $plannedExpense->notes ?? '') }}">
     </div>
 

@@ -22,7 +22,7 @@
                     @method('PUT')
                     <div class="form-group mb-2">
                         <label for="name">Name</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $currency->name) }}"
+                        <input type="text" autocomplete="off" name="name" id="name" class="form-control" value="{{ old('name', $currency->name) }}"
                             required>
                     </div>
                     <div class="form-group">

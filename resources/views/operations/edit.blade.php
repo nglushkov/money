@@ -42,7 +42,7 @@
         {{-- Amount --}}
         <div class="mb-3">
             <label class="form-label" for="amount">Amount</label>
-            <input type="text" name="amount" id="amount" class="form-control input-amount"
+            <input type="text" autocomplete="off" name="amount" id="amount" class="form-control input-amount"
                    required autofocus
                    value="{{ old('amount', App\Helpers\MoneyFormatter::getWithoutTrailingZeros($operation->amount)) }}"
                    placeholder="0.00">
@@ -105,7 +105,7 @@
         {{-- Notes --}}
         <div class="mb-3">
             <label class="form-label" for="notes">Notes</label>
-            <input type="text" name="notes" id="notes" class="form-control"
+            <input type="text" autocomplete="off" name="notes" id="notes" class="form-control"
                    placeholder="Optional"
                    value="{{ old('notes', $operation->notes) }}">
         </div>

@@ -24,7 +24,7 @@
                             <label for="amount_from">From:</label>
                         </div>
                         <div class="col-6">
-                            <input type="text" name="amount_from" id="amount_from" class="form-control" required value="{{ old('amount_from', \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($copyExchange->amount_from ?? '')) }}">
+                            <input type="text" autocomplete="off" name="amount_from" id="amount_from" class="form-control" required value="{{ old('amount_from', \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($copyExchange->amount_from ?? '')) }}">
                         </div>
                         <div class="col-auto">
                             <select name="from_currency_id" id="from_currency_id" class="form-control" required>
@@ -39,7 +39,7 @@
                             <label for="amount_to">To:</label>
                         </div>
                         <div class="col-6">
-                            <input type="text" name="amount_to" id="amount_to" class="form-control" required value="{{ old('amount_to', \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($copyExchange->amount_to ?? '')) }}">
+                            <input type="text" autocomplete="off" name="amount_to" id="amount_to" class="form-control" required value="{{ old('amount_to', \App\Helpers\MoneyFormatter::getWithoutTrailingZeros($copyExchange->amount_to ?? '')) }}">
                         </div>
                         <div class="col-auto">
                             <select name="to_currency_id" id="to_currency_id" class="form-control" required>
@@ -80,7 +80,7 @@
                             <label for="place_name">New Place:</label>
                         </div>
                         <div class="col">
-                            <input type="text" name="place_name" id="notes" class="form-control" value="{{ old('place_name') }}">
+                            <input type="text" autocomplete="off" name="place_name" id="notes" class="form-control" value="{{ old('place_name') }}">
                         </div>
                     </div>
                     @endif
@@ -97,7 +97,7 @@
                             <label for="notes">Notes:</label>
                         </div>
                         <div class="col">
-                            <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes', $copyExchange->notes) }}">
+                            <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" value="{{ old('notes', $copyExchange->notes) }}">
                         </div>
                     </div>
                     <div class="form-check">

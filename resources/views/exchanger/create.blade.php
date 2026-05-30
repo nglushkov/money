@@ -75,7 +75,7 @@
                             <div class="row g-2 align-items-end">
                                 <div class="col-auto">
                                     <label class="form-label" x-text="`Gave, ${fromCurrencyName}`"></label>
-                                    <input type="text"
+                                    <input type="text" autocomplete="off"
                                            :name="`rows[${index}][from_amount]`"
                                            x-model="row.from_amount"
                                            @input="calcRate(index)"
@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <label class="form-label">Received</label>
-                                    <input type="text"
+                                    <input type="text" autocomplete="off"
                                            :name="`rows[${index}][amount]`"
                                            x-model="row.amount"
                                            @input="calcRate(index)"
@@ -146,7 +146,7 @@
                     <div class="row g-2 mb-3">
                         <div class="col">
                             <label class="form-label">Notes</label>
-                            <input type="text" name="notes" class="form-control"
+                            <input type="text" autocomplete="off" name="notes" class="form-control"
                                    value="{{ old('notes') }}" placeholder="optional">
                         </div>
                     </div>

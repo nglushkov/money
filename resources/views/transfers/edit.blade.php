@@ -49,7 +49,7 @@
                             <label for="amount">Amount:</label>
                         </div>
                         <div class="col-6">
-                            <input type="text" name="amount" id="amount" class="form-control" required value="{{ old('amount', money_input($transfer->amount)) }}">
+                            <input type="text" autocomplete="off" name="amount" id="amount" class="form-control" required value="{{ old('amount', money_input($transfer->amount)) }}">
                         </div>
                         <div class="col-auto">
                             <select name="currency_id" id="currency_id" class="form-control" required>
@@ -72,7 +72,7 @@
                             <label for="notes">Notes:</label>
                         </div>
                         <div class="col">
-                            <input type="text" name="notes" id="notes" class="form-control" value="{{ old('notes', $transfer->notes) }}">
+                            <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" value="{{ old('notes', $transfer->notes) }}">
                         </div>
                     </div>
                     <hr>

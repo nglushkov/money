@@ -25,7 +25,7 @@
 
                     <div class="form-group mb-3">
                         <label for="mp_review_threshold">Review threshold (ARS)</label>
-                        <input type="number" name="mp_review_threshold" id="mp_review_threshold"
+                        <input type="number" autocomplete="off" name="mp_review_threshold" id="mp_review_threshold"
                             class="form-control" value="{{ old('mp_review_threshold', $reviewThreshold) }}" min="0" required>
                         <small class="text-muted">MP operations above this amount are flagged for review</small>
                     </div>
