@@ -14,15 +14,16 @@ The project is self-hosted and intended for personal/family use. There is no pub
 | Framework | Laravel | ^10.10 |
 | Database | MySQL | 8.0 |
 | Cache | Memcached | alpine (via Sail) |
-| Frontend templating | Blade + vanilla HTML/CSS | — |
-| Frontend build | Vite | ^5.0 |
+| Frontend templating | Blade + Bootstrap 5 | — |
+| Frontend interactivity | Alpine.js | 3.x (CDN, `defer`) |
 | Auth | Laravel session auth | — |
 | Telegram | irazasyed/telegram-bot-sdk | ^3.13 |
 | HTTP client | Guzzle (via Laravel Http facade) | ^7.2 |
 | Arbitrary-precision math | PHP bcmath extension | built-in |
 | Backups | spatie/laravel-backup | ^8.6 |
 | Dev environment | Laravel Sail | ^1.18 |
-| Testing | PHPUnit | ^10.1 |
+| Testing (unit/feature) | PHPUnit | ^10.1 |
+| Testing (browser) | Laravel Dusk + Selenium | ^8.6 |
 
 ## Repository Structure
 
@@ -57,10 +58,13 @@ routes/
 tests/
   Feature/            # Feature (HTTP-level) tests
   Unit/               # Unit tests
+  Browser/            # Laravel Dusk browser tests (Alpine.js interactions, form flows)
+  DuskTestCase.php    # Base class for Dusk tests; connects to Selenium container
 
 config/               # Standard Laravel config files
 storage/app/backup/   # Backup destination (spatie/laravel-backup)
-docker-compose.yml    # Sail services: app (PHP 8.3), MySQL 8.0, Memcached
+docker-compose.yml    # Sail services: app (PHP 8.3), MySQL 8.0, Memcached, Selenium
+.env.dusk.local       # Dusk-specific env overrides (testing DB, selenium driver URL)
 ```
 
 ## Key Concepts
@@ -120,6 +124,28 @@ Rate saved
 ### Authorization
 Each model has a Policy class. Policies enforce that users can only modify their own data (or common resources). The `auth` middleware wraps all routes except login and the Telegram webhook.
 
+### Exchanger (Exchange + Transfer composite flow)
+
+`/exchanger/create` — форма для фиксации операции в обменнике: отдал крипто-валюту (USDT), получил фиат (ARS, USD и т.д.) и сразу перевёл его на нужный счёт.
+
+Одна строка формы атомарно создаёт:
+- `Exchange` — конвертация внутри крипто-счёта (USDT → ARS/USD, с обменником в `place_id`)
+- `Transfer` — перемещение полученной суммы с крипто-счёта на целевой счёт (MP, нал и т.д.)
+- `Rate` — курс на дату (через `firstOrCreate`, не дублируется если уже есть за этот день)
+
+Форма поддерживает несколько строк (несколько обменов за один раз). Alpine.js обеспечивает динамическое добавление/удаление строк и отображение курса в реальном времени.
+
+Реализован в `ExchangerController` + `ExchangerService`. Отличие от обычного `Exchange`: обычный Exchange — только конвертация внутри одного счёта без Transfer.
+
+### MP Mappings (маппинги Mercado Pago)
+
+Таблица `mercado_pago_mappings` используется при синке MP-транзакций для автоматической категоризации. Ключевые особенности:
+
+- Поиск: `str_contains(strtolower($description), strtolower($keyword))` — оба side приводятся к lowercase
+- Приоритет: сортировка по `LENGTH(keyword) DESC` — более длинный (специфичный) keyword побеждает
+- Если совпадения нет — операция создаётся как черновик (`is_draft = true`)
+- Keyword `"producto"` не должен использоваться — это generic-префикс MP ("Producto de X"), а не название магазина
+
 ### Telegram Bot integration
 The bot handles webhook POSTs at `/{TELEGRAM_BOT_TOKEN}/webhook`. The token appears directly in the route URL (via `env()`), which means route enumeration would expose the token. The `app:bot-set-webhook` command registers the webhook URL with Telegram.
 
@@ -130,6 +156,7 @@ The bot handles webhook POSTs at `/{TELEGRAM_BOT_TOKEN}/webhook`. The token appe
 - **`is_correction` global scope** — `Operation` has `IsNotCorrectionScope` applied as both a `#[ScopedBy]` attribute and a `booted()` call, which means the scope is registered twice. In practice Laravel deduplicates this, but it is redundant and could confuse a reader.
 - **`correctAmount` is on the Bill model** — a `@todo: Move to service` comment exists in `Bill::correctAmount()`. The method creates Operations directly from the model, mixing persistence logic into the model layer.
 - **Queue is sync** — `QUEUE_CONNECTION=sync` in `.env`. No queue worker is needed, but all queued jobs block the HTTP request.
-- **No CI/CD pipeline** — there is no `.github/`, `.gitlab-ci.yml`, or equivalent. All testing is manual (`sail artisan test`).
+- **No CI/CD pipeline** — there is no `.github/`, `.gitlab-ci.yml`, or equivalent. All testing is manual (`sail artisan test` + `sail artisan dusk`).
+- **Vite в package.json не используется** — Bootstrap подключён как статика из `/public/assets/`, Alpine.js через CDN. Vite присутствует в `package.json` как заготовка но `@vite()` в layout не вызывается.
 - **ARS rates are stored only in ExternalRate** — `GetUsdArsRates` does not create a `Rate` row (unlike `GetRates` for USD/RUB), so ARS rates are available on the external-rates page but cannot be used for conversion in operations.
 - **bcmath scale 18 internal / 8 short** — crypto amounts use scale 18 throughout; display calls use scale 8. Mixing scales in output formatting is implicit and depends on which helper is called.

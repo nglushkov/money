@@ -79,6 +79,7 @@ Laravel Sail is used as the local Docker wrapper. The `docker-compose.yml` defin
 | `laravel.test` | `sail-8.3/app` (built from `vendor/laravel/sail/runtimes/8.3`) | PHP 8.3 + Nginx/Apache app server |
 | `mysql` | `mysql/mysql-server:8.0` | Primary database |
 | `memcached` | `memcached:alpine` | Cache backend |
+| `selenium` | `selenium/standalone-chromium` | Headless Chrome для Laravel Dusk |
 
 **Quick start:**
 
@@ -161,10 +162,27 @@ There is no automated deployment pipeline. For local use:
 ### Testing
 
 ```bash
+# Unit + Feature тесты (PHPUnit)
 sail artisan test
+
+# Browser тесты (Laravel Dusk)
+sail up -d selenium   # нужен запущенный selenium-контейнер
+sail artisan dusk
+
+# Конкретный файл
+sail artisan dusk tests/Browser/ExchangerTest.php
 ```
 
-PHPUnit configuration is in `phpunit.xml`. Tests use a separate `testing` database (created by the Sail MySQL init script at `vendor/laravel/sail/database/mysql/create-testing-database.sh`).
+**PHPUnit** — конфигурация в `phpunit.xml`. Используют базу `testing` (создаётся скриптом Sail при первом запуске MySQL).
+
+**Laravel Dusk** — browser-тесты для Alpine.js интерактивности и form flows. Конфигурация в `.env.dusk.local`:
+- `APP_URL=http://laravel.test` — Selenium обращается к приложению внутри Docker-сети
+- `DB_DATABASE=testing` — та же тестовая база
+- `DUSK_DRIVER_URL=http://selenium:4444` — ChromeDriver внутри selenium-контейнера
+
+Скриншоты упавших тестов сохраняются в `tests/Browser/screenshots/`.
+
+**Правило:** перед каждым коммитом прогонять `sail artisan test`. При реализации фичи с UI — также `sail artisan dusk`.
 
 ### Telegram Bot local testing
 
