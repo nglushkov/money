@@ -16,41 +16,12 @@
     </div>
 @endif
 
-<div x-data="{
-    splitMode: {{ old('split_mode', 0) ? 'true' : 'false' }},
-    totalAmount: '{{ old('amount', money_input($plannedExpense->amount ?? null)) }}',
-    rows: [{ id: 0, amount: '' }],
-    nextId: 1,
-    get splitTotal() {
-        return this.rows.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
-    },
-    get remaining() {
-        return Math.round(((parseFloat(this.totalAmount) || 0) - this.splitTotal) * 100) / 100;
-    },
-    get isBalanced() {
-        return Math.abs(this.remaining) < 0.01;
-    },
-    addRow() {
-        this.rows.push({ id: this.nextId++, amount: '' });
-    },
-    removeRow(i) {
-        if (this.rows.length > 1) this.rows.splice(i, 1);
-    },
-    fillRemaining(i) {
-        if (this.remaining > 0) this.rows[i].amount = this.remaining.toFixed(2);
-    },
-    initSplitSelect(el) {
-        this.\$nextTick(() => {
-            if (!el.tomselect) new TomSelect(el, { allowEmptyOption: true });
-        });
-    }
-}">
-
+<div x-data="splitForm()">
 <form id="op-form" action="{{ route('operations.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="split_mode" :value="splitMode ? 1 : 0">
 
-    {{-- Type toggle --}}
+    {{-- Type --}}
     <div class="mb-3">
         <div class="type-toggle">
             <input type="radio" class="btn-check" name="type" id="type-expense"
@@ -72,20 +43,17 @@
     <div class="mb-3">
         <div class="d-flex align-items-center justify-content-between mb-1">
             <label class="form-label mb-0" for="amount">Amount</label>
-            <button type="button"
-                    class="split-toggle-btn"
-                    :class="{ active: splitMode }"
+            <button type="button" dusk="split-toggle"
+                    class="split-toggle-btn" :class="{ active: splitMode }"
                     @click="splitMode = !splitMode">
                 <i class="bi bi-scissors me-1"></i>Split
             </button>
         </div>
         <input type="text" name="amount" id="amount" class="form-control input-amount"
-               required autofocus
-               x-model="totalAmount"
-               placeholder="0.00">
+               required autofocus x-model="totalAmount" placeholder="0.00">
     </div>
 
-    {{-- Normal mode: single category --}}
+    {{-- Normal: single category --}}
     <div x-show="!splitMode">
         <div class="mb-3">
             <label class="form-label" for="category">Category</label>
@@ -102,16 +70,17 @@
         </div>
     </div>
 
-    {{-- Split mode: rows --}}
-    <div x-show="splitMode" x-cloak>
+    {{-- Split: dynamic rows --}}
+    <div x-show="splitMode" x-cloak dusk="split-section">
         <label class="form-label">Split by Category</label>
         <div class="split-section">
             <template x-for="(row, i) in rows" :key="row.id">
-                <div class="split-row">
+                <div class="split-row" :dusk="'split-row-' + i">
                     <div class="split-cat">
                         <select data-split-select
                                 :name="'splits[' + i + '][category_id]'"
-                                x-init="initSplitSelect($el)">
+                                :dusk="'split-cat-' + i"
+                                x-init="$nextTick(() => { if (!$el.tomselect) new TomSelect($el, { allowEmptyOption: true }) })">
                             <option value="">Category</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -121,42 +90,42 @@
                     <div class="split-amt">
                         <input type="number" step="0.01" min="0"
                                :name="'splits[' + i + '][amount]'"
+                               :dusk="'split-amt-' + i"
                                x-model="row.amount"
-                               class="form-control"
-                               placeholder="0.00">
+                               class="form-control" placeholder="0.00">
                     </div>
                     <button type="button" class="split-rest"
+                            :dusk="'split-rest-' + i"
+                            x-show="remaining > 0.005"
                             @click="fillRemaining(i)"
-                            x-show="remaining > 0"
                             title="Fill remaining">
                         = <span x-text="remaining.toFixed(2)"></span>
                     </button>
                     <button type="button" class="split-del"
-                            @click="removeRow(i)"
-                            x-show="rows.length > 1">
-                        ×
-                    </button>
+                            :dusk="'split-del-' + i"
+                            x-show="rows.length > 1"
+                            @click="removeRow(i)">×</button>
                 </div>
             </template>
 
             <button type="button" class="btn btn-link btn-sm ps-0 text-muted"
-                    @click="addRow()">
+                    dusk="split-add-row" @click="addRow()">
                 <i class="bi bi-plus-lg me-1"></i>Add row
             </button>
 
             <div class="split-stats">
                 <span class="stat-label">Split:</span>
-                <span class="stat-val" :class="isBalanced ? 'stat-ok' : 'stat-warn'"
+                <span class="stat-val" dusk="split-total"
+                      :class="isBalanced ? 'stat-ok' : 'stat-warn'"
                       x-text="splitTotal.toFixed(2)"></span>
                 <span class="stat-label">/ Total:</span>
                 <span class="stat-val" x-text="(parseFloat(totalAmount) || 0).toFixed(2)"></span>
                 <template x-if="isBalanced">
-                    <span class="stat-ok"><i class="bi bi-check-circle-fill"></i></span>
+                    <span class="stat-ok" dusk="split-balanced"><i class="bi bi-check-circle-fill"></i></span>
                 </template>
-                <template x-if="!isBalanced && remaining !== 0">
-                    <span class="stat-warn">
-                        <span x-text="remaining > 0 ? '−' : '+'"></span>
-                        <span x-text="Math.abs(remaining).toFixed(2)"></span> remaining
+                <template x-if="!isBalanced">
+                    <span class="stat-warn" dusk="split-remaining">
+                        Remaining: <span x-text="remaining.toFixed(2)"></span>
                     </span>
                 </template>
             </div>
@@ -207,8 +176,7 @@
     {{-- Notes --}}
     <div class="mb-3">
         <label class="form-label" for="notes">Notes</label>
-        <input type="text" name="notes" id="notes" class="form-control"
-               placeholder="Optional"
+        <input type="text" name="notes" id="notes" class="form-control" placeholder="Optional"
                value="{{ old('notes', $plannedExpense->notes ?? '') }}">
     </div>
 
@@ -226,15 +194,44 @@
     </div>
 
     <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-success flex-fill" style="font-weight:600;">
+        <button type="submit" dusk="submit" class="btn btn-success flex-fill" style="font-weight:600;">
             <i class="bi bi-check-lg me-1"></i>Create
         </button>
         <a href="{{ route('home') }}" class="btn btn-outline-secondary">Cancel</a>
     </div>
 </form>
-
 </div>
 
 <style>[x-cloak] { display: none !important; }</style>
+
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('splitForm', () => ({
+        splitMode: {!! old('split_mode') ? 'true' : 'false' !!},
+        totalAmount: {!! json_encode(old('amount', money_input($plannedExpense->amount ?? null) ?? '')) !!},
+        rows: [{ id: 0, amount: '' }],
+        nextId: 1,
+
+        get splitTotal() {
+            return this.rows.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+        },
+        get remaining() {
+            return Math.round(((parseFloat(this.totalAmount) || 0) - this.splitTotal) * 100) / 100;
+        },
+        get isBalanced() {
+            return Math.abs(this.remaining) < 0.01;
+        },
+        addRow() {
+            this.rows.push({ id: this.nextId++, amount: '' });
+        },
+        removeRow(i) {
+            if (this.rows.length > 1) this.rows.splice(i, 1);
+        },
+        fillRemaining(i) {
+            if (this.remaining > 0) this.rows[i].amount = this.remaining.toFixed(2);
+        }
+    }));
+});
+</script>
 
 @endsection
