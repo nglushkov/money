@@ -24,16 +24,20 @@ class MoveController extends Controller
 
     public function index(Request $request)
     {
-        $mpOnly   = $request->boolean('mp');
-        $moveType = $request->get('type');
+        $mpOnly    = $request->boolean('mp');
+        $draftOnly = $request->boolean('draft');
+        $moveType  = $request->get('type');
 
         $operationsQuery = Operation::with(['bill', 'category', 'currency', 'place', 'user'])->latest();
         if ($mpOnly) {
             $operationsQuery->where('external_source', 'mercadopago');
         }
+        if ($draftOnly) {
+            $operationsQuery->where('is_draft', true);
+        }
         $operations = $operationsQuery->get();
 
-        if ($mpOnly) {
+        if ($mpOnly || $draftOnly) {
             $moves = $operations;
         } else {
             $transfers = Transfer::with(['from', 'to', 'currency', 'user'])->latest()->get();
@@ -59,6 +63,8 @@ class MoveController extends Controller
             'moves'           => $moves,
             'paginator'       => $paginator,
             'mpOnly'          => $mpOnly,
+            'draftOnly'       => $draftOnly,
+            'activeType'      => $moveType,
             'defaultCurrency' => Currency::getDefaultCurrency(),
             'plannedExpenses' => $this->plannedExpenseService->getPlannedExpensesToBeReminded(),
         ]);
