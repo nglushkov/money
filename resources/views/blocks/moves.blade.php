@@ -1,133 +1,115 @@
 @foreach($moves as $move)
     @if ($move instanceof App\Models\Operation)
-        <li class="list-group-item" onclick="window.location.href = '{{ route($move->is_draft ? 'operations.edit' : 'operations.show', $move) }}';" style="cursor: pointer;">
-            <table style="width:100%">
-                <tr>
-                    <td style="width: 30%">
-                        <span @class(['text-success' => $move->is_income])>💰 {{ $move->amount_text }}</span>
-                        @if ($move->currency->id !== $defaultCurrency->id)
-                            <small class="text-body-secondary">{{ $move->amount_in_default_currency_formatted }}</small>
-                        @endif
-                    </td>
-                    <td style="width: 50%">
-                        @if($move->category)
-                            <span><a href="{{ route('categories.show', $move->category) }}" class="text-body">{{ $move->category->name }}</a></span>&nbsp;<small class="text-secondary">in</small>
-                        @endif
-                        @if($move->place)
-                            <span class=""><a href="{{ route('places.show', $move->place) }}" class="text-body">{{ $move->place->name }}</a></span>
-                        @endif
-                        <small class="text-secondary">{{ $move->is_expense ? 'by' : 'to' }}</small>&nbsp;<span><a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name_with_user }}</a></span>
-                    </td>
-                    <td style="width: 20%">
-                        <span class="text-body-secondary fw-light"><small>{{ $move->user->name }}</small></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
-                    </td>
-                    <td>
-                        <small>
-                            @if ($move->attachment)
-                                📎
-                            @endif
-                        </small>
-                        <small class="text-body-secondary">{{ $move->notes ? Str::limit($move->notes, 40) : '' }}</small>
-                    </td>
-                    <td onclick="event.stopPropagation()">
-                        @if($move->mp_review_status === 'pending')
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-bs-toggle="dropdown">
-                                    Review
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="{{ route('p2p.create', ['from_operation' => $move->id]) }}">Create P2P</a></li>
-                                    <li>
-                                        <form action="{{ route('operations.keep', $move->id) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="dropdown-item">Keep as operation</button>
-                                        </form>
-                                    </li>
-                                    <li>
-                                        <form action="{{ route('operations.destroy', $move) }}" method="POST"
-                                            onsubmit="return confirm('Delete this operation?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="back_route" value="{{ url()->current() }}">
-                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        @elseif($move->is_draft)
-                            <form action="{{ route('operations.destroy', $move) }}" method="post">
-                                <span class="badge bg-warning">Draft</span>
-                                @csrf
-                                @method('DELETE')
-                                <input type="hidden" name="back_route" value="{{ route('home') }}">
-                                <button type="submit" class="btn btn-light btn-sm">Delete</button>
-                            </form>
-                        @endif
-                    </td>
-                </tr>
-            </table>
-        </li>
+        @php $href = route($move->is_draft ? 'operations.edit' : 'operations.show', $move); @endphp
+        <div class="move-row" onclick="window.location.href='{{ $href }}'">
+            <div class="move-icon {{ $move->is_income ? 'mi-income' : 'mi-expense' }}">
+                <i class="bi {{ $move->is_income ? 'bi-arrow-up' : 'bi-arrow-down' }}"></i>
+            </div>
+            <div class="move-body">
+                <div class="move-title">
+                    {{ $move->category?->name ?? '—' }}
+                    @if($move->place)<span class="text-muted fw-normal"> @ {{ $move->place->name }}</span>@endif
+                </div>
+                <div class="move-subtitle">
+                    <a href="{{ route('bills.show', $move->bill) }}" class="text-muted" onclick="event.stopPropagation()">{{ $move->bill->name_with_user }}</a>
+                    @if($move->notes) · {{ Str::limit($move->notes, 35) }}@endif
+                    @if($move->attachment) · <i class="bi bi-paperclip"></i>@endif
+                </div>
+            </div>
+            <div class="move-right" onclick="event.stopPropagation()">
+                <div class="move-amount-val {{ $move->is_income ? 'col-income' : 'col-expense' }}">
+                    {{ $move->amount_text }}
+                </div>
+                @if ($move->currency->id !== $defaultCurrency->id && $move->amount_in_default_currency != 0)
+                    <div class="move-amount-sub">{{ $move->amount_in_default_currency_formatted }}</div>
+                @endif
+                @if($move->mp_review_status === 'pending')
+                    <div class="mt-1">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-sm btn-warning dropdown-toggle"
+                                    data-bs-toggle="dropdown" style="font-size:.7rem;padding:.2rem .5rem;">
+                                Review
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{{ route('p2p.create', ['from_operation' => $move->id]) }}">
+                                    <i class="bi bi-people"></i> Create P2P
+                                </a></li>
+                                <li>
+                                    <form action="{{ route('operations.keep', $move->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bi bi-check2"></i> Keep as operation
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="{{ route('operations.destroy', $move) }}" method="POST"
+                                          onsubmit="return confirm('Delete this operation?')">
+                                        @csrf @method('DELETE')
+                                        <input type="hidden" name="back_route" value="{{ url()->current() }}">
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                @elseif($move->is_draft)
+                    <div class="d-flex align-items-center gap-1 mt-1 justify-content-end">
+                        <span class="badge-draft">Draft</span>
+                        <form action="{{ route('operations.destroy', $move) }}" method="post" class="d-inline">
+                            @csrf @method('DELETE')
+                            <input type="hidden" name="back_route" value="{{ route('home') }}">
+                            <button type="submit" class="btn btn-link btn-sm p-0 text-danger" style="font-size:.8rem;line-height:1;">×</button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+        </div>
 
     @elseif ($move instanceof App\Models\Transfer)
-        <li class="list-group-item" onclick="window.location.href = '{{ route('transfers.show', $move) }}';" style="cursor: pointer;">
-            <table style="width:100%">
-                <tr>
-                    <td style="width: 30%">
-                        <span>➡️ {{ $move->amount_text_with_currency }}</span>
-                    </td>
-                    <td style="width: 50%">
-                        <span><a href="{{ route('bills.show', $move->from) }}" class="text-body">{{ $move->from->name_with_user }}</a></span>&nbsp;
-                        <small class="text-secondary">→</small>&nbsp;
-                        <span><a href="{{ route('bills.show', $move->to) }}" class="text-body">{{ $move->to->name_with_user }}</a></span>
-                    </td>
-                    <td style="width: 20%">
-                        <span class="text-body-secondary fw-light"><small>{{ $move->user->name }}</small></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
-                    </td>
-                    <td>
-                        <small class="text-body-secondary">{{ $move->notes ? Str::limit($move->notes, 40) : '' }}</small>
-                    </td>
-                    <td></td>
-                </tr>
-            </table>
-        </li>
+        <div class="move-row" onclick="window.location.href='{{ route('transfers.show', $move) }}'">
+            <div class="move-icon mi-transfer">
+                <i class="bi bi-arrow-left-right"></i>
+            </div>
+            <div class="move-body">
+                <div class="move-title">
+                    <a href="{{ route('bills.show', $move->from) }}" class="text-body" onclick="event.stopPropagation()">{{ $move->from->name_with_user }}</a>
+                    <span class="text-muted fw-normal"> → </span>
+                    <a href="{{ route('bills.show', $move->to) }}" class="text-body" onclick="event.stopPropagation()">{{ $move->to->name_with_user }}</a>
+                </div>
+                <div class="move-subtitle">
+                    Transfer · {{ $move->user->name }}
+                    @if($move->notes) · {{ Str::limit($move->notes, 35) }}@endif
+                </div>
+            </div>
+            <div class="move-right">
+                <div class="move-amount-val col-neutral">{{ $move->amount_text_with_currency }}</div>
+            </div>
+        </div>
 
     @elseif ($move instanceof App\Models\Exchange)
-        <li class="list-group-item" onclick="window.location.href = '{{ route('exchanges.show', $move) }}';" style="cursor: pointer;">
-            <table style="width:100%">
-                <tr>
-                    <td style="width: 30%">
-                        <span>🔁 {{ $move->amount_from_formatted }} → {{ $move->amount_to_formatted }}</span>
-                    </td>
-                    <td style="width: 50%">
-                        <span>{{ $move->rate_text }}</span>
-                    </td>
-                    <td style="width: 20%">
-                        <span class="text-body-secondary fw-light"><small>{{ $move->user->name }}</small></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div><small class="text-body-secondary fw-light">{{ $move->date_formatted }}</small></div>
-                    </td>
-                    <td>
-                        <span>
-                            <a href="{{ route('bills.show', $move->bill) }}" class="text-body">{{ $move->bill->name_with_user }}</a>&nbsp;
-                            <small class="text-body-secondary">{{ $move->place ? $move->place->name : '' }}</small>
-                        </span>
-                    </td>
-                    <td><small class="text-body-secondary">{{ $move->notes ? Str::limit($move->notes, 40) : '' }}</small></td>
-                </tr>
-            </table>
-        </li>
+        <div class="move-row" onclick="window.location.href='{{ route('exchanges.show', $move) }}'">
+            <div class="move-icon mi-exchange">
+                <i class="bi bi-currency-exchange"></i>
+            </div>
+            <div class="move-body">
+                <div class="move-title">
+                    {{ $move->amount_from_formatted }}
+                    <span class="text-muted fw-normal"> → </span>
+                    {{ $move->amount_to_formatted }}
+                </div>
+                <div class="move-subtitle">
+                    <a href="{{ route('bills.show', $move->bill) }}" class="text-muted" onclick="event.stopPropagation()">{{ $move->bill->name_with_user }}</a>
+                    @if($move->place) · {{ $move->place->name }}@endif
+                    · {{ $move->user->name }}
+                </div>
+            </div>
+            <div class="move-right">
+                <div class="move-amount-val col-neutral" style="font-size:.8rem;">{{ $move->rate_text }}</div>
+                @if($move->notes)<div class="move-amount-sub">{{ Str::limit($move->notes, 20) }}</div>@endif
+            </div>
+        </div>
     @endif
 @endforeach

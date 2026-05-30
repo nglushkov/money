@@ -1,56 +1,60 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row">
-        <div class="col">
-            <div class="card p-3">
-                <h5 class="card-title mb-2 text-center">@yield('title')</h5>
-                <div class="card-body">
-                    <div class="row">
+<div class="row g-3">
 
-                        <div class="col-md-4">
-                            <div class="text-end pe-4">
-                                <h5>Top usable categories</h5>
-                                <a href="{{ route('categories.create') }}" class="btn btn-outline-primary btn-sm">Create new category</a>
-                                <ul class="list-group">
-                                    @foreach($topCategories as $category)
-                                        <li class="list-group">
-                                            <a href="{{ route('operations.index', ['category_id' => $category->id]) }}" onclick="event.preventDefault(); document.getElementById('category').value = {{ $category->id }}; document.getElementById('form').submit();">{{ $category->name }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                                <div class="mb-3"></div>
-                                <h5>Top</h5>
-                                <ul class="list-group">
-                                    @foreach($topBills as $bill)
-                                        <li class="list-group">
-                                            <a href="{{ route('operations.index', ['bill_id' => $bill->id]) }}" onclick="event.preventDefault(); document.getElementById('bill').value = {{ $bill->id }}; document.getElementById('form').submit();">{{ $bill->name_with_user }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-
-                        @yield('form')
-
-                        <div class="col-md-4">
-                            <div class="ps-3">
-                                <h5>Top usable places</h5>
-                                <a href="{{ route('places.create') }}" class="btn btn-outline-primary btn-sm">Create new place</a>
-                                <ul class="list-group">
-                                    @foreach($topPlaces as $place)
-                                        <li class="list-group">
-                                            <a href="{{ route('operations.index', ['place_id' => $place->id]) }}" onclick="event.preventDefault(); document.getElementById('place').value = {{ $place->id }}; document.getElementById('form').submit();">{{ $place->name }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+    {{-- Left: Quick categories + bills --}}
+    <div class="col-md-3 order-2 order-md-1">
+        <div class="quickpick-card">
+            <div class="quickpick-label">
+                Top Categories
+                <a href="{{ route('categories.create') }}" class="text-muted" style="font-size:.75rem;">+ New</a>
             </div>
+            @foreach($topCategories as $category)
+                <a class="quickpick-item"
+                   href="#"
+                   onclick="event.preventDefault(); document.getElementById('category').value = {{ $category->id }}; document.getElementById('op-form').submit();">
+                    {{ $category->name }}
+                </a>
+            @endforeach
+
+            <div class="quickpick-label mt-3">
+                Top Bills
+            </div>
+            @foreach($topBills as $bill)
+                <a class="quickpick-item"
+                   href="#"
+                   onclick="event.preventDefault(); document.getElementById('bill').value = {{ $bill->id }}; document.getElementById('op-form').submit();">
+                    {{ $bill->name_with_user }}
+                </a>
+            @endforeach
         </div>
     </div>
 
+    {{-- Center: Form --}}
+    <div class="col-md-6 order-1 order-md-2">
+        <div class="form-card">
+            <h5 class="fw-700 mb-4" style="font-weight:700;">@yield('title')</h5>
+            @yield('form')
+        </div>
+    </div>
+
+    {{-- Right: Quick places --}}
+    <div class="col-md-3 order-3">
+        <div class="quickpick-card">
+            <div class="quickpick-label">
+                Top Places
+                <a href="{{ route('places.create') }}" class="text-muted" style="font-size:.75rem;">+ New</a>
+            </div>
+            @foreach($topPlaces as $place)
+                <a class="quickpick-item"
+                   href="#"
+                   onclick="event.preventDefault(); document.getElementById('place').value = {{ $place->id }}; document.getElementById('op-form').submit();">
+                    {{ $place->name }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+
+</div>
 @endsection
