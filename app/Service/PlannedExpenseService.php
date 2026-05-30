@@ -54,7 +54,7 @@ class PlannedExpenseService
      */
     public function getPlannedExpensesToBeReminded(): Collection
     {
-        $plannedExpenses = PlannedExpense::all()->sortBy('next_payment_date');
+        $plannedExpenses = PlannedExpense::with(['category', 'place'])->get()->sortBy('next_payment_date');
         $plannedExpensesToBePaid = collect();
 
         foreach ($plannedExpenses as $plannedExpense) {
