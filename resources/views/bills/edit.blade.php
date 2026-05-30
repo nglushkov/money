@@ -10,7 +10,7 @@
     </a>
 </div>
 
-<div class="form-card" style="max-width:36rem;">
+<div class="form-card" style="max-width:36rem;margin:0 auto;">
     <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);margin-bottom:1rem;">Edit Bill</div>
 
     @if ($errors->any())

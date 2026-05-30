@@ -94,9 +94,9 @@
     @endif
 </div>
 
-{{-- Currency filter pills + history --}}
+{{-- Currency filter pills --}}
 <div class="page-toolbar" style="margin-bottom:.75rem;">
-    <div class="toolbar-left">
+    <div class="toolbar-left" style="overflow:hidden;">
         <div class="d-flex gap-1 filter-pills-scroll">
             <a href="{{ route('bills.show', $bill) }}"
                class="filter-pill {{ !request('currency_id') ? 'pill-active' : '' }}">All</a>
@@ -107,11 +107,6 @@
                 </a>
             @endforeach
         </div>
-    </div>
-    <div class="toolbar-right">
-        <a href="{{ route('operations.create', ['bill_id' => $bill->id]) }}" class="btn btn-success btn-sm" style="font-weight:600;">
-            <i class="bi bi-plus-lg me-1"></i>New op
-        </a>
     </div>
 </div>
 
