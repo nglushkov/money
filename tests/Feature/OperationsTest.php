@@ -41,6 +41,10 @@ class OperationsTest extends TestCase
         $response = $this->actingAs($this->user)->get('/operations/create');
 
         $response->assertStatus(200);
+        $response->assertSee('form-card');
+        $response->assertSee('op-form');
+        $response->assertSee('type-toggle');
+        $response->assertSee('input-amount');
     }
 
     public function testShowOperation()
@@ -67,6 +71,10 @@ class OperationsTest extends TestCase
         $response = $this->actingAs($this->user)->get("/operations/{$operation->id}/edit");
 
         $response->assertStatus(200);
+        $response->assertSee('form-card');
+        $response->assertSee('op-form');
+        $response->assertSee('type-toggle');
+        $response->assertSee('input-amount');
     }
 
     public function testOperationsUpdate()
