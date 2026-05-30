@@ -35,15 +35,7 @@
                         <small class="text-body-secondary">{{ $move->notes ? Str::limit($move->notes, 40) : '' }}</small>
                     </td>
                     <td onclick="event.stopPropagation()">
-                        @if($move->is_draft)
-                            <form action="{{ route('operations.destroy', $move) }}" method="post">
-                                <span class="badge bg-warning">Draft</span>
-                                @csrf
-                                @method('DELETE')
-                                <input type="hidden" name="back_route" value="{{ route('home') }}">
-                                <button type="submit" class="btn btn-light btn-sm">Delete</button>
-                            </form>
-                        @elseif($move->mp_review_status === 'pending')
+                        @if($move->mp_review_status === 'pending')
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-bs-toggle="dropdown">
                                     Review
@@ -67,6 +59,14 @@
                                     </li>
                                 </ul>
                             </div>
+                        @elseif($move->is_draft)
+                            <form action="{{ route('operations.destroy', $move) }}" method="post">
+                                <span class="badge bg-warning">Draft</span>
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="back_route" value="{{ route('home') }}">
+                                <button type="submit" class="btn btn-light btn-sm">Delete</button>
+                            </form>
                         @endif
                     </td>
                 </tr>
