@@ -95,19 +95,15 @@
 </div>
 
 {{-- Currency filter pills --}}
-<div class="page-toolbar" style="margin-bottom:.75rem;">
-    <div class="toolbar-left" style="overflow:hidden;">
-        <div class="d-flex gap-1 filter-pills-scroll">
-            <a href="{{ route('bills.show', $bill) }}"
-               class="filter-pill {{ !request('currency_id') ? 'pill-active' : '' }}">All</a>
-            @foreach ($currencies as $currency)
-                <a href="{{ route('bills.show', ['bill' => $bill, 'currency_id' => $currency->id]) }}"
-                   class="filter-pill {{ $currency->id == request('currency_id') ? 'pill-active' : '' }}">
-                    {{ $currency->name }}
-                </a>
-            @endforeach
-        </div>
-    </div>
+<div class="mb-3" style="background:var(--c-surface);border-radius:var(--radius-sm);padding:.5rem .75rem;box-shadow:var(--shadow-sm);display:flex;gap:.25rem;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;">
+    <a href="{{ route('bills.show', $bill) }}"
+       class="filter-pill {{ !request('currency_id') ? 'pill-active' : '' }}" style="white-space:nowrap;">All</a>
+    @foreach ($currencies as $currency)
+        <a href="{{ route('bills.show', ['bill' => $bill, 'currency_id' => $currency->id]) }}"
+           class="filter-pill {{ $currency->id == request('currency_id') ? 'pill-active' : '' }}" style="white-space:nowrap;">
+            {{ $currency->name }}
+        </a>
+    @endforeach
 </div>
 
 @if(count($moves) > 0)
