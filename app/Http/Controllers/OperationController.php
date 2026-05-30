@@ -223,7 +223,7 @@ class OperationController extends Controller
 
     public function keepAsReviewed(int $id)
     {
-        Operation::whereKey($id)->update(['mp_review_status' => 'kept']);
+        Operation::whereKey($id)->update(['mp_review_status' => 'kept', 'is_draft' => false]);
         return redirect()->back();
     }
 

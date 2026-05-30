@@ -72,10 +72,9 @@ class OperationService
             return null;
         }
 
-        $threshold = (float) AppSetting::get('mp_review_threshold', 300000, $data['user_id']);
-        $reviewStatus = ($data['external_source'] === 'mercadopago' && (float) $data['amount'] >= $threshold)
-            ? 'pending'
-            : null;
+        $threshold    = (float) AppSetting::get('mp_review_threshold', 300000, $data['user_id']);
+        $needsReview  = $data['external_source'] === 'mercadopago' && (float) $data['amount'] >= $threshold;
+        $reviewStatus = $needsReview ? 'pending' : null;
 
         $operation = new Operation([
             'amount'            => $data['amount'],
@@ -86,7 +85,7 @@ class OperationService
             'place_id'          => $data['place_id'] ?? null,
             'date'              => $data['date'],
             'notes'             => $data['notes'] ?? null,
-            'is_draft'          => false,
+            'is_draft'          => $needsReview,
             'external_id'       => $data['external_id'],
             'external_source'   => $data['external_source'],
             'mp_review_status'  => $reviewStatus,
