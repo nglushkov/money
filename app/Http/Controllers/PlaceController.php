@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePlaceRequest;
 use App\Http\Requests\UpdatePlaceRequest;
+use App\Models\Currency;
 use App\Models\Place;
 
 class PlaceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $places = Place::orderBy('name')->paginate(50);
+        $places = Place::orderBy('name')->withCount('operations')->get();
+        $defaultCurrency = Currency::getDefaultCurrency();
 
-        return view('places.index', compact('places'));
+        return view('places.index', compact('places', 'defaultCurrency'));
     }
 
     /**
@@ -48,9 +47,18 @@ class PlaceController extends Controller
             'place',
         ])->latestDate()->paginate(20);
 
+        $totalSpent = $place->operations()->with('currency')->get()->sum('amount_in_default_currency');
+        $operationsCount = $place->operations()->count();
+        $lastOperationDate = $place->operations()->max('date');
+        $defaultCurrency = Currency::getDefaultCurrency();
+
         return view('places.show', [
             'place' => $place,
-            'lastOperations' => $lastOperations
+            'lastOperations' => $lastOperations,
+            'totalSpent' => $totalSpent,
+            'operationsCount' => $operationsCount,
+            'lastOperationDate' => $lastOperationDate,
+            'defaultCurrency' => $defaultCurrency,
         ]);
     }
 

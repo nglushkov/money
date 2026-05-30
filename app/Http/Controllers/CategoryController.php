@@ -5,17 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
+use App\Models\Currency;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $categories = Category::orderBy('name')->paginate(50);
+        $categories = Category::orderBy('name')->withCount('operations')->get();
+        $defaultCurrency = Currency::getDefaultCurrency();
 
-        return view('categories.index', compact('categories'));
+        return view('categories.index', compact('categories', 'defaultCurrency'));
     }
 
     /**
@@ -48,9 +47,18 @@ class CategoryController extends Controller
             'place',
         ])->latestDate()->paginate(20);
 
+        $totalSpent = $category->operations()->with('currency')->get()->sum('amount_in_default_currency');
+        $operationsCount = $category->operations()->count();
+        $lastOperationDate = $category->operations()->max('date');
+        $defaultCurrency = Currency::getDefaultCurrency();
+
         return view('categories.show', [
             'category' => $category,
             'lastOperations' => $lastOperations,
+            'totalSpent' => $totalSpent,
+            'operationsCount' => $operationsCount,
+            'lastOperationDate' => $lastOperationDate,
+            'defaultCurrency' => $defaultCurrency,
         ]);
     }
 
