@@ -30,6 +30,12 @@ services:
             - '${FORWARD_MEMCACHED_PORT:-11211}:11211'
         networks:
             - sail
+    selenium:
+        image: 'selenium/standalone-chromium'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        networks:
+            - sail
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
