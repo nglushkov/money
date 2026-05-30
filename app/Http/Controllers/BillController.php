@@ -159,7 +159,9 @@ class BillController extends Controller
         $moves = $paginator->items();
         $defaultCurrency = Currency::getDefaultCurrency();
 
-        $currencies = Currency::orderBy('is_crypto')->orderBy('name')->get();
+        $currencies = $bill->is_crypto
+            ? Currency::isCrypto()->orderBy('name')->get()
+            : Currency::isNotCrypto()->orderBy('name')->get();
 
         return view('bills.show', [
             'bill' => $bill,
