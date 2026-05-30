@@ -216,7 +216,7 @@ document.addEventListener('alpine:init', () => {
         },
         _initSelects() {
             document.querySelectorAll('[data-split-select]').forEach(el => {
-                if (!el.tomselect) new TomSelect(el, { allowEmptyOption: true });
+                if (!el.tomselect) new TomSelect(el, window.tsOpts());
             });
         },
 

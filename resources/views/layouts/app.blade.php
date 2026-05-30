@@ -50,9 +50,23 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2/dist/js/tom-select.complete.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
+        window.tsOpts = function(extra) {
+            return Object.assign({
+                allowEmptyOption: true,
+                score: function(search) {
+                    var q = search.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+                    return function(item) {
+                        if (!q) return 1;
+                        var t = (item.text || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+                        return t.includes(q) ? 1 : 0;
+                    };
+                }
+            }, extra || {});
+        };
+
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('select:not([x-model]):not([data-split-select])').forEach(function (el) {
-                new TomSelect(el, { allowEmptyOption: true });
+                new TomSelect(el, window.tsOpts());
             });
         });
     </script>
