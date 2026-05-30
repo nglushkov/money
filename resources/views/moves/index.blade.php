@@ -4,11 +4,21 @@
 
 @section('content')
 
+<div x-data="{ selectMode: false, selected: [] }" @keydown.escape.window="selectMode = false; selected = []">
+
+{{-- Bulk delete form (hidden, submitted via Alpine) --}}
+<form id="bulk-delete-form" action="{{ route('moves.bulk-delete') }}" method="POST" style="display:none">
+    @csrf
+    <template x-for="item in selected" :key="item">
+        <input type="hidden" name="selected[]" :value="item">
+    </template>
+</form>
+
 {{-- Toolbar --}}
 <div class="page-toolbar">
     <div class="toolbar-left">
         {{-- New operation button --}}
-        <div class="btn-group">
+        <div class="btn-group" x-show="!selectMode">
             <a href="{{ route('operations.create') }}" class="btn btn-success btn-sm fw-600" style="font-weight:600;">
                 <i class="bi bi-plus-lg me-1"></i>New
             </a>
@@ -31,9 +41,25 @@
             </ul>
         </div>
 
+        {{-- Select mode: cancel + delete --}}
+        <template x-if="selectMode">
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                        @click="selectMode = false; selected = []">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-danger btn-sm"
+                        :disabled="selected.length === 0"
+                        @click="if(selected.length && confirm('Delete ' + selected.length + ' item(s)?')) document.getElementById('bulk-delete-form').submit()">
+                    <i class="bi bi-trash me-1"></i>Delete
+                    <span x-text="selected.length > 0 ? '(' + selected.length + ')' : ''"></span>
+                </button>
+            </div>
+        </template>
+
         {{-- Filter pills --}}
         @php $noFilter = !$mpOnly && !$draftOnly && !$activeType; @endphp
-        <div class="d-flex gap-1 filter-pills-scroll">
+        <div class="d-flex gap-1 filter-pills-scroll" x-show="!selectMode">
             <a href="{{ route('home') }}"
                class="filter-pill {{ $noFilter ? 'pill-active' : '' }}">All</a>
             <a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Operation->name]) }}"
@@ -50,7 +76,13 @@
     </div>
 
     <div class="toolbar-right">
-        <form autocomplete="off" action="{{ route('mp-sync') }}" method="POST">
+        <button type="button" class="btn btn-outline-secondary btn-sm"
+                x-show="!selectMode"
+                @click="selectMode = true">
+            <i class="bi bi-check2-square me-1"></i>Select
+        </button>
+
+        <form autocomplete="off" action="{{ route('mp-sync') }}" method="POST" x-show="!selectMode">
             @csrf
             <button type="submit" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-repeat me-1"></i>Sync MP
@@ -58,7 +90,7 @@
         </form>
 
         @if (count($plannedExpenses) > 0)
-            <button type="button" class="btn btn-sm btn-outline-warning"
+            <button type="button" class="btn btn-sm btn-outline-warning" x-show="!selectMode"
                     onclick="document.getElementById('dismiss-all-form').submit();">
                 <i class="bi bi-bell-slash me-1"></i>Dismiss planned
             </button>
@@ -120,5 +152,7 @@
 <div class="mt-3">
     {{ $paginator->links() }}
 </div>
+
+</div>{{-- end x-data --}}
 
 @endsection

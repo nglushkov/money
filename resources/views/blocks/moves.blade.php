@@ -1,7 +1,16 @@
 @foreach($moves as $move)
     @if ($move instanceof App\Models\Operation)
         @php $href = route($move->is_draft ? 'operations.edit' : 'operations.show', $move); @endphp
-        <div class="move-row" onclick="window.location.href='{{ $href }}'">
+        @php $moveKey = 'operation:' . $move->id; @endphp
+        <div class="move-row"
+             :class="selectMode && selected.includes('{{ $moveKey }}') ? 'move-row-selected' : ''"
+             @click="if(selectMode) { selected.includes('{{ $moveKey }}') ? selected = selected.filter(x => x !== '{{ $moveKey }}') : selected.push('{{ $moveKey }}') } else { window.location.href='{{ $href }}' }">
+            <div class="move-select" x-show="selectMode" @click.stop style="display:none;align-items:center;padding-right:.5rem;">
+                <input type="checkbox"
+                       :checked="selected.includes('{{ $moveKey }}')"
+                       @change="$event.target.checked ? selected.push('{{ $moveKey }}') : selected = selected.filter(x => x !== '{{ $moveKey }}')"
+                       style="width:1.1rem;height:1.1rem;cursor:pointer;">
+            </div>
             <div class="move-icon {{ $move->is_income ? 'mi-income' : 'mi-expense' }}">
                 <i class="bi {{ $move->is_income ? 'bi-arrow-up' : 'bi-arrow-down' }}"></i>
             </div>
@@ -69,7 +78,16 @@
         </div>
 
     @elseif ($move instanceof App\Models\Transfer)
-        <div class="move-row" onclick="window.location.href='{{ route('transfers.show', $move) }}'">
+        @php $moveKey = 'transfer:' . $move->id; @endphp
+        <div class="move-row"
+             :class="selectMode && selected.includes('{{ $moveKey }}') ? 'move-row-selected' : ''"
+             @click="if(selectMode) { selected.includes('{{ $moveKey }}') ? selected = selected.filter(x => x !== '{{ $moveKey }}') : selected.push('{{ $moveKey }}') } else { window.location.href='{{ route('transfers.show', $move) }}' }">
+            <div class="move-select" x-show="selectMode" @click.stop style="display:none;align-items:center;padding-right:.5rem;">
+                <input type="checkbox"
+                       :checked="selected.includes('{{ $moveKey }}')"
+                       @change="$event.target.checked ? selected.push('{{ $moveKey }}') : selected = selected.filter(x => x !== '{{ $moveKey }}')"
+                       style="width:1.1rem;height:1.1rem;cursor:pointer;">
+            </div>
             <div class="move-icon mi-transfer">
                 <i class="bi bi-arrow-left-right"></i>
             </div>
@@ -90,7 +108,16 @@
         </div>
 
     @elseif ($move instanceof App\Models\Exchange)
-        <div class="move-row" onclick="window.location.href='{{ route('exchanges.show', $move) }}'">
+        @php $moveKey = 'exchange:' . $move->id; @endphp
+        <div class="move-row"
+             :class="selectMode && selected.includes('{{ $moveKey }}') ? 'move-row-selected' : ''"
+             @click="if(selectMode) { selected.includes('{{ $moveKey }}') ? selected = selected.filter(x => x !== '{{ $moveKey }}') : selected.push('{{ $moveKey }}') } else { window.location.href='{{ route('exchanges.show', $move) }}' }">
+            <div class="move-select" x-show="selectMode" @click.stop style="display:none;align-items:center;padding-right:.5rem;">
+                <input type="checkbox"
+                       :checked="selected.includes('{{ $moveKey }}')"
+                       @change="$event.target.checked ? selected.push('{{ $moveKey }}') : selected = selected.filter(x => x !== '{{ $moveKey }}')"
+                       style="width:1.1rem;height:1.1rem;cursor:pointer;">
+            </div>
             <div class="move-icon mi-exchange">
                 <i class="bi bi-currency-exchange"></i>
             </div>
