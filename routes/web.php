@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/', [MoveController::class, 'index'])->name('home');
     Route::post('/mp-sync', [MoveController::class, 'runMpSync'])->name('mp-sync');
+    Route::post('/moves/bulk-delete', [MoveController::class, 'bulkDelete'])->name('moves.bulk-delete');
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 

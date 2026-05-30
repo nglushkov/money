@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\StorageFilePath;
 use App\Models\Currency;
 use App\Models\Enum\MoveType;
+use App\Models\MercadoPagoDismissed;
 use App\Service\PlannedExpenseService;
 use Illuminate\Http\Request;
 use App\Models\Operation;
@@ -12,6 +14,8 @@ use App\Models\Exchange;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class MoveController extends Controller
 {
@@ -73,6 +77,56 @@ class MoveController extends Controller
         } catch (\Throwable $e) {
             return redirect()->route('home')->with('error', $e->getMessage());
         }
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $selected = $request->input('selected', []);
+
+        if (empty($selected)) {
+            return redirect()->back();
+        }
+
+        $operationIds = [];
+        $transferIds  = [];
+        $exchangeIds  = [];
+
+        foreach ($selected as $item) {
+            [$type, $id] = explode(':', $item, 2);
+            match ($type) {
+                'operation' => $operationIds[] = (int) $id,
+                'transfer'  => $transferIds[]  = (int) $id,
+                'exchange'  => $exchangeIds[]  = (int) $id,
+                default     => null,
+            };
+        }
+
+        DB::transaction(function () use ($operationIds, $transferIds, $exchangeIds) {
+            if ($operationIds) {
+                $operations = Operation::whereIn('id', $operationIds)->get();
+                foreach ($operations as $operation) {
+                    if ($operation->external_source === 'mercadopago' && $operation->external_id) {
+                        MercadoPagoDismissed::dismiss($operation->external_id, $operation->user_id);
+                    }
+                    if ($operation->attachment) {
+                        Storage::delete(StorageFilePath::OperationAttachments->value . '/' .
+                            md5($operation->id . $operation->attachment));
+                    }
+                    $operation->delete();
+                }
+            }
+
+            if ($transferIds) {
+                Transfer::whereIn('id', $transferIds)->each(fn($t) => $t->delete());
+            }
+
+            if ($exchangeIds) {
+                Exchange::whereIn('id', $exchangeIds)->each(fn($e) => $e->delete());
+            }
+        });
+
+        $count = count($selected);
+        return redirect()->back()->with('success', "Deleted {$count} item(s)");
     }
 
     public function paginate($items, $perPage = 15, $page = null, $options = [])

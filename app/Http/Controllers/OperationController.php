@@ -6,6 +6,7 @@ use App\Enum\StorageFilePath;
 use App\Http\Requests\StoreOperationRequest;
 use App\Http\Requests\UpdateOperationRequest;
 use App\Models\Enum\OperationType;
+use App\Models\MercadoPagoDismissed;
 use App\Models\Operation;
 use App\Models\Bill;
 use App\Models\Category;
@@ -245,6 +246,10 @@ class OperationController extends Controller
         $operation = Operation::withoutGlobalScope(IsNotCorrectionScope::class)->findOrFail($id);
 
         DB::transaction(function () use ($request, $operation) {
+            if ($operation->external_source === 'mercadopago' && $operation->external_id) {
+                MercadoPagoDismissed::dismiss($operation->external_id, $operation->user_id);
+            }
+
             $operation->delete();
 
             if ($operation->attachment) {

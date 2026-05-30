@@ -163,6 +163,8 @@ a { text-decoration: none; }
 }
 .move-row:last-child  { border-bottom: none; }
 .move-row:hover       { background: #f8fafc; }
+.move-row-selected    { background: #f0fdf4 !important; }
+.move-select          { display: flex; align-items: center; padding-right: .5rem; }
 
 .move-icon {
   width: 2.25rem;

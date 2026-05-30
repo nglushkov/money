@@ -56,24 +56,38 @@ class MercadoPagoSync extends Command
                 continue;
             }
 
+            $date        = Carbon::parse($payment['date_approved'] ?? $payment['date_created'])->setTimezone(config('app.timezone'));
+            $description = $payment['description'] ?? $payment['payment_method_id'] ?? '';
+
             if ($payment['operation_type'] === 'money_transfer') {
-                $skipped++;
+                $operation = $this->operationService->createFromExternal([
+                    'external_id'     => (string) $payment['id'],
+                    'external_source' => 'mercadopago',
+                    'amount'          => $payment['transaction_amount'],
+                    'type'            => OperationType::Expense->name,
+                    'bill_id'         => $bill->id,
+                    'currency_id'     => $currencyId,
+                    'category_id'     => null,
+                    'place_id'        => null,
+                    'force_draft'     => true,
+                    'date'            => $date,
+                    'notes'           => $description ?: 'Money transfer',
+                    'user_id'         => $userId,
+                ]);
+
+                $operation ? $created++ : $skipped++;
                 continue;
             }
 
-            $type = OperationType::Expense->name;
-
-            $description = $payment['description'] ?? $payment['payment_method_id'] ?? '';
-            $hasMatch    = $this->mappingService->hasMatch($description);
-            $categoryId  = $hasMatch ? $this->mappingService->getCategoryId($description) : null;
-            $placeId     = $hasMatch ? $this->mappingService->getPlaceId($description) : null;
-            $date        = Carbon::parse($payment['date_approved'] ?? $payment['date_created'])->setTimezone(config('app.timezone'));
+            $hasMatch   = $this->mappingService->hasMatch($description);
+            $categoryId = $hasMatch ? $this->mappingService->getCategoryId($description) : null;
+            $placeId    = $hasMatch ? $this->mappingService->getPlaceId($description) : null;
 
             $operation = $this->operationService->createFromExternal([
                 'external_id'      => (string) $payment['id'],
                 'external_source'  => 'mercadopago',
                 'amount'           => $payment['transaction_amount'],
-                'type'             => $type,
+                'type'             => OperationType::Expense->name,
                 'bill_id'          => $bill->id,
                 'currency_id'      => $currencyId,
                 'category_id'      => $categoryId,

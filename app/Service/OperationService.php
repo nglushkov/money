@@ -7,6 +7,7 @@ use App\Models\Bill;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Enum\OperationType;
+use App\Models\MercadoPagoDismissed;
 use App\Models\Operation;
 use App\Models\Place;
 use Illuminate\Support\Carbon;
@@ -69,6 +70,10 @@ class OperationService
     public function createFromExternal(array $data): ?Operation
     {
         if (Operation::where('external_id', $data['external_id'])->exists()) {
+            return null;
+        }
+
+        if (MercadoPagoDismissed::isDismissed($data['external_id'])) {
             return null;
         }
 
