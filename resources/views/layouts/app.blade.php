@@ -51,7 +51,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('select:not([x-model])').forEach(function (el) {
+            document.querySelectorAll('select:not([x-model]):not([data-split-select])').forEach(function (el) {
                 new TomSelect(el, { allowEmptyOption: true });
             });
         });

@@ -103,6 +103,55 @@ class OperationsTest extends TestCase
         ];
     }
 
+    public function testSplitStore()
+    {
+        $bill     = Bill::inRandomOrder()->first();
+        $currency = Currency::inRandomOrder()->first();
+        $place    = Place::inRandomOrder()->first();
+        $cat1     = Category::inRandomOrder()->first();
+        $cat2     = Category::inRandomOrder()->skip(1)->first();
+
+        $countBefore = Operation::count();
+
+        $response = $this->actingAs($this->user)->post('/operations', [
+            'date'       => '2021-01-01',
+            'amount'     => '5000',
+            'type'       => OperationType::Expense->name,
+            'bill_id'    => $bill->id,
+            'currency_id'=> $currency->id,
+            'place_id'   => $place->id,
+            'split_mode' => '1',
+            'splits'     => [
+                ['category_id' => $cat1->id, 'amount' => '3000'],
+                ['category_id' => $cat2->id, 'amount' => '2000'],
+            ],
+        ]);
+
+        $response->assertRedirectToRoute('home');
+        $this->assertEquals($countBefore + 2, Operation::count());
+
+        $this->assertDatabaseHas('operations', ['category_id' => $cat1->id, 'amount' => '3000.00']);
+        $this->assertDatabaseHas('operations', ['category_id' => $cat2->id, 'amount' => '2000.00']);
+    }
+
+    public function testCopyOperation()
+    {
+        $operation = Operation::factory()->create([
+            'external_id' => 'mp-test-123',
+            'external_source' => 'mercadopago',
+            'mp_review_status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($this->user)->get("/operations/{$operation->id}/copy");
+
+        $response->assertRedirect();
+        $copy = Operation::where('id', '!=', $operation->id)->latest('id')->first();
+        $this->assertNull($copy->external_id);
+        $this->assertNull($copy->external_source);
+        $this->assertNull($copy->mp_review_status);
+        $this->assertTrue($copy->is_draft);
+    }
+
     public function testOperationsDestroy()
     {
         $operation = Operation::factory()->create();

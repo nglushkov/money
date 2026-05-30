@@ -522,3 +522,57 @@ a { text-decoration: none; }
 .detail-value { color: var(--c-text); }
 .detail-value a { color: var(--c-accent); }
 .detail-value a:hover { text-decoration: underline; }
+
+/* === Split operation === */
+.split-toggle-btn {
+  font-size: .8125rem;
+  font-weight: 600;
+  padding: .3rem .85rem;
+  border-radius: 999px;
+  border: 1px solid var(--c-border);
+  color: var(--c-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: all .15s;
+  line-height: 1.4;
+}
+.split-toggle-btn:hover    { border-color: var(--c-accent); color: var(--c-accent); }
+.split-toggle-btn.active   { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
+
+.split-section {
+  background: #f8fafc;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: .875rem;
+  margin-top: .25rem;
+}
+.split-row {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin-bottom: .5rem;
+}
+.split-row select, .split-row input[type=number], .split-row input[type=text] {
+  font-size: .875rem !important;
+  padding: .4rem .65rem !important;
+}
+.split-row .split-cat  { flex: 1; min-width: 0; }
+.split-row .split-amt  { width: 8rem; flex-shrink: 0; }
+.split-row .split-rest { flex-shrink: 0; font-size: .75rem; color: var(--c-accent); cursor: pointer; white-space: nowrap; padding: .3rem .5rem; border: 1px solid var(--c-border); border-radius: var(--radius-sm); background: #fff; }
+.split-row .split-rest:hover { background: #f0fdf4; }
+.split-row .split-del  { flex-shrink: 0; color: var(--c-muted); cursor: pointer; font-size: 1rem; line-height: 1; background: none; border: none; padding: .2rem .35rem; border-radius: var(--radius-sm); }
+.split-row .split-del:hover { color: var(--c-expense); background: #fef2f2; }
+
+.split-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: .8125rem;
+  padding-top: .625rem;
+  border-top: 1px solid var(--c-border);
+  margin-top: .25rem;
+}
+.split-stats .stat-label { color: var(--c-muted); }
+.split-stats .stat-val   { font-weight: 600; }
+.split-stats .stat-ok    { color: var(--c-income); }
+.split-stats .stat-warn  { color: #d97706; }

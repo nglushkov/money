@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="detail-card" style="max-width: 640px;">
+<div class="detail-card mx-auto" style="max-width: 640px;">
 
     {{-- Header: amount + actions --}}
     <div class="detail-header">

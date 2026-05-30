@@ -115,22 +115,36 @@ class OperationController extends Controller
      */
     public function store(StoreOperationRequest $request)
     {
-        $operation = new Operation();
-        $operation->fill($request->validated());
+        $splitMode = $request->boolean('split_mode');
 
-        DB::transaction(function () use ($request, $operation) {
-            $operation->user_id = auth()->id();
-            $operation->save();
+        DB::transaction(function () use ($request, $splitMode) {
+            if ($splitMode) {
+                $common = $request->safe()->except(['splits', 'split_mode', 'category_id', 'amount']);
+                foreach ($request->validated()['splits'] as $split) {
+                    $operation = new Operation();
+                    $operation->fill(array_merge($common, [
+                        'category_id' => $split['category_id'],
+                        'amount'      => $split['amount'],
+                    ]));
+                    $operation->user_id = auth()->id();
+                    $operation->save();
+                }
+            } else {
+                $operation = new Operation();
+                $operation->fill($request->validated());
+                $operation->user_id = auth()->id();
+                $operation->save();
 
-            if ($request->has('attachment')) {
-                $originalName = $request->file('attachment')->getClientOriginalName();
-                $request->file('attachment')->storeAs(
-                    StorageFilePath::OperationAttachments->value, $this->getAttachmentFileNameEncrypted($operation->id, $originalName)
-                );
-
-                $operation->attachment = basename($originalName);
+                if ($request->hasFile('attachment')) {
+                    $originalName = $request->file('attachment')->getClientOriginalName();
+                    $request->file('attachment')->storeAs(
+                        StorageFilePath::OperationAttachments->value,
+                        $this->getAttachmentFileNameEncrypted($operation->id, $originalName)
+                    );
+                    $operation->attachment = basename($originalName);
+                    $operation->save();
+                }
             }
-            $operation->save();
         });
 
         return redirect()->route('home');
@@ -293,6 +307,9 @@ class OperationController extends Controller
         $newOperation = $operation->replicate();
         $newOperation->date = now();
         $newOperation->is_draft = true;
+        $newOperation->external_id = null;
+        $newOperation->external_source = null;
+        $newOperation->mp_review_status = null;
         $newOperation->save();
 
         return redirect()->route('operations.edit', $newOperation);

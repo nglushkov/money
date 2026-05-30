@@ -7,31 +7,33 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOperationRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
+        $split = $this->boolean('split_mode');
+
         return [
-            'bill_id' => 'required|exists:bills,id',
-            'category_id' => 'required|exists:categories,id',
-            'currency_id' => 'required|exists:currencies,id',
-            'date' => 'required|date|before_or_equal:today',
-            'amount' => 'required|numeric',
-            'type' => 'required|in:' . implode(',', OperationType::names()),
-            'place_id' => 'required|exists:places,id',
-            'notes' => 'nullable|string|max:255',
-            'attachment' => 'nullable|file|mimes:jpeg,png,pdf,zip|max:8192',
+            'bill_id'              => 'required|exists:bills,id',
+            'currency_id'          => 'required|exists:currencies,id',
+            'date'                 => 'required|date|before_or_equal:today',
+            'amount'               => 'required|numeric',
+            'type'                 => 'required|in:' . implode(',', OperationType::names()),
+            'place_id'             => 'required|exists:places,id',
+            'notes'                => 'nullable|string|max:255',
+            'attachment'           => 'nullable|file|mimes:jpeg,png,pdf,zip|max:8192',
+            'split_mode'           => 'nullable|boolean',
+
+            // normal mode
+            'category_id'          => $split ? 'nullable' : 'required|exists:categories,id',
+
+            // split mode
+            'splits'               => $split ? 'required|array|min:1' : 'nullable',
+            'splits.*.category_id' => $split ? 'required|exists:categories,id' : 'nullable',
+            'splits.*.amount'      => $split ? 'required|numeric|min:0.01' : 'nullable',
         ];
     }
 }

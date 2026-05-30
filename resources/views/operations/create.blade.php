@@ -6,65 +6,91 @@
 
 @section('form')
 
-    @if ($errors->any())
-        <div class="alert alert-danger mb-3">
-            <ul class="mb-0 ps-3">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+@if ($errors->any())
+    <div class="alert alert-danger mb-3">
+        <ul class="mb-0 ps-3">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<div x-data="{
+    splitMode: {{ old('split_mode', 0) ? 'true' : 'false' }},
+    totalAmount: '{{ old('amount', money_input($plannedExpense->amount ?? null)) }}',
+    rows: [{ id: 0, amount: '' }],
+    nextId: 1,
+    get splitTotal() {
+        return this.rows.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+    },
+    get remaining() {
+        return Math.round(((parseFloat(this.totalAmount) || 0) - this.splitTotal) * 100) / 100;
+    },
+    get isBalanced() {
+        return Math.abs(this.remaining) < 0.01;
+    },
+    addRow() {
+        this.rows.push({ id: this.nextId++, amount: '' });
+    },
+    removeRow(i) {
+        if (this.rows.length > 1) this.rows.splice(i, 1);
+    },
+    fillRemaining(i) {
+        if (this.remaining > 0) this.rows[i].amount = this.remaining.toFixed(2);
+    },
+    initSplitSelect(el) {
+        this.\$nextTick(() => {
+            if (!el.tomselect) new TomSelect(el, { allowEmptyOption: true });
+        });
+    }
+}">
+
+<form id="op-form" action="{{ route('operations.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <input type="hidden" name="split_mode" :value="splitMode ? 1 : 0">
+
+    {{-- Type toggle --}}
+    <div class="mb-3">
+        <div class="type-toggle">
+            <input type="radio" class="btn-check" name="type" id="type-expense"
+                   value="{{ OperationType::Expense->name }}"
+                   @checked(old('type', OperationType::Expense->name) == OperationType::Expense->name)>
+            <label class="btn btn-outline-danger" for="type-expense">
+                <i class="bi bi-arrow-down me-1"></i>Expense
+            </label>
+            <input type="radio" class="btn-check" name="type" id="type-income"
+                   value="{{ OperationType::Income->name }}"
+                   @checked(old('type') == OperationType::Income->name)>
+            <label class="btn btn-outline-success" for="type-income">
+                <i class="bi bi-arrow-up me-1"></i>Income
+            </label>
         </div>
-    @endif
+    </div>
 
-    <form id="op-form" action="{{ route('operations.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        {{-- Type toggle --}}
-        <div class="mb-3">
-            <div class="type-toggle">
-                <input type="radio" class="btn-check" name="type" id="type-expense"
-                       value="{{ OperationType::Expense->name }}"
-                       @checked(old('type', OperationType::Expense->name) == OperationType::Expense->name)>
-                <label class="btn btn-outline-danger" for="type-expense">
-                    <i class="bi bi-arrow-down me-1"></i>Expense
-                </label>
-
-                <input type="radio" class="btn-check" name="type" id="type-income"
-                       value="{{ OperationType::Income->name }}"
-                       @checked(old('type') == OperationType::Income->name)>
-                <label class="btn btn-outline-success" for="type-income">
-                    <i class="bi bi-arrow-up me-1"></i>Income
-                </label>
-            </div>
+    {{-- Amount --}}
+    <div class="mb-3">
+        <div class="d-flex align-items-center justify-content-between mb-1">
+            <label class="form-label mb-0" for="amount">Amount</label>
+            <button type="button"
+                    class="split-toggle-btn"
+                    :class="{ active: splitMode }"
+                    @click="splitMode = !splitMode">
+                <i class="bi bi-scissors me-1"></i>Split
+            </button>
         </div>
+        <input type="text" name="amount" id="amount" class="form-control input-amount"
+               required autofocus
+               x-model="totalAmount"
+               placeholder="0.00">
+    </div>
 
-        {{-- Amount --}}
-        <div class="mb-3">
-            <label class="form-label" for="amount">Amount</label>
-            <input type="text" name="amount" id="amount" class="form-control input-amount"
-                   required autofocus
-                   value="{{ old('amount', money_input($plannedExpense->amount ?? null)) }}"
-                   placeholder="0.00">
-        </div>
-
-        {{-- Bill --}}
-        <div class="mb-3">
-            <label class="form-label" for="bill">Bill</label>
-            <select name="bill_id" id="bill" class="form-control" required>
-                <option value="">Select Bill</option>
-                @foreach($bills as $bill)
-                    <option value="{{ $bill->id }}"
-                        @selected(old('bill_id', $plannedExpense->bill_id ?? '') == $bill->id)>
-                        {{ $bill->name_with_user }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Category --}}
+    {{-- Normal mode: single category --}}
+    <div x-show="!splitMode">
         <div class="mb-3">
             <label class="form-label" for="category">Category</label>
-            <select name="category_id" id="category" class="form-control" required>
+            <select name="category_id" id="category" class="form-control"
+                    :required="!splitMode">
                 <option value="">Select Category</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}"
@@ -74,61 +100,141 @@
                 @endforeach
             </select>
         </div>
+    </div>
 
-        {{-- Currency --}}
-        <div class="mb-3">
-            <label class="form-label" for="currency">Currency</label>
-            <select name="currency_id" id="currency" class="form-control">
-                @foreach($currencies as $currency)
-                    <option value="{{ $currency->id }}"
-                        @selected(old('currency_id', $plannedExpense->currency_id ?? '') == $currency->id)>
-                        {{ $currency->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+    {{-- Split mode: rows --}}
+    <div x-show="splitMode" x-cloak>
+        <label class="form-label">Split by Category</label>
+        <div class="split-section">
+            <template x-for="(row, i) in rows" :key="row.id">
+                <div class="split-row">
+                    <div class="split-cat">
+                        <select data-split-select
+                                :name="'splits[' + i + '][category_id]'"
+                                x-init="initSplitSelect($el)">
+                            <option value="">Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="split-amt">
+                        <input type="number" step="0.01" min="0"
+                               :name="'splits[' + i + '][amount]'"
+                               x-model="row.amount"
+                               class="form-control"
+                               placeholder="0.00">
+                    </div>
+                    <button type="button" class="split-rest"
+                            @click="fillRemaining(i)"
+                            x-show="remaining > 0"
+                            title="Fill remaining">
+                        = <span x-text="remaining.toFixed(2)"></span>
+                    </button>
+                    <button type="button" class="split-del"
+                            @click="removeRow(i)"
+                            x-show="rows.length > 1">
+                        ×
+                    </button>
+                </div>
+            </template>
 
-        {{-- Place --}}
-        <div class="mb-3">
-            <label class="form-label" for="place">Place</label>
-            <select name="place_id" id="place" class="form-control" required>
-                <option value="">Select Place</option>
-                @foreach($places as $place)
-                    <option value="{{ $place->id }}"
-                        @selected(old('place_id', $plannedExpense->place_id ?? '') == $place->id)>
-                        {{ $place->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Notes --}}
-        <div class="mb-3">
-            <label class="form-label" for="notes">Notes</label>
-            <input type="text" name="notes" id="notes" class="form-control"
-                   placeholder="Optional"
-                   value="{{ old('notes', $plannedExpense->notes ?? '') }}">
-        </div>
-
-        {{-- Date --}}
-        <div class="mb-3">
-            <label class="form-label" for="date">Date</label>
-            <input type="date" name="date" id="date" class="form-control" required
-                   value="{{ old('date', date('Y-m-d')) }}">
-        </div>
-
-        {{-- Attachment --}}
-        <div class="mb-4">
-            <label class="form-label" for="attachment">Attachment</label>
-            <input type="file" name="attachment" id="attachment" class="form-control">
-        </div>
-
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-success flex-fill" style="font-weight:600;">
-                <i class="bi bi-check-lg me-1"></i>Create
+            <button type="button" class="btn btn-link btn-sm ps-0 text-muted"
+                    @click="addRow()">
+                <i class="bi bi-plus-lg me-1"></i>Add row
             </button>
-            <a href="{{ route('home') }}" class="btn btn-outline-secondary">Cancel</a>
+
+            <div class="split-stats">
+                <span class="stat-label">Split:</span>
+                <span class="stat-val" :class="isBalanced ? 'stat-ok' : 'stat-warn'"
+                      x-text="splitTotal.toFixed(2)"></span>
+                <span class="stat-label">/ Total:</span>
+                <span class="stat-val" x-text="(parseFloat(totalAmount) || 0).toFixed(2)"></span>
+                <template x-if="isBalanced">
+                    <span class="stat-ok"><i class="bi bi-check-circle-fill"></i></span>
+                </template>
+                <template x-if="!isBalanced && remaining !== 0">
+                    <span class="stat-warn">
+                        <span x-text="remaining > 0 ? '−' : '+'"></span>
+                        <span x-text="Math.abs(remaining).toFixed(2)"></span> remaining
+                    </span>
+                </template>
+            </div>
         </div>
-    </form>
+    </div>
+
+    {{-- Bill --}}
+    <div class="mb-3 mt-3">
+        <label class="form-label" for="bill">Bill</label>
+        <select name="bill_id" id="bill" class="form-control" required>
+            <option value="">Select Bill</option>
+            @foreach($bills as $bill)
+                <option value="{{ $bill->id }}"
+                    @selected(old('bill_id', $plannedExpense->bill_id ?? '') == $bill->id)>
+                    {{ $bill->name_with_user }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    {{-- Currency --}}
+    <div class="mb-3">
+        <label class="form-label" for="currency">Currency</label>
+        <select name="currency_id" id="currency" class="form-control">
+            @foreach($currencies as $currency)
+                <option value="{{ $currency->id }}"
+                    @selected(old('currency_id', $plannedExpense->currency_id ?? '') == $currency->id)>
+                    {{ $currency->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    {{-- Place --}}
+    <div class="mb-3">
+        <label class="form-label" for="place">Place</label>
+        <select name="place_id" id="place" class="form-control" required>
+            <option value="">Select Place</option>
+            @foreach($places as $place)
+                <option value="{{ $place->id }}"
+                    @selected(old('place_id', $plannedExpense->place_id ?? '') == $place->id)>
+                    {{ $place->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    {{-- Notes --}}
+    <div class="mb-3">
+        <label class="form-label" for="notes">Notes</label>
+        <input type="text" name="notes" id="notes" class="form-control"
+               placeholder="Optional"
+               value="{{ old('notes', $plannedExpense->notes ?? '') }}">
+    </div>
+
+    {{-- Date --}}
+    <div class="mb-3">
+        <label class="form-label" for="date">Date</label>
+        <input type="date" name="date" id="date" class="form-control" required
+               value="{{ old('date', date('Y-m-d')) }}">
+    </div>
+
+    {{-- Attachment (normal mode only) --}}
+    <div class="mb-4" x-show="!splitMode">
+        <label class="form-label" for="attachment">Attachment</label>
+        <input type="file" name="attachment" id="attachment" class="form-control">
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success flex-fill" style="font-weight:600;">
+            <i class="bi bi-check-lg me-1"></i>Create
+        </button>
+        <a href="{{ route('home') }}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+
+</div>
+
+<style>[x-cloak] { display: none !important; }</style>
 
 @endsection
