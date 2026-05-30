@@ -13,7 +13,7 @@
             @foreach($topCategories as $category)
                 <a class="quickpick-item"
                    href="#"
-                   onclick="event.preventDefault(); document.getElementById('category').value = {{ $category->id }}; document.getElementById('op-form').submit();">
+                   onclick="event.preventDefault(); document.getElementById('category').tomselect.setValue({{ $category->id }});">
                     {{ $category->name }}
                 </a>
             @endforeach
@@ -24,7 +24,7 @@
             @foreach($topBills as $bill)
                 <a class="quickpick-item"
                    href="#"
-                   onclick="event.preventDefault(); document.getElementById('bill').value = {{ $bill->id }}; document.getElementById('op-form').submit();">
+                   onclick="event.preventDefault(); document.getElementById('bill').tomselect.setValue({{ $bill->id }});">
                     {{ $bill->name_with_user }}
                 </a>
             @endforeach
@@ -49,7 +49,7 @@
             @foreach($topPlaces as $place)
                 <a class="quickpick-item"
                    href="#"
-                   onclick="event.preventDefault(); document.getElementById('place').value = {{ $place->id }}; document.getElementById('op-form').submit();">
+                   onclick="event.preventDefault(); document.getElementById('place').tomselect.setValue({{ $place->id }});">
                     {{ $place->name }}
                 </a>
             @endforeach
