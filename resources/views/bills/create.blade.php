@@ -1,61 +1,71 @@
 @extends('layouts.app')
 
-@section('title', 'Create Bill')
+@section('title', 'New Bill')
 
 @section('content')
-<div class="row justify-content-md-center">
-    <div class="col-md-6">
-        <div class="card p-3">
-            <h5 class="card-title mb-2">Create Bill</h5>
-            <div class="card-body">
-                <form autocomplete="off" action="{{ route('bills.store') }}" method="POST">
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-                    @csrf
-                    <div class="form-group mb-2">
-                        <label for="name">Name</label>
-                        <input type="text" autocomplete="off" name="name" id="name" class="form-control" value="{{ old('name') }}"
-                            required>
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="notes">Notes</label>
-                        <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="user_id">User</label>
-                        <select name="user_id" id="user_id" class="form-control">
-                            <option value="">Bill is Common</option>
-                            @foreach($users as $user)
-                            <option value="{{ $user->id }}" @if(old('user_id') == $user->id) selected @endif>{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" name="is_crypto" id="is_crypto" class="form-check-input"
-                               {{ old('is_crypto') ? 'checked' : '' }} value="1">&nbsp;
-                        <label for="is_crypto">Is Crypto</label>
-                    <hr>
-                    <h5>Initial balance:</h5>
-                    @foreach($currencies as $currency)
-                    <div class="form-group mb-2">
-                        <label for="amount_{{ $currency->id }}">{{ $currency->name }}</label>
-                        <input type="text" autocomplete="off" name="amount[{{ $currency->id }}]" id="amount_{{ $currency->id }}"
-                            class="form-control" value="{{ old('amount.' . $currency->id, 0) }}" required>
-                    </div>
-                    @endforeach
-                    <hr>
-                    <button type="submit" class="btn btn-primary">Create</button>
-                    <a href="{{ route('bills.index') }}" class="btn btn-secondary">Cancel</a>
-                </form>
+
+<div style="margin-bottom:.75rem;">
+    <a href="{{ route('bills.index') }}" style="color:var(--c-muted);font-size:.875rem;text-decoration:none;">
+        <i class="bi bi-arrow-left me-1"></i>All bills
+    </a>
+</div>
+
+<div class="form-card" style="max-width:36rem;">
+    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);margin-bottom:1rem;">New Bill</div>
+
+    @if ($errors->any())
+        <div class="alert alert-danger mb-3">
+            @foreach ($errors->all() as $error)<div>{{ $error }}</div>@endforeach
+        </div>
+    @endif
+
+    <form autocomplete="off" action="{{ route('bills.store') }}" method="POST">
+        @csrf
+
+        <div class="mb-3">
+            <label class="form-label" for="name">Name</label>
+            <input type="text" autocomplete="off" name="name" id="name" class="form-control" value="{{ old('name') }}" required autofocus>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="notes">Notes</label>
+            <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="user_id">Owner</label>
+            <select name="user_id" id="user_id" class="form-control">
+                <option value="">Common (shared)</option>
+                @foreach($users as $user)
+                    <option value="{{ $user->id }}" @selected(old('user_id') == $user->id)>{{ $user->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <div class="form-check">
+                <input type="checkbox" name="is_crypto" id="is_crypto" class="form-check-input" value="1" {{ old('is_crypto') ? 'checked' : '' }}>
+                <label class="form-check-label" for="is_crypto">Crypto bill</label>
             </div>
         </div>
-    </div>
+
+        <div style="border-top:1px solid var(--c-border);padding-top:1rem;margin-top:1rem;">
+            <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c-muted);margin-bottom:.75rem;">Initial balance</div>
+            @foreach($currencies as $currency)
+                <div class="mb-2" style="display:flex;align-items:center;gap:.75rem;">
+                    <label style="width:3.5rem;font-size:.85rem;font-weight:600;color:var(--c-muted);margin:0;">{{ $currency->name }}</label>
+                    <input type="text" autocomplete="off" name="amount[{{ $currency->id }}]"
+                           class="form-control form-control-sm" style="max-width:12rem;"
+                           value="{{ old('amount.' . $currency->id, 0) }}">
+                </div>
+            @endforeach
+        </div>
+
+        <div style="display:flex;gap:.5rem;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--c-border);">
+            <button type="submit" class="btn btn-success">Create</button>
+            <a href="{{ route('bills.index') }}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
 </div>
+
 @endsection
