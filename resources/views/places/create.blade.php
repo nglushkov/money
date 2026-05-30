@@ -3,36 +3,47 @@
 @section('title', 'Create Place')
 
 @section('content')
-<div class="row justify-content-md-center">
+
+<div class="page-toolbar">
+    <div class="toolbar-left">
+        <a href="{{ route('places.index') }}" style="color:var(--c-muted);font-size:.875rem;text-decoration:none;">
+            <i class="bi bi-arrow-left me-1"></i>All places
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-md-center mt-3">
     <div class="col-md-6">
-        <div class="card p-3">
-            <h5 class="card-title mb-2">New Place</h5>
-            <div class="card-body">
-                <form autocomplete="off" action="{{ route('places.store') }}" method="POST">
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
+        <div class="form-card">
+            <h5 style="font-size:1rem;font-weight:700;margin:0 0 1.25rem;">New Place</h5>
+
+            @if ($errors->any())
+                <div class="alert alert-danger mb-3">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-                    @csrf
-                    <div class="form-group mb-2">
-                        <label for="name">Name</label>
-                        <input type="text" autocomplete="off" name="name" id="name" class="form-control" autofocus value="{{ old('name') }}" required >
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="notes">Notes</label>
-                        <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
-                    </div>
-                    <hr>
-                    <button type="submit" class="btn btn-primary">Create</button>
-                    <a href="{{ route('places.index') }}" class="btn btn-secondary">Cancel</a>
-                </form>
-            </div>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form autocomplete="off" action="{{ route('places.store') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="name" class="form-label" style="font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--c-muted);">Name</label>
+                    <input type="text" autocomplete="off" name="name" id="name" class="form-control" autofocus value="{{ old('name') }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="notes" class="form-label" style="font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--c-muted);">Notes</label>
+                    <input type="text" autocomplete="off" name="notes" id="notes" class="form-control" value="{{ old('notes') }}">
+                </div>
+                <div style="display:flex;gap:.5rem;margin-top:1.5rem;">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="{{ route('places.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
 @endsection
