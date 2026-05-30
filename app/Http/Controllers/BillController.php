@@ -25,15 +25,19 @@ class BillController extends Controller
     public function index(Request $request)
     {
         $bills = Bill::isNotCrypto();
-        if ($request->get('user_id')) {
-            $bills->where(function ($query) use ($request) {
-                $query->where('user_id', $request->user_id)->orWhere('user_id', null);
+
+        if (!$request->boolean('all')) {
+            $bills->where(function ($q) {
+                $q->where('user_id', auth()->id())->orWhereNull('user_id');
             });
         }
 
+        $showAll = $request->boolean('all');
+
         return view('bills.index', [
-            'bills' => $bills->orderBy('name')->get(),
+            'bills'      => $bills->orderBy('name')->get(),
             'currencies' => Currency::isNotCrypto()->orderBy('name')->get(),
+            'showAll'    => $showAll,
         ]);
     }
 
