@@ -35,23 +35,17 @@ class MoveController extends Controller
         if ($draftOnly) {
             $operationsQuery->where('is_draft', true);
         }
-        $operations = $operationsQuery->get();
-
-        if ($mpOnly || $draftOnly) {
-            $moves = $operations;
+        if ($mpOnly || $draftOnly || $moveType === MoveType::Operation->name) {
+            $moves = $operationsQuery->get();
+        } elseif ($moveType === MoveType::Transfer->name) {
+            $moves = Transfer::with(['from', 'to', 'currency', 'user'])->latest()->get();
+        } elseif ($moveType === MoveType::Exchange->name) {
+            $moves = Exchange::with(['from', 'to', 'bill', 'user', 'place'])->latest()->get();
         } else {
-            $transfers = Transfer::with(['from', 'to', 'currency', 'user'])->latest()->get();
-            $exchanges = Exchange::with(['from', 'to', 'bill', 'user', 'place'])->latest()->get();
-
-            if ($moveType === MoveType::Operation->name) {
-                $moves = $operations;
-            } elseif ($moveType === MoveType::Transfer->name) {
-                $moves = $transfers;
-            } elseif ($moveType === MoveType::Exchange->name) {
-                $moves = $exchanges;
-            } else {
-                $moves = $operations->concat($transfers)->concat($exchanges);
-            }
+            $operations = $operationsQuery->get();
+            $transfers  = Transfer::with(['from', 'to', 'currency', 'user'])->latest()->get();
+            $exchanges  = Exchange::with(['from', 'to', 'bill', 'user', 'place'])->latest()->get();
+            $moves      = $operations->concat($transfers)->concat($exchanges);
         }
 
         $moves = $moves->sortByDesc(fn($m) => $m->date->format('U') . $m->created_at->format('U'));
