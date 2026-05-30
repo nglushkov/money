@@ -25,7 +25,7 @@
                 <li class="list-group-item"><strong>Is Crypto:</strong> {{ $bill->is_crypto ? 'Yes' : 'No' }}</li>
                 <li class="list-group-item border-0"><h5>Currencies:</h5></li>
                 @foreach ($bill->getAmountsNotNull() as $amount)
-                    <form id="form-{{ $amount->getCurrency()->name }}" action="{{ route('bills.correct', $bill) }}" method="post">
+                    <form autocomplete="off" id="form-{{ $amount->getCurrency()->name }}" action="{{ route('bills.correct', $bill) }}" method="post">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="currency_name" value="{{ $amount->getCurrency()->name }}">

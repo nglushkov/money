@@ -31,7 +31,7 @@
                             </ul>
                         </div>
                 @endif
-                <form action="{{ route('rates.store') }}" method="POST">
+                <form autocomplete="off" action="{{ route('rates.store') }}" method="POST">
                     @csrf
 
                     <h5>Add Rate</h5>
@@ -102,7 +102,7 @@
                                 @endif
                             </td>
                             <td>
-                                <form action="{{ route('rates.destroy', $rate) }}" method="POST">
+                                <form autocomplete="off" action="{{ route('rates.destroy', $rate) }}" method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-light" onclick="return confirm('Are you sure?')">Delete</button>

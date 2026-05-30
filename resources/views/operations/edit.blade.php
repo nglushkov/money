@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <form id="op-form" action="{{ route('operations.update', $operation) }}" method="POST" enctype="multipart/form-data">
+    <form autocomplete="off" id="op-form" action="{{ route('operations.update', $operation) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -143,7 +143,7 @@
         </div>
     </form>
 
-    <form action="{{ route('operations.delete-attachment', $operation) }}" id="delete-attachment" method="post" class="d-none">
+    <form autocomplete="off" action="{{ route('operations.delete-attachment', $operation) }}" id="delete-attachment" method="post" class="d-none">
         @method('DELETE')
         @csrf
         <input type="hidden" name="attachment" value="{{ $operation->attachment }}">

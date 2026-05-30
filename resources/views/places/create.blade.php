@@ -8,7 +8,7 @@
         <div class="card p-3">
             <h5 class="card-title mb-2">New Place</h5>
             <div class="card-body">
-                <form action="{{ route('places.store') }}" method="POST">
+                <form autocomplete="off" action="{{ route('places.store') }}" method="POST">
                     @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>

@@ -69,7 +69,7 @@
                                         </td>
                                         <td>
                                             @if (!$amount->getCurrency()->is_default)
-                                                <form id="form-{{ $bill->id }}-{{ $amount->getCurrency()->id }}" action="{{ route('crypto.set-total-invested-amount', $bill) }}" method="post">
+                                                <form autocomplete="off" id="form-{{ $bill->id }}-{{ $amount->getCurrency()->id }}" action="{{ route('crypto.set-total-invested-amount', $bill) }}" method="post">
                                                     @csrf
                                                     @method('PUT')
                                                     {{ MoneyFormatter::getWithCurrencyName($bill->getCryptoInvestedByCurrency($amount->getCurrency()), $defaultCurrencyName) }}

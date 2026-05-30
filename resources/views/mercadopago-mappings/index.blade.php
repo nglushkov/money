@@ -28,7 +28,7 @@
                             <td>{{ $mapping->is_default ? '✓' : '' }}</td>
                             <td>
                                 <a href="{{ route('mercadopago-mappings.edit', $mapping) }}" class="btn btn-sm btn-light">Edit</a>
-                                <form action="{{ route('mercadopago-mappings.destroy', $mapping) }}" method="POST" class="d-inline"
+                                <form autocomplete="off" action="{{ route('mercadopago-mappings.destroy', $mapping) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('Delete?')">
                                     @csrf
                                     @method('DELETE')

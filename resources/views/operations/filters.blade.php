@@ -1,6 +1,6 @@
 @php use App\Models\Enum\OperationType; @endphp
 
-<form action="{{ route('operations.index') }}" method="GET">
+<form autocomplete="off" action="{{ route('operations.index') }}" method="GET">
     <a href="{{ route('operations.create') }}" class="btn btn-success">Create</a>
     <a class="btn btn-light"
        href="{{ route('operations.index', array_merge(request()->all(), ['show_filter' => 1])) }}"

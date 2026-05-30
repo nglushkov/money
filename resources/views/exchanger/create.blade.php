@@ -19,7 +19,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('exchanger.store') }}" method="POST"
+                <form autocomplete="off" action="{{ route('exchanger.store') }}" method="POST"
                       x-data="exchangerForm()">
                     @csrf
 

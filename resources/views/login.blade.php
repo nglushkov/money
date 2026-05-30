@@ -7,7 +7,7 @@
         <div class="card">
             <div class="card-header">Login</div>
             <div class="card-body">
-                <form method="POST" action="{{ route('authenticate') }}">
+                <form autocomplete="off" method="POST" action="{{ route('authenticate') }}">
                     @csrf
 
                     <div class="form-group">

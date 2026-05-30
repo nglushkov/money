@@ -8,7 +8,7 @@
         <div class="card p-3">
             <h5 class="card-title mb-2">New Mercado Pago Mapping</h5>
             <div class="card-body">
-                <form action="{{ route('mercadopago-mappings.store') }}" method="POST">
+                <form autocomplete="off" action="{{ route('mercadopago-mappings.store') }}" method="POST">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>

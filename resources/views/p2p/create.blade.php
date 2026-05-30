@@ -16,7 +16,7 @@
             @endif
 
             <div class="card-body p-0">
-                <form action="{{ route('p2p.store') }}" method="POST">
+                <form autocomplete="off" action="{{ route('p2p.store') }}" method="POST">
                     @csrf
 
                     @if($operation)

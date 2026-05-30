@@ -123,7 +123,7 @@
     <a href="{{ route('operations.create') }}" class="btn btn-link btn-sm text-muted">New Operation</a>
 </div>
 
-<form id="delete-form" action="{{ route('operations.destroy', $operation) }}" method="POST" class="d-none">
+<form autocomplete="off" id="delete-form" action="{{ route('operations.destroy', $operation) }}" method="POST" class="d-none">
     @csrf @method('DELETE')
 </form>
 

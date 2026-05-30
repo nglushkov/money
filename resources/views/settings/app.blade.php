@@ -17,7 +17,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('settings.app.update') }}" method="POST">
+                <form autocomplete="off" action="{{ route('settings.app.update') }}" method="POST">
                     @csrf
                     @method('PUT')
 

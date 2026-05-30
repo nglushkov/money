@@ -8,7 +8,7 @@
         <div class="card p-3">
             <h5 class="card-title mb-2">Update Exchange</h5>
             <div class="card-body">
-                <form action="{{ route('exchanges.update', $exchange->id) }}" method="POST">
+                <form autocomplete="off" action="{{ route('exchanges.update', $exchange->id) }}" method="POST">
                     @method('PUT')
                     @if ($errors->any())
                         <div class="alert alert-danger">

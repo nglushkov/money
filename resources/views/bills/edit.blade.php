@@ -8,7 +8,7 @@
         <div class="card p-3">
             <h5 class="card-title mb-2">Edit Bill</h5>
             <div class="card-body">
-                <form action="{{ route('bills.update', $bill->id) }}" method="POST">
+                <form autocomplete="off" action="{{ route('bills.update', $bill->id) }}" method="POST">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>

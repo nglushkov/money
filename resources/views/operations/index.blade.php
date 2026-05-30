@@ -40,7 +40,7 @@
                                     <span class="badge bg-warning">Correction</span>
                                     <a href="#" class="btn btn-sm btn-light"
                                         onclick="event.preventDefault(); if (confirm('Are you sure you want to delete?')) { document.getElementById('draft-delete-{{ $operation->id }}').submit(); }">Delete</a>
-                                    <form action="{{ route('operations.destroy', $operation) }}" method="post" id="draft-delete-{{ $operation->id }}">
+                                    <form autocomplete="off" action="{{ route('operations.destroy', $operation) }}" method="post" id="draft-delete-{{ $operation->id }}">
                                         @csrf
                                         @method('DELETE')
                                     </form>
@@ -65,7 +65,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <form action="{{ route('operations.keep', $operation->id) }}" method="POST">
+                                                <form autocomplete="off" action="{{ route('operations.keep', $operation->id) }}" method="POST">
                                                     @csrf
                                                     <button type="submit" class="dropdown-item">Keep as operation</button>
                                                 </form>

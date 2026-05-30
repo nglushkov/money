@@ -35,7 +35,7 @@
                                     <i class="bi bi-people"></i> Create P2P
                                 </a></li>
                                 <li>
-                                    <form action="{{ route('operations.keep', $move->id) }}" method="POST">
+                                    <form autocomplete="off" action="{{ route('operations.keep', $move->id) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="dropdown-item">
                                             <i class="bi bi-check2"></i> Keep as operation
@@ -43,7 +43,7 @@
                                     </form>
                                 </li>
                                 <li>
-                                    <form action="{{ route('operations.destroy', $move) }}" method="POST"
+                                    <form autocomplete="off" action="{{ route('operations.destroy', $move) }}" method="POST"
                                           onsubmit="return confirm('Delete this operation?')">
                                         @csrf @method('DELETE')
                                         <input type="hidden" name="back_route" value="{{ url()->current() }}">
@@ -58,7 +58,7 @@
                 @elseif($move->is_draft)
                     <div class="d-flex align-items-center gap-1 mt-1 justify-content-end">
                         <span class="badge-draft">Draft</span>
-                        <form action="{{ route('operations.destroy', $move) }}" method="post" class="d-inline">
+                        <form autocomplete="off" action="{{ route('operations.destroy', $move) }}" method="post" class="d-inline">
                             @csrf @method('DELETE')
                             <input type="hidden" name="back_route" value="{{ route('home') }}">
                             <button type="submit" class="btn btn-link btn-sm p-0 text-danger" style="font-size:.8rem;line-height:1;">×</button>

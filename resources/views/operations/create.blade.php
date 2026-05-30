@@ -17,7 +17,7 @@
 @endif
 
 <div x-data="splitForm()">
-<form id="op-form" action="{{ route('operations.store') }}" method="POST" enctype="multipart/form-data">
+<form autocomplete="off" id="op-form" action="{{ route('operations.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="split_mode" :value="splitMode ? 1 : 0">
 

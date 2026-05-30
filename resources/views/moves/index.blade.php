@@ -50,7 +50,7 @@
     </div>
 
     <div class="toolbar-right">
-        <form action="{{ route('mp-sync') }}" method="POST">
+        <form autocomplete="off" action="{{ route('mp-sync') }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-repeat me-1"></i>Sync MP
@@ -62,7 +62,7 @@
                     onclick="document.getElementById('dismiss-all-form').submit();">
                 <i class="bi bi-bell-slash me-1"></i>Dismiss planned
             </button>
-            <form action="{{ route('planned-expenses.dismiss-all') }}" method="post" id="dismiss-all-form">
+            <form autocomplete="off" action="{{ route('planned-expenses.dismiss-all') }}" method="post" id="dismiss-all-form">
                 @csrf
             </form>
         @endif
@@ -94,7 +94,7 @@
         <div class="ms-auto">
             <button type="button" class="btn-close btn-close-sm"
                 onclick="document.getElementById('pe-dismiss-{{ $pe->id }}').submit();"></button>
-            <form action="{{ route('planned-expenses.dismiss', $pe) }}" method="post" id="pe-dismiss-{{ $pe->id }}" class="d-inline">
+            <form autocomplete="off" action="{{ route('planned-expenses.dismiss', $pe) }}" method="post" id="pe-dismiss-{{ $pe->id }}" class="d-inline">
                 @csrf @method('PUT')
                 <input type="hidden" name="dismiss" value="{{ $pe->id }}">
             </form>
