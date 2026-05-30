@@ -33,7 +33,7 @@ class MercadoPagoMappingService
             ->all();
 
         foreach ($this->mappings as $mapping) {
-            if (str_contains($description, $mapping->keyword)) {
+            if (str_contains($description, strtolower($mapping->keyword))) {
                 return $mapping;
             }
         }

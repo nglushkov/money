@@ -68,4 +68,77 @@ class MercadoPagoMappingServiceTest extends TestCase
     {
         $this->assertFalse($this->service->hasMatch('unknown merchant'));
     }
+
+    public function test_keyword_with_uppercase_letters_matches_case_insensitively(): void
+    {
+        // Keyword stored with mixed case (e.g. "Reggina") must still match
+        $category = Category::factory()->create();
+        $place    = Place::factory()->create(['name' => 'Reggina']);
+
+        MercadoPagoMapping::create([
+            'keyword'     => 'Reggina',
+            'category_id' => $category->id,
+            'place_id'    => $place->id,
+            'is_default'  => false,
+        ]);
+
+        $service = new MercadoPagoMappingService();
+
+        $this->assertEquals($category->id, $service->getCategoryId('Producto de Reggina'));
+        $this->assertEquals($place->id, $service->getPlaceId('Producto de Reggina'));
+    }
+
+    public function test_specific_shop_keyword_wins_over_generic_mp_prefix(): void
+    {
+        // MP sends descriptions like "Producto de <ShopName>".
+        // "producto" is a generic MP prefix, not a merchant name — it must NOT shadow specific shop mappings.
+        // This test documents that "producto" must NOT exist as a keyword in mappings.
+        $groceries = Category::factory()->create(['name' => 'Продукты']);
+        $shopCat   = Category::factory()->create(['name' => 'Рестораны']);
+        $shopPlace = Place::factory()->create(['name' => 'Reggina']);
+
+        // Only the specific shop mapping; "producto" is intentionally absent.
+        MercadoPagoMapping::create([
+            'keyword'     => 'Reggina',
+            'category_id' => $shopCat->id,
+            'place_id'    => $shopPlace->id,
+            'is_default'  => false,
+        ]);
+
+        $service = new MercadoPagoMappingService();
+
+        $this->assertEquals($shopCat->id, $service->getCategoryId('Producto de Reggina'));
+        $this->assertEquals($shopPlace->id, $service->getPlaceId('Producto de Reggina'));
+    }
+
+    public function test_longer_keyword_takes_priority_over_shorter(): void
+    {
+        $catJumbo     = Category::factory()->create(['name' => 'Продукты']);
+        $catAlmagro   = Category::factory()->create(['name' => 'Продукты Альмагро']);
+        $placeJumbo   = Place::factory()->create(['name' => 'Jumbo']);
+        $placeAlmagro = Place::factory()->create(['name' => 'Jumbo Almagro']);
+
+        MercadoPagoMapping::create([
+            'keyword'     => 'jumbo',
+            'category_id' => $catJumbo->id,
+            'place_id'    => $placeJumbo->id,
+            'is_default'  => false,
+        ]);
+
+        MercadoPagoMapping::create([
+            'keyword'     => 'scjumboalmagr',
+            'category_id' => $catAlmagro->id,
+            'place_id'    => $placeAlmagro->id,
+            'is_default'  => false,
+        ]);
+
+        $service = new MercadoPagoMappingService();
+
+        // More specific (longer) keyword wins
+        $this->assertEquals($catAlmagro->id, $service->getCategoryId('payment scjumboalmagr'));
+        $this->assertEquals($placeAlmagro->id, $service->getPlaceId('payment scjumboalmagr'));
+
+        // Generic keyword still works when specific doesn't match
+        $this->assertEquals($catJumbo->id, $service->getCategoryId('jumbo palermo'));
+    }
 }
