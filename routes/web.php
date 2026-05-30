@@ -9,6 +9,7 @@ use App\Http\Controllers\TelegramBotController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExchangeController;
+use App\Http\Controllers\ExchangerController;
 use App\Http\Controllers\ExternalRateController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MoveController;
@@ -80,6 +81,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/p2p/create', [P2PController::class, 'create'])->name('p2p.create');
     Route::post('/p2p', [P2PController::class, 'store'])->name('p2p.store');
+    Route::get('/exchanger/create', [ExchangerController::class, 'create'])->name('exchanger.create');
+    Route::post('/exchanger', [ExchangerController::class, 'store'])->name('exchanger.store');
     Route::post('/operations/{id}/keep', [OperationController::class, 'keepAsReviewed'])->name('operations.keep')->whereNumber('id');
 
     Route::get('/rates/refresh-crypto', [RateController::class, 'refreshCrypto'])->name('rates.refresh-crypto');

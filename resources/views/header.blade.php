@@ -56,6 +56,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ route('p2p.create') }}">P2P</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ route('exchanger.create') }}">Обменник</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
