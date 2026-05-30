@@ -6,7 +6,7 @@
 <div class="row justify-content-md-center">
     <div class="col-md-6">
         <div class="card p-3">
-            <h5 class="card-title mb-2">Новая Категория</h5>
+            <h5 class="card-title mb-2">New Category</h5>
             <div class="card-body">
                 <form action="{{ route('categories.store') }}" method="POST">
                     @if ($errors->any())

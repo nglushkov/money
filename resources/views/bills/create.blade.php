@@ -42,7 +42,7 @@
                                {{ old('is_crypto') ? 'checked' : '' }} value="1">&nbsp;
                         <label for="is_crypto">Is Crypto</label>
                     <hr>
-                    <h5>Начальный остаток:</h5>
+                    <h5>Initial balance:</h5>
                     @foreach($currencies as $currency)
                     <div class="form-group mb-2">
                         <label for="amount_{{ $currency->id }}">{{ $currency->name }}</label>

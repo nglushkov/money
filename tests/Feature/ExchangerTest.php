@@ -40,7 +40,7 @@ class ExchangerTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('exchanger.create'))
             ->assertOk()
-            ->assertSee('Обменник');
+            ->assertSee('Exchanger');
     }
 
     public function test_store_creates_exchange_and_transfer(): void
