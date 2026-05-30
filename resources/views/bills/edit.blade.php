@@ -48,7 +48,7 @@
                         <div class="form-group mb-2">
                             <label for="amount_{{ $currency->id }}">{{ $currency->name }}</label>
                             <input type="text" name="amount[{{ $currency->id }}]" id="amount_{{ $currency->id }}"
-                                class="form-control" value="{{ old('amount.' . $currency->id, $bill->currenciesInitial->find($currency->id)->pivot->amount ?? 0) }}"
+                                class="form-control" value="{{ old('amount.' . $currency->id, money_input($bill->currenciesInitial->find($currency->id)->pivot->amount ?? 0)) }}"
                                 required>
                         </div>
                     @endforeach

@@ -58,7 +58,7 @@
                         <label for="ars_amount">ARS received</label>
                         <div class="input-group">
                             <input type="number" name="ars_amount" id="ars_amount" class="form-control"
-                                value="{{ old('ars_amount', $operation?->amount) }}" step="0.01" min="0.01" required
+                                value="{{ old('ars_amount', money_input($operation?->amount)) }}" step="0.01" min="0.01" required
                                 oninput="calcRate()">
                             <span class="input-group-text">ARS</span>
                         </div>

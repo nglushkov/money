@@ -31,7 +31,18 @@ class MoneyFormatter
 
     public static function getWithoutTrailingZeros(string $amount): string
     {
-        return rtrim(rtrim($amount, '0'), '.');
+        if (!str_contains($amount, '.')) {
+            return $amount;
+        }
+        return rtrim(rtrim($amount, '0'), '.') ?: '0';
+    }
+
+    public static function forInput(mixed $amount): string
+    {
+        if ($amount === null || $amount === '') {
+            return '';
+        }
+        return static::getWithoutTrailingZeros((string) $amount);
     }
 
     public static function getCryptoWithCurrencyName(string $amount, string $currencyName): string
