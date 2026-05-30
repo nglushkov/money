@@ -42,11 +42,6 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-check mb-3">
-                        <input type="checkbox" name="is_default" id="is_default" class="form-check-input"
-                            value="1" @checked(old('is_default'))>
-                        <label class="form-check-label" for="is_default">Default (fallback)</label>
-                    </div>
                     <hr>
                     <button type="submit" class="btn btn-primary">Create</button>
                     <a href="{{ route('mercadopago-mappings.index') }}" class="btn btn-secondary">Cancel</a>
