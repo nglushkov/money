@@ -72,7 +72,6 @@ class ReportController extends Controller
             $date = Carbon::create(null, $i);
             $months[$i] = ucfirst($date->monthName);
         }
-        $months = array_reverse($months, true);
 
         // Получение списка годов в которых были расходы
         $years = Operation::select(DB::raw('EXTRACT(YEAR FROM date) as year'))

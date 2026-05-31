@@ -17,20 +17,15 @@ class ReportService
      */
     public function getTotalByCategories(Collection $operations, string $defaultCurrencyName)
     {
-        $data = $operations->groupBy('category_id')->map(function (Collection $operations) use($defaultCurrencyName) {
+        return $operations->groupBy('category_id')->map(function (Collection $operations) use ($defaultCurrencyName) {
+            $totalRaw = $operations->sum('amount_in_default_currency');
             return collect([
                 'categoryName' => $operations->first()->category->name,
-                'categoryId' => $operations->first()->category->id,
-                'total' => $operations->sum('amount_in_default_currency'),
+                'categoryId'   => $operations->first()->category->id,
+                'total_raw'    => (float) $totalRaw,
+                'total'        => MoneyFormatter::getWithCurrencyName($totalRaw, $defaultCurrencyName),
             ]);
-        })->sortByDesc('total')->values();
-
-        $data->transform(function ($item) use ($defaultCurrencyName) {
-            $item['total'] = MoneyFormatter::getWithCurrencyName($item['total'], $defaultCurrencyName);
-            return $item;
-        });
-
-        return $data;
+        })->sortByDesc('total_raw')->values();
     }
 
     // todo: Move
