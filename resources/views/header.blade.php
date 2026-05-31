@@ -16,29 +16,23 @@
                     <a class="nav-link" href="{{ route('bills.index') }}"><i class="bi bi-credit-card me-1"></i>Bills</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('crypto.index') }}"><i class="bi bi-graph-up me-1"></i>Crypto</a>
+                    <a class="nav-link" href="{{ route('p2p.create') }}">P2P</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('exchanger.create') }}">Exchanger</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('p2p.create') }}">P2P</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        Reports
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('reports.total-by-categories') }}">
-                            <i class="bi bi-bar-chart"></i> Total by Categories
-                        </a></li>
-                    </ul>
+                    <a class="nav-link" href="{{ route('reports.total-by-categories') }}"><i class="bi bi-bar-chart me-1"></i>Reports</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                         More
                     </a>
                     <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('crypto.index') }}">
+                            <i class="bi bi-graph-up"></i> Crypto
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ route('operations.index') }}">
                             <i class="bi bi-list-ul"></i> All Operations
                         </a></li>
