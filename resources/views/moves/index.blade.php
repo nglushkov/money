@@ -4,7 +4,8 @@
 
 @section('content')
 
-<div x-data="{ selectMode: false, selected: [] }" @keydown.escape.window="selectMode = false; selected = []">
+<div x-data="{ selectMode: false, selected: [], searchOpen: {{ $search ? 'true' : 'false' }} }"
+     @keydown.escape.window="selectMode = false; selected = []; searchOpen = false">
 
 {{-- Bulk delete form (hidden, submitted via Alpine) --}}
 <form id="bulk-delete-form" action="{{ route('moves.bulk-delete') }}" method="POST" style="display:none">
@@ -58,8 +59,8 @@
         </template>
 
         {{-- Filter pills --}}
-        @php $noFilter = !$mpOnly && !$draftOnly && !$activeType; @endphp
-        <div class="d-flex gap-1 filter-pills-scroll" x-show="!selectMode">
+        @php $noFilter = !$mpOnly && !$draftOnly && !$activeType && !$search; @endphp
+        <div class="d-flex gap-1 filter-pills-scroll" x-show="!selectMode && !searchOpen">
             <a href="{{ route('home') }}"
                class="filter-pill {{ $noFilter ? 'pill-active' : '' }}">All</a>
             <a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Operation->name]) }}"
@@ -72,17 +73,48 @@
                class="filter-pill {{ $mpOnly ? 'pill-active-mp' : '' }}">MP</a>
             <a href="{{ route('home', ['draft' => 1]) }}"
                class="filter-pill {{ $draftOnly ? 'pill-active-draft' : '' }}">Drafts</a>
+            @if($search)
+                <span class="filter-pill pill-active-search">
+                    <i class="bi bi-search me-1" style="font-size:.7rem;"></i>{{ Str::limit($search, 20) }}
+                    <a href="{{ route('home', array_filter(['type' => $activeType, 'mp' => $mpOnly ?: null, 'draft' => $draftOnly ?: null])) }}"
+                       class="ms-1 text-inherit" style="opacity:.7;" onclick="event.stopPropagation()">×</a>
+                </span>
+            @endif
         </div>
+
+        {{-- Search form (replaces pills when open) --}}
+        <form method="GET" action="{{ route('home') }}" class="d-flex align-items-center gap-1 flex-grow-1"
+              x-show="!selectMode && searchOpen" x-transition style="display:none!important">
+            @if($activeType)<input type="hidden" name="type" value="{{ $activeType }}">@endif
+            @if($mpOnly)<input type="hidden" name="mp" value="1">@endif
+            @if($draftOnly)<input type="hidden" name="draft" value="1">@endif
+            <div class="search-input-wrap flex-grow-1">
+                <i class="bi bi-search search-input-icon"></i>
+                <input type="text" name="search" value="{{ $search }}" placeholder="Search by category, place, bill, notes…"
+                       class="form-control form-control-sm search-input" x-ref="searchInput" autocomplete="off">
+            </div>
+            <button type="submit" class="btn btn-success btn-sm px-3">Search</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm"
+                    @click="searchOpen = false">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </form>
     </div>
 
     <div class="toolbar-right">
         <button type="button" class="btn btn-outline-secondary btn-sm"
-                x-show="!selectMode"
+                x-show="!selectMode && !searchOpen"
                 @click="selectMode = true">
             <i class="bi bi-check2-square me-1"></i>Select
         </button>
 
-        <form autocomplete="off" action="{{ route('mp-sync') }}" method="POST" x-show="!selectMode">
+        <button type="button" class="btn btn-sm {{ $search ? 'btn-success' : 'btn-outline-secondary' }}"
+                x-show="!selectMode && !searchOpen"
+                @click="searchOpen = true; $nextTick(() => $refs.searchInput.focus())">
+            <i class="bi bi-search"></i>
+        </button>
+
+        <form autocomplete="off" action="{{ route('mp-sync') }}" method="POST" x-show="!selectMode && !searchOpen">
             @csrf
             <button type="submit" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-repeat me-1"></i>Sync MP
@@ -90,7 +122,7 @@
         </form>
 
         @if (count($plannedExpenses) > 0)
-            <button type="button" class="btn btn-sm btn-outline-warning" x-show="!selectMode"
+            <button type="button" class="btn btn-sm btn-outline-warning" x-show="!selectMode && !searchOpen"
                     onclick="document.getElementById('dismiss-all-form').submit();">
                 <i class="bi bi-bell-slash me-1"></i>Dismiss planned
             </button>

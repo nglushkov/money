@@ -130,9 +130,19 @@ a { text-decoration: none; }
   line-height: 1.4;
 }
 .filter-pill:hover            { border-color: var(--c-accent); color: var(--c-accent); }
-.filter-pill.pill-active      { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
-.filter-pill.pill-active-mp   { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
-.filter-pill.pill-active-draft{ background: #b45309; border-color: #b45309; color: #fff; }
+.filter-pill.pill-active        { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
+.filter-pill.pill-active-mp     { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+.filter-pill.pill-active-draft  { background: #b45309; border-color: #b45309; color: #fff; }
+.filter-pill.pill-active-search { background: #0f766e; border-color: #0f766e; color: #fff; display: inline-flex; align-items: center; }
+.filter-pill.pill-active-search a { color: #fff; text-decoration: none; }
+
+/* === Search input === */
+.search-input-wrap { position: relative; }
+.search-input-icon {
+  position: absolute; left: .6rem; top: 50%; transform: translateY(-50%);
+  font-size: .85rem; color: var(--c-muted); pointer-events: none; z-index: 1;
+}
+.search-input { padding-left: 2rem !important; }
 
 /* === Moves group === */
 .moves-date-header {

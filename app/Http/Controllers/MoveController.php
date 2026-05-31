@@ -31,6 +31,7 @@ class MoveController extends Controller
         $mpOnly    = $request->boolean('mp');
         $draftOnly = $request->boolean('draft');
         $moveType  = $request->get('type');
+        $search    = trim($request->get('search', ''));
 
         $operationsQuery = Operation::with(['bill', 'category', 'currency', 'place', 'user'])->latest();
         if ($mpOnly) {
@@ -39,17 +40,78 @@ class MoveController extends Controller
         if ($draftOnly) {
             $operationsQuery->where('is_draft', true);
         }
+        if ($search) {
+            $operationsQuery
+                ->leftJoin('categories as s_cat', 'operations.category_id', '=', 's_cat.id')
+                ->leftJoin('places as s_place', 'operations.place_id', '=', 's_place.id')
+                ->leftJoin('bills as s_bill', 'operations.bill_id', '=', 's_bill.id')
+                ->select('operations.*')
+                ->where(function ($q) use ($search) {
+                    $q->where('operations.notes', 'like', "%{$search}%")
+                      ->orWhere('s_cat.name', 'like', "%{$search}%")
+                      ->orWhere('s_place.name', 'like', "%{$search}%")
+                      ->orWhere('s_bill.name', 'like', "%{$search}%");
+                });
+        }
+
         if ($mpOnly || $draftOnly || $moveType === MoveType::Operation->name) {
             $moves = $operationsQuery->get();
         } elseif ($moveType === MoveType::Transfer->name) {
-            $moves = Transfer::with(['from', 'to', 'currency', 'user'])->latest()->get();
+            $transfersQuery = Transfer::with(['from', 'to', 'currency', 'user'])->latest();
+            if ($search) {
+                $transfersQuery
+                    ->leftJoin('bills as s_from', 'transfers.from_bill_id', '=', 's_from.id')
+                    ->leftJoin('bills as s_to', 'transfers.to_bill_id', '=', 's_to.id')
+                    ->select('transfers.*')
+                    ->where(function ($q) use ($search) {
+                        $q->where('transfers.notes', 'like', "%{$search}%")
+                          ->orWhere('s_from.name', 'like', "%{$search}%")
+                          ->orWhere('s_to.name', 'like', "%{$search}%");
+                    });
+            }
+            $moves = $transfersQuery->get();
         } elseif ($moveType === MoveType::Exchange->name) {
-            $moves = Exchange::with(['from', 'to', 'bill', 'user', 'place'])->latest()->get();
+            $exchangesQuery = Exchange::with(['from', 'to', 'bill', 'user', 'place'])->latest();
+            if ($search) {
+                $exchangesQuery
+                    ->leftJoin('bills as s_bill_exc', 'exchanges.bill_id', '=', 's_bill_exc.id')
+                    ->leftJoin('places as s_place_exc', 'exchanges.place_id', '=', 's_place_exc.id')
+                    ->select('exchanges.*')
+                    ->where(function ($q) use ($search) {
+                        $q->where('exchanges.notes', 'like', "%{$search}%")
+                          ->orWhere('s_bill_exc.name', 'like', "%{$search}%")
+                          ->orWhere('s_place_exc.name', 'like', "%{$search}%");
+                    });
+            }
+            $moves = $exchangesQuery->get();
         } else {
             $operations = $operationsQuery->get();
-            $transfers  = Transfer::with(['from', 'to', 'currency', 'user'])->latest()->get();
-            $exchanges  = Exchange::with(['from', 'to', 'bill', 'user', 'place'])->latest()->get();
-            $moves      = $operations->concat($transfers)->concat($exchanges);
+
+            $transfersQuery = Transfer::with(['from', 'to', 'currency', 'user'])->latest();
+            $exchangesQuery = Exchange::with(['from', 'to', 'bill', 'user', 'place'])->latest();
+            if ($search) {
+                $transfersQuery
+                    ->leftJoin('bills as s_from', 'transfers.from_bill_id', '=', 's_from.id')
+                    ->leftJoin('bills as s_to', 'transfers.to_bill_id', '=', 's_to.id')
+                    ->select('transfers.*')
+                    ->where(function ($q) use ($search) {
+                        $q->where('transfers.notes', 'like', "%{$search}%")
+                          ->orWhere('s_from.name', 'like', "%{$search}%")
+                          ->orWhere('s_to.name', 'like', "%{$search}%");
+                    });
+                $exchangesQuery
+                    ->leftJoin('bills as s_bill_exc', 'exchanges.bill_id', '=', 's_bill_exc.id')
+                    ->leftJoin('places as s_place_exc', 'exchanges.place_id', '=', 's_place_exc.id')
+                    ->select('exchanges.*')
+                    ->where(function ($q) use ($search) {
+                        $q->where('exchanges.notes', 'like', "%{$search}%")
+                          ->orWhere('s_bill_exc.name', 'like', "%{$search}%")
+                          ->orWhere('s_place_exc.name', 'like', "%{$search}%");
+                    });
+            }
+            $transfers = $transfersQuery->get();
+            $exchanges = $exchangesQuery->get();
+            $moves     = $operations->concat($transfers)->concat($exchanges);
         }
 
         $moves = $moves->sortByDesc(fn($m) => $m->date->format('U') . $m->created_at->format('U'));
@@ -63,6 +125,7 @@ class MoveController extends Controller
             'mpOnly'          => $mpOnly,
             'draftOnly'       => $draftOnly,
             'activeType'      => $moveType,
+            'search'          => $search,
             'defaultCurrency' => Currency::getDefaultCurrency(),
             'plannedExpenses' => $this->plannedExpenseService->getPlannedExpensesToBeReminded(),
         ]);
