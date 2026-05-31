@@ -1,11 +1,20 @@
-@php use App\Helpers\MoneyFormatter; @endphp
+@php
+    use App\Helpers\MoneyFormatter;
+    $allAmounts = $bills->map(fn($b) => $b->getAmounts());
+    $zeroCurrencyIndices = [];
+    foreach ($currencies as $i => $currency) {
+        if ($allAmounts->every(fn($amounts) => floatval($amounts[$i]->getAmount()) == 0)) {
+            $zeroCurrencyIndices[] = $i;
+        }
+    }
+@endphp
 @extends('layouts.app')
 
 @section('title', 'Bills')
 
 @section('content')
 
-<div x-data="{ hideZero: true }">
+<div x-data="{ hideZero: true, zeroCols: {{ json_encode($zeroCurrencyIndices) }} }">
 
 <div class="page-toolbar">
     <div class="toolbar-left">
@@ -39,7 +48,7 @@
                     <tr>
                         <th>Bill</th>
                         @foreach ($currencies as $currency)
-                            <th class="col-amount">{{ $currency->name }}</th>
+                            <th class="col-amount" x-show="!hideZero || !zeroCols.includes({{ $loop->index }})">{{ $currency->name }}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -65,7 +74,8 @@
                             </td>
                             @foreach ($amounts as $amount)
                                 @php $val = MoneyFormatter::getWithoutDecimals($amount->getAmount()); @endphp
-                                <td class="col-amount {{ $val == '0' ? 'amount-zero' : '' }}">
+                                <td class="col-amount {{ $val == '0' ? 'amount-zero' : '' }}"
+                                    x-show="!hideZero || !zeroCols.includes({{ $loop->index }})">
                                     {{ $val }}
                                 </td>
                             @endforeach
@@ -76,7 +86,7 @@
                     <tr>
                         <td class="text-muted" style="font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;">Total</td>
                         @foreach ($currencies as $currency)
-                            <td class="col-amount">
+                            <td class="col-amount" x-show="!hideZero || !zeroCols.includes({{ $loop->index }})">
                                 {{ MoneyFormatter::getWithoutDecimals($currency->getSum($bills)) }}
                             </td>
                         @endforeach
