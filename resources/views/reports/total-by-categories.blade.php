@@ -20,7 +20,7 @@
         @endif
     </div>
     <div class="toolbar-right">
-        <select class="form-select form-select-sm" style="width:auto;max-width:160px;" onchange="redirectToBill(this)">
+        <select class="form-select form-select-sm" style="width:auto;" onchange="redirectToBill(this)">
             <option value="">All bills</option>
             @foreach($bills as $bill)
                 <option value="{{ $bill->id }}" {{ request('bill_id') == $bill->id ? 'selected' : '' }}>
