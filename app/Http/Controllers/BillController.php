@@ -160,7 +160,7 @@ class BillController extends Controller
         });
 
         $paginator = $this->paginate($moves, 100);
-        $moves = $paginator->items();
+        $moves = $paginator->getCollection()->groupBy(fn($m) => $m->date_formatted);
         $defaultCurrency = Currency::getDefaultCurrency();
 
         $currencies = $bill->is_crypto

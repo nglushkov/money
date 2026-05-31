@@ -107,9 +107,12 @@
 </div>
 
 @if(count($moves) > 0)
-    <div class="moves-card">
-        @include('blocks.moves', ['moves' => $moves])
-    </div>
+    @foreach($moves as $date => $moveGroup)
+        <div class="moves-date-header">{{ $date }}</div>
+        <div class="moves-card">
+            @include('blocks.moves', ['moves' => $moveGroup])
+        </div>
+    @endforeach
     <div class="mt-3">{{ $paginator->links() }}</div>
 @else
     <div class="moves-card">
