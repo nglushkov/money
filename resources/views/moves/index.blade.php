@@ -39,8 +39,15 @@
                 <li><a href="{{ route('p2p.create') }}" class="dropdown-item">
                     <i class="bi bi-people"></i> P2P exchange
                 </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <button type="button" class="dropdown-item" onclick="document.getElementById('mp-sync-form').submit()">
+                        <i class="bi bi-arrow-repeat"></i> Sync MP
+                    </button>
+                </li>
             </ul>
         </div>
+        <form autocomplete="off" action="{{ route('mp-sync') }}" method="POST" id="mp-sync-form" style="display:none">@csrf</form>
 
         {{-- Select mode: cancel + delete --}}
         <template x-if="selectMode">
@@ -113,23 +120,6 @@
                 @click="searchOpen = true; $nextTick(() => $refs.searchInput.focus())">
             <i class="bi bi-search"></i>
         </button>
-
-        <form autocomplete="off" action="{{ route('mp-sync') }}" method="POST" x-show="!selectMode && !searchOpen">
-            @csrf
-            <button type="submit" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-repeat me-1"></i>Sync MP
-            </button>
-        </form>
-
-        @if (count($plannedExpenses) > 0)
-            <button type="button" class="btn btn-sm btn-outline-warning" x-show="!selectMode && !searchOpen"
-                    onclick="document.getElementById('dismiss-all-form').submit();">
-                <i class="bi bi-bell-slash me-1"></i>Dismiss planned
-            </button>
-            <form autocomplete="off" action="{{ route('planned-expenses.dismiss-all') }}" method="post" id="dismiss-all-form">
-                @csrf
-            </form>
-        @endif
     </div>
 </div>
 
@@ -146,25 +136,38 @@
 @endif
 
 {{-- Planned expenses --}}
-@foreach($plannedExpenses as $pe)
-    <div class="planned-row">
-        <i class="bi bi-calendar-event text-warning"></i>
-        <a href="{{ route('planned-expenses.show', $pe) }}" class="fw-500">Planned Expense</a>
-        <span class="text-muted">{{ $pe->next_payment_date_formatted }}</span>
-        <span class="text-muted">({{ $pe->next_payment_date_humans }})</span>
-        <strong>{{ $pe->amount_formatted }}</strong>
-        @if($pe->category)<span>{{ $pe->category->name }}</span>@endif
-        @if($pe->place)<span class="text-muted">@ {{ $pe->place->name }}</span>@endif
-        <div class="ms-auto">
-            <button type="button" class="btn-close btn-close-sm"
-                onclick="document.getElementById('pe-dismiss-{{ $pe->id }}').submit();"></button>
-            <form autocomplete="off" action="{{ route('planned-expenses.dismiss', $pe) }}" method="post" id="pe-dismiss-{{ $pe->id }}" class="d-inline">
-                @csrf @method('PUT')
-                <input type="hidden" name="dismiss" value="{{ $pe->id }}">
+@if(count($plannedExpenses) > 0)
+    @foreach($plannedExpenses as $pe)
+        <div class="planned-row">
+            <i class="bi bi-calendar-event text-warning"></i>
+            <a href="{{ route('planned-expenses.show', $pe) }}" class="fw-500">Planned Expense</a>
+            <span class="text-muted">{{ $pe->next_payment_date_formatted }}</span>
+            <span class="text-muted">({{ $pe->next_payment_date_humans }})</span>
+            <strong>{{ $pe->amount_formatted }}</strong>
+            @if($pe->category)<span>{{ $pe->category->name }}</span>@endif
+            @if($pe->place)<span class="text-muted">@ {{ $pe->place->name }}</span>@endif
+            <div class="ms-auto">
+                <button type="button" class="btn-close btn-close-sm"
+                    onclick="document.getElementById('pe-dismiss-{{ $pe->id }}').submit();"></button>
+                <form autocomplete="off" action="{{ route('planned-expenses.dismiss', $pe) }}" method="post" id="pe-dismiss-{{ $pe->id }}" class="d-inline">
+                    @csrf @method('PUT')
+                    <input type="hidden" name="dismiss" value="{{ $pe->id }}">
+                </form>
+            </div>
+        </div>
+    @endforeach
+    @if(count($plannedExpenses) > 1)
+        <div class="text-end mb-2" style="padding-right:.25rem;">
+            <button type="button" class="btn btn-link btn-sm text-warning p-0" style="font-size:.8rem;"
+                    onclick="document.getElementById('dismiss-all-form').submit();">
+                <i class="bi bi-bell-slash me-1"></i>Dismiss all
+            </button>
+            <form autocomplete="off" action="{{ route('planned-expenses.dismiss-all') }}" method="post" id="dismiss-all-form">
+                @csrf
             </form>
         </div>
-    </div>
-@endforeach
+    @endif
+@endif
 
 {{-- Moves list --}}
 @if (count($moves) == 0)
