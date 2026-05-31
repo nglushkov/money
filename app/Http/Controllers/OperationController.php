@@ -235,6 +235,10 @@ class OperationController extends Controller
             }
         });
 
+        if ($splitMode) {
+            return redirect()->route('home');
+        }
+
         return Session::has('index_url') ? redirect(Session::get('index_url')) : redirect()->route('home');
     }
 

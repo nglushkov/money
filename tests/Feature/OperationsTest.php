@@ -86,7 +86,7 @@ class OperationsTest extends TestCase
         $response = $this->actingAs($this->user)->put("/operations/{$operation->id}", $fields);
         $this->assertDatabaseHas('operations', $fields);
 
-        $response->assertRedirectToRoute('operations.show', $operation);
+        $response->assertRedirectToRoute('home');
     }
 
     private function getFields(): array
@@ -132,6 +132,52 @@ class OperationsTest extends TestCase
 
         $this->assertDatabaseHas('operations', ['category_id' => $cat1->id, 'amount' => '3000.00']);
         $this->assertDatabaseHas('operations', ['category_id' => $cat2->id, 'amount' => '2000.00']);
+    }
+
+    public function testSplitUpdateRedirectsToHomeNotDeletedOperation()
+    {
+        $bill     = Bill::inRandomOrder()->first();
+        $currency = Currency::inRandomOrder()->first();
+        $place    = Place::inRandomOrder()->first();
+        $cat1     = Category::inRandomOrder()->first();
+        $cat2     = Category::inRandomOrder()->skip(1)->first();
+
+        $operation = Operation::factory()->create([
+            'bill_id'     => $bill->id,
+            'currency_id' => $currency->id,
+        ]);
+
+        $showUrl = route('operations.show', $operation);
+
+        // Visit edit with referer pointing at the operation show page
+        $this->actingAs($this->user)->get("/operations/{$operation->id}/edit", [
+            'Referer' => $showUrl,
+        ]);
+
+        $countBefore = Operation::count();
+
+        $response = $this->actingAs($this->user)->put("/operations/{$operation->id}", [
+            'date'        => '2023-06-01',
+            'type'        => OperationType::Expense->name,
+            'bill_id'     => $bill->id,
+            'currency_id' => $currency->id,
+            'place_id'    => $place->id,
+            'split_mode'  => '1',
+            'splits'      => [
+                ['category_id' => $cat1->id, 'amount' => '1500'],
+                ['category_id' => $cat2->id, 'amount' => '500'],
+            ],
+        ]);
+
+        // Must redirect to home, not to the now-deleted operation show page
+        $response->assertRedirectToRoute('home');
+
+        // Original operation deleted, two new ones created
+        $this->assertDatabaseMissing('operations', ['id' => $operation->id]);
+        $this->assertEquals($countBefore + 1, Operation::count());
+
+        $this->assertDatabaseHas('operations', ['category_id' => $cat1->id, 'amount' => '1500.00']);
+        $this->assertDatabaseHas('operations', ['category_id' => $cat2->id, 'amount' => '500.00']);
     }
 
     public function testCopyOperation()
