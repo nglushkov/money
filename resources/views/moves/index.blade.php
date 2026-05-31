@@ -101,10 +101,6 @@
                        class="form-control form-control-sm search-input" x-ref="searchInput" autocomplete="off">
             </div>
             <button type="submit" class="btn btn-success btn-sm px-3">Search</button>
-            <button type="button" class="btn btn-outline-secondary btn-sm"
-                    @click="searchOpen = false">
-                <i class="bi bi-x-lg"></i>
-            </button>
         </form>
     </div>
 
