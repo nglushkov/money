@@ -158,6 +158,7 @@ class OperationsTest extends TestCase
 
         $response = $this->actingAs($this->user)->put("/operations/{$operation->id}", [
             'date'        => '2023-06-01',
+            'amount'      => '2000',
             'type'        => OperationType::Expense->name,
             'bill_id'     => $bill->id,
             'currency_id' => $currency->id,
