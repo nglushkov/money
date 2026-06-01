@@ -4,8 +4,8 @@
 
 @section('content')
 
-<div x-data="{ selectMode: false, selected: [], searchOpen: {{ $search ? 'true' : 'false' }} }"
-     @keydown.escape.window="selectMode = false; selected = []; searchOpen = false">
+<div x-data="{ selectMode: false, selected: [] }"
+     @keydown.escape.window="selectMode = false; selected = []">
 
 {{-- Bulk delete form (hidden, submitted via Alpine) --}}
 <form id="bulk-delete-form" action="{{ route('moves.bulk-delete') }}" method="POST" style="display:none">
@@ -15,12 +15,15 @@
     </template>
 </form>
 
+{{-- Sync MP form (hidden) --}}
+<form autocomplete="off" action="{{ route('mp-sync') }}" method="POST" id="mp-sync-form" style="display:none">@csrf</form>
+
 {{-- Toolbar --}}
 <div class="page-toolbar">
     <div class="toolbar-left">
         {{-- New operation button --}}
         <div class="btn-group" x-show="!selectMode">
-            <a href="{{ route('operations.create') }}" class="btn btn-success btn-sm fw-600" style="font-weight:600;">
+            <a href="{{ route('operations.create') }}" class="btn btn-success btn-sm" style="font-weight:600;">
                 <i class="bi bi-plus-lg me-1"></i>New
             </a>
             <button type="button" class="btn btn-success btn-sm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
@@ -33,7 +36,7 @@
                     <i class="bi bi-arrow-left-right text-primary"></i> Transfer
                 </a></li>
                 <li><a href="{{ route('exchanges.create') }}" class="dropdown-item">
-                    <i class="bi bi-currency-exchange text-purple" style="color:var(--c-exchange)"></i> Exchange
+                    <i class="bi bi-currency-exchange" style="color:var(--c-exchange)"></i> Exchange
                 </a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a href="{{ route('p2p.create') }}" class="dropdown-item">
@@ -47,7 +50,6 @@
                 </li>
             </ul>
         </div>
-        <form autocomplete="off" action="{{ route('mp-sync') }}" method="POST" id="mp-sync-form" style="display:none">@csrf</form>
 
         {{-- Select mode: cancel + delete --}}
         <template x-if="selectMode">
@@ -67,7 +69,7 @@
 
         {{-- Filter pills --}}
         @php $noFilter = !$mpOnly && !$draftOnly && !$activeType && !$search; @endphp
-        <div class="d-flex gap-1 filter-pills-scroll" x-show="!selectMode && !searchOpen">
+        <div class="d-flex gap-1 filter-pills-scroll" x-show="!selectMode">
             <a href="{{ route('home') }}"
                class="filter-pill {{ $noFilter ? 'pill-active' : '' }}">All</a>
             <a href="{{ route('home', ['type' => \App\Models\Enum\MoveType::Operation->name]) }}"
@@ -80,41 +82,31 @@
                class="filter-pill {{ $mpOnly ? 'pill-active-mp' : '' }}">MP</a>
             <a href="{{ route('home', ['draft' => 1]) }}"
                class="filter-pill {{ $draftOnly ? 'pill-active-draft' : '' }}">Drafts</a>
-            @if($search)
-                <span class="filter-pill pill-active-search">
-                    <i class="bi bi-search me-1" style="font-size:.7rem;"></i>{{ Str::limit($search, 20) }}
-                    <a href="{{ route('home', array_filter(['type' => $activeType, 'mp' => $mpOnly ?: null, 'draft' => $draftOnly ?: null])) }}"
-                       class="ms-1 text-inherit" style="opacity:.7;" onclick="event.stopPropagation()">×</a>
-                </span>
-            @endif
         </div>
+    </div>
 
-        {{-- Search form (replaces pills when open) --}}
-        <form method="GET" action="{{ route('home') }}" class="d-flex align-items-center gap-1 flex-grow-1"
-              x-show="!selectMode && searchOpen" x-transition style="display:none!important">
+    <div class="toolbar-right" x-show="!selectMode">
+        {{-- Search (always visible) --}}
+        <form method="GET" action="{{ route('home') }}" autocomplete="off" class="d-flex align-items-center">
             @if($activeType)<input type="hidden" name="type" value="{{ $activeType }}">@endif
             @if($mpOnly)<input type="hidden" name="mp" value="1">@endif
             @if($draftOnly)<input type="hidden" name="draft" value="1">@endif
-            <div class="search-input-wrap flex-grow-1">
+            <div class="search-input-wrap">
                 <i class="bi bi-search search-input-icon"></i>
-                <input type="text" name="search" value="{{ $search }}" placeholder="Search by category, place, bill, notes…"
-                       class="form-control form-control-sm search-input" x-ref="searchInput" autocomplete="off">
+                <input type="text" name="search" value="{{ $search }}" placeholder="Search…"
+                       class="form-control form-control-sm search-input {{ $search ? 'has-clear' : '' }}"
+                       style="width:11rem;" autocomplete="off">
+                @if($search)
+                    <a href="{{ route('home', array_filter(['type' => $activeType, 'mp' => $mpOnly ?: null, 'draft' => $draftOnly ?: null])) }}"
+                       class="search-clear-btn" title="Clear search">×</a>
+                @endif
             </div>
-            <button type="submit" class="btn btn-success btn-sm px-3">Search</button>
         </form>
-    </div>
 
-    <div class="toolbar-right">
+        {{-- Select --}}
         <button type="button" class="btn btn-outline-secondary btn-sm"
-                x-show="!selectMode && !searchOpen"
-                @click="selectMode = true">
-            <i class="bi bi-check2-square me-1"></i>Select
-        </button>
-
-        <button type="button" class="btn btn-sm {{ $search ? 'btn-success' : 'btn-outline-secondary' }}"
-                x-show="!selectMode && !searchOpen"
-                @click="searchOpen = true; $nextTick(() => $refs.searchInput.focus())">
-            <i class="bi bi-search"></i>
+                @click="selectMode = true" title="Select">
+            <i class="bi bi-check2-square"></i>
         </button>
     </div>
 </div>

@@ -143,6 +143,12 @@ a { text-decoration: none; }
   font-size: .85rem; color: var(--c-muted); pointer-events: none; z-index: 1;
 }
 .search-input { padding-left: 2rem !important; }
+.search-input.has-clear { padding-right: 1.6rem !important; }
+.search-clear-btn {
+  position: absolute; right: .5rem; top: 50%; transform: translateY(-50%);
+  color: var(--c-muted); text-decoration: none; font-size: 1.1rem; line-height: 1;
+}
+.search-clear-btn:hover { color: var(--c-text); }
 
 /* === Moves group === */
 .moves-date-header {
