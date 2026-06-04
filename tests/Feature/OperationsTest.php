@@ -6,6 +6,7 @@ use App\Models\Bill;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Enum\OperationType;
+use App\Models\MercadoPagoDismissed;
 use App\Models\Operation;
 use App\Models\Place;
 use App\Models\User;
@@ -197,6 +198,36 @@ class OperationsTest extends TestCase
         $this->assertNull($copy->external_source);
         $this->assertNull($copy->mp_review_status);
         $this->assertTrue($copy->is_draft);
+    }
+
+    public function testSplitMpOperationDismissesExternalId()
+    {
+        $bill     = Bill::where('user_id', $this->user->id)->firstOrFail();
+        $currency = Currency::inRandomOrder()->first();
+        $cat1     = Category::inRandomOrder()->first();
+        $cat2     = Category::inRandomOrder()->skip(1)->first();
+
+        $operation = Operation::factory()->create([
+            'bill_id'         => $bill->id,
+            'currency_id'     => $currency->id,
+            'external_id'     => 'mp-split-test-999',
+            'external_source' => 'mercadopago',
+        ]);
+
+        $this->actingAs($this->user)->put("/operations/{$operation->id}", [
+            'date'        => '2023-06-01',
+            'amount'      => '1000',
+            'type'        => OperationType::Expense->name,
+            'bill_id'     => $bill->id,
+            'currency_id' => $currency->id,
+            'split_mode'  => '1',
+            'splits'      => [
+                ['category_id' => $cat1->id, 'amount' => '600'],
+                ['category_id' => $cat2->id, 'amount' => '400'],
+            ],
+        ]);
+
+        $this->assertDatabaseHas('mercadopago_dismissed', ['external_id' => 'mp-split-test-999']);
     }
 
     public function testOperationsDestroy()

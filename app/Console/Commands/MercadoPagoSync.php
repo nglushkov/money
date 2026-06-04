@@ -10,6 +10,7 @@ use App\Service\MercadoPagoService;
 use App\Service\OperationService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class MercadoPagoSync extends Command
 {
@@ -31,6 +32,8 @@ class MercadoPagoSync extends Command
         $accounts = config('mercadopago.accounts', []);
 
         $currency = Currency::where('name', 'ARS')->firstOrFail();
+
+        Log::info('MP sync started', ['days' => $days, 'from' => $from->toDateString(), 'to' => $to->toDateString()]);
 
         foreach ($accounts as $account) {
             $this->syncAccount($account, $currency->id, $from, $to);
@@ -102,5 +105,6 @@ class MercadoPagoSync extends Command
         }
 
         $this->info("User {$userId}: created {$created}, skipped {$skipped}");
+        Log::info("MP sync user {$userId}: created {$created}, skipped {$skipped}", ['from' => $from->toDateString(), 'to' => $to->toDateString()]);
     }
 }

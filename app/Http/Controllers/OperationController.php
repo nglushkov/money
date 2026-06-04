@@ -199,6 +199,10 @@ class OperationController extends Controller
                 $common = $request->safe()->except(['splits', 'split_mode', 'category_id', 'amount']);
                 $userId = $operation->user_id;
 
+                if ($operation->external_source === 'mercadopago' && $operation->external_id) {
+                    MercadoPagoDismissed::dismiss($operation->external_id, $operation->user_id);
+                }
+
                 if ($operation->attachment) {
                     Storage::delete(StorageFilePath::OperationAttachments->value . '/' . $this->getAttachmentFileNameEncrypted($operation->id, $operation->attachment));
                 }
