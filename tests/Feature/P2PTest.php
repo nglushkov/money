@@ -36,6 +36,7 @@ class P2PTest extends TestCase
         $this->arsCurrency  = Currency::where('name', 'ARS')->firstOrFail();
 
         AppSetting::set('p2p_bybit_bill_id', $this->bybitBill->id, $this->user->id);
+        AppSetting::set('p2p_mp_bill_id', $this->mpBill->id, $this->user->id);
         AppSetting::set('mp_review_threshold', 300000, $this->user->id);
     }
 

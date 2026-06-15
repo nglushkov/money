@@ -39,22 +39,25 @@ class AppSettingsTest extends TestCase
 
     public function test_update_saves_settings(): void
     {
-        $bill = Bill::factory()->create(['name' => 'Bybit', 'user_id' => $this->user->id]);
+        $bybitBill = Bill::factory()->create(['name' => 'Bybit', 'user_id' => $this->user->id]);
+        $mpBill    = Bill::factory()->create(['name' => 'Mercado Pago', 'user_id' => $this->user->id]);
 
         $this->actingAs($this->user)->put(route('settings.app.update'), [
             'mp_review_threshold' => 400000,
-            'p2p_bybit_bill_id'   => $bill->id,
+            'p2p_bybit_bill_id'   => $bybitBill->id,
+            'p2p_mp_bill_id'      => $mpBill->id,
         ])->assertRedirect(route('settings.app'));
 
         $this->assertEquals('400000', AppSetting::get('mp_review_threshold', null, $this->user->id));
-        $this->assertEquals($bill->id, AppSetting::get('p2p_bybit_bill_id', null, $this->user->id));
+        $this->assertEquals($bybitBill->id, AppSetting::get('p2p_bybit_bill_id', null, $this->user->id));
+        $this->assertEquals($mpBill->id, AppSetting::get('p2p_mp_bill_id', null, $this->user->id));
     }
 
     public function test_update_validates_required_fields(): void
     {
         $this->actingAs($this->user)
             ->put(route('settings.app.update'), [])
-            ->assertSessionHasErrors(['mp_review_threshold', 'p2p_bybit_bill_id']);
+            ->assertSessionHasErrors(['mp_review_threshold', 'p2p_bybit_bill_id', 'p2p_mp_bill_id']);
     }
 
     public function test_keep_sets_review_status(): void

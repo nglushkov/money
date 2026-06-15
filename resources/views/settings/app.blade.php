@@ -32,8 +32,8 @@
 
                     <h6 class="text-muted mb-3 mt-4">P2P</h6>
 
-                    <div class="form-group mb-4">
-                        <label for="p2p_bybit_bill_id">Default P2P bill</label>
+                    <div class="form-group mb-3">
+                        <label for="p2p_bybit_bill_id">Source bill (USDT → ARS)</label>
                         <select name="p2p_bybit_bill_id" id="p2p_bybit_bill_id" class="form-control" required>
                             <option value="">— select —</option>
                             @foreach($bills as $bill)
@@ -44,6 +44,20 @@
                             @endforeach
                         </select>
                         <small class="text-muted">Bill where USDT → ARS exchange is created</small>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="p2p_mp_bill_id">Destination bill (ARS transfer to)</label>
+                        <select name="p2p_mp_bill_id" id="p2p_mp_bill_id" class="form-control" required>
+                            <option value="">— select —</option>
+                            @foreach($bills as $bill)
+                                <option value="{{ $bill->id }}"
+                                    @selected(old('p2p_mp_bill_id', $p2pMpBillId) == $bill->id)>
+                                    {{ $bill->name }}{{ $bill->user ? ' (' . $bill->user->name . ')' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted">Bill that receives ARS after exchange (default: Mercado Pago)</small>
                     </div>
 
                     <hr>

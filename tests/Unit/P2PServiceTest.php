@@ -39,6 +39,7 @@ class P2PServiceTest extends TestCase
         $this->ars       = Currency::where('name', 'ARS')->firstOrFail();
 
         AppSetting::set('p2p_bybit_bill_id', $this->bybitBill->id, $this->user->id);
+        AppSetting::set('p2p_mp_bill_id', $this->mpBill->id, $this->user->id);
 
         $this->service = new P2PService();
     }

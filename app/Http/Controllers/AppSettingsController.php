@@ -14,6 +14,7 @@ class AppSettingsController extends Controller
             'bills'             => Bill::with('user')->orderBy('name')->get(),
             'reviewThreshold'   => AppSetting::get('mp_review_threshold', 300000),
             'p2pBybitBillId'    => (int) AppSetting::get('p2p_bybit_bill_id'),
+            'p2pMpBillId'       => (int) AppSetting::get('p2p_mp_bill_id'),
         ]);
     }
 
@@ -22,6 +23,7 @@ class AppSettingsController extends Controller
         $data = $request->validate([
             'mp_review_threshold' => 'required|numeric|min:0',
             'p2p_bybit_bill_id'   => 'required|integer|exists:bills,id',
+            'p2p_mp_bill_id'      => 'required|integer|exists:bills,id',
         ]);
 
         foreach ($data as $key => $value) {
