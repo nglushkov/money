@@ -162,9 +162,10 @@ a { text-decoration: none; }
 .moves-card {
   border: 1px solid var(--c-border);
   border-radius: var(--radius);
-  overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
+.moves-card .move-row:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+.moves-card .move-row:last-child  { border-radius: 0 0 var(--radius) var(--radius); }
 
 /* === Move row === */
 .move-row {
