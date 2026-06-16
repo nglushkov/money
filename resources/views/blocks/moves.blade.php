@@ -4,7 +4,7 @@
         @php $moveKey = 'operation:' . $move->id; @endphp
         <div class="move-row"
              :class="selectMode && selected.includes('{{ $moveKey }}') ? 'move-row-selected' : ''"
-             @click="if(selectMode) { selected.includes('{{ $moveKey }}') ? selected = selected.filter(x => x !== '{{ $moveKey }}') : selected.push('{{ $moveKey }}') } else { window.location.href='{{ $href }}' }">
+             @click="if ($event.target.closest('.move-right')) return; if(selectMode) { selected.includes('{{ $moveKey }}') ? selected = selected.filter(x => x !== '{{ $moveKey }}') : selected.push('{{ $moveKey }}') } else { window.location.href='{{ $href }}' }">
             <div class="move-select" x-show="selectMode" @click.stop style="display:none;align-items:center;padding-right:.5rem;">
                 <input type="checkbox"
                        :checked="selected.includes('{{ $moveKey }}')"
@@ -25,7 +25,7 @@
                     @if($move->attachment) · <i class="bi bi-paperclip"></i>@endif
                 </div>
             </div>
-            <div class="move-right" onclick="event.stopPropagation()">
+            <div class="move-right">
                 <div class="move-amount-val {{ $move->is_income ? 'col-income' : 'col-expense' }}">
                     {{ $move->amount_text }}
                 </div>
