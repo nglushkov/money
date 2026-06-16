@@ -6,6 +6,7 @@ use App\Models\AppSetting;
 use App\Models\Bill;
 use App\Models\Currency;
 use App\Models\Exchange;
+use App\Models\MercadoPagoDismissed;
 use App\Models\Operation;
 use App\Models\Transfer;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +46,9 @@ class P2PService
             $transfer->save();
 
             if ($sourceOperation) {
+                if ($sourceOperation->external_id !== null) {
+                    MercadoPagoDismissed::dismiss($sourceOperation->external_id, $sourceOperation->user_id);
+                }
                 $sourceOperation->delete();
             }
         });

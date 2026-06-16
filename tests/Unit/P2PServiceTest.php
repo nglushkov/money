@@ -7,6 +7,7 @@ use App\Models\Bill;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Exchange;
+use App\Models\MercadoPagoDismissed;
 use App\Models\Operation;
 use App\Models\Transfer;
 use App\Models\User;
@@ -94,5 +95,48 @@ class P2PServiceTest extends TestCase
         $this->assertCount(1, Exchange::all());
         $this->assertCount(1, Transfer::all());
         $this->assertCount(0, Operation::all());
+    }
+
+    public function test_creates_dismissed_record_for_mp_operation(): void
+    {
+        $category = Category::first();
+        $operation = Operation::factory()->create([
+            'bill_id'      => $this->mpBill->id,
+            'currency_id'  => $this->ars->id,
+            'user_id'      => $this->user->id,
+            'category_id'  => $category->id,
+            'external_id'  => 'MP-EXT-12345',
+        ]);
+
+        $this->service->create(
+            ['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000, 'bybit_bill_id' => $this->bybitBill->id],
+            $operation
+        );
+
+        $this->assertDatabaseHas('mercadopago_dismissed', [
+            'external_id' => 'MP-EXT-12345',
+            'user_id'     => $this->user->id,
+        ]);
+        $this->assertDatabaseMissing('operations', ['id' => $operation->id]);
+    }
+
+    public function test_does_not_create_dismissed_record_when_no_external_id(): void
+    {
+        $category = Category::first();
+        $operation = Operation::factory()->create([
+            'bill_id'     => $this->mpBill->id,
+            'currency_id' => $this->ars->id,
+            'user_id'     => $this->user->id,
+            'category_id' => $category->id,
+            'external_id' => null,
+        ]);
+
+        $this->service->create(
+            ['date' => '2026-05-10', 'usdt_amount' => 250, 'ars_amount' => 368000, 'bybit_bill_id' => $this->bybitBill->id],
+            $operation
+        );
+
+        $this->assertCount(0, MercadoPagoDismissed::all());
+        $this->assertDatabaseMissing('operations', ['id' => $operation->id]);
     }
 }
