@@ -36,7 +36,7 @@ class UpdateOperationRequest extends FormRequest
             'type'                 => 'required|in:' . implode(',', OperationType::names()),
             'bill_id'              => 'required|exists:bills,id',
             'currency_id'          => 'required|exists:currencies,id',
-            'place_id'             => 'required|exists:places,id',
+            'place_id'             => 'nullable|exists:places,id',
             'notes'                => 'nullable|string',
             'date'                 => 'required|date|before_or_equal:today',
             'attachment'           => 'nullable|file|mimes:jpeg,png,pdf,zip|max:8192',

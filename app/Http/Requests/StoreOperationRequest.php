@@ -22,7 +22,7 @@ class StoreOperationRequest extends FormRequest
             'date'                 => 'required|date|before_or_equal:today',
             'amount'               => 'required|numeric',
             'type'                 => 'required|in:' . implode(',', OperationType::names()),
-            'place_id'             => 'required|exists:places,id',
+            'place_id'             => 'nullable|exists:places,id',
             'notes'                => 'nullable|string|max:255',
             'attachment'           => 'nullable|file|mimes:jpeg,png,pdf,zip|max:8192',
             'split_mode'           => 'nullable|boolean',
