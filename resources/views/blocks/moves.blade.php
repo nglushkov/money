@@ -33,13 +33,17 @@
                     <div class="move-amount-sub">{{ $move->amount_in_default_currency_formatted }}</div>
                 @endif
                 @if($move->mp_review_status === 'pending')
-                    <div class="mt-1">
-                        <div class="btn-group btn-group-sm">
+                    <div class="mt-1" x-data="{ reviewOpen: false }">
+                        <div style="position:relative;display:inline-block;">
                             <button type="button" class="btn btn-sm btn-warning dropdown-toggle"
-                                    data-bs-toggle="dropdown" style="font-size:.7rem;padding:.2rem .5rem;">
+                                    @click.stop="reviewOpen = !reviewOpen"
+                                    style="font-size:.7rem;padding:.2rem .5rem;">
                                 Review
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
+                            <ul class="dropdown-menu dropdown-menu-end"
+                                x-show="reviewOpen"
+                                @click.outside="reviewOpen = false"
+                                style="display:none;position:absolute;right:0;top:100%;z-index:1050;">
                                 <li><a class="dropdown-item" href="{{ route('p2p.create', ['from_operation' => $move->id]) }}">
                                     <i class="bi bi-people"></i> Create P2P
                                 </a></li>
